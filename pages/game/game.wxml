@@ -1,0 +1,57 @@
+<!--pages/game/game.wxml-->
+<view class="game-container">
+  <!-- 游戏画布 -->
+  <canvas 
+    canvas-id="gameCanvas" 
+    id="gameCanvas"
+    type="webgl"
+    class="game-canvas"
+    bindtouchstart="onTouchStart"
+    bindtouchmove="onTouchMove"
+    bindtouchend="onTouchEnd"
+  ></canvas>
+  
+  <!-- 游戏UI -->
+  <view class="game-ui">
+    <!-- 分数显示 -->
+    <view class="score-panel">
+      <text class="score-label">分数</text>
+      <text class="score-value">{{score}}</text>
+    </view>
+    
+    <!-- 最高分 -->
+    <view class="best-score-panel">
+      <text class="best-score-label">最高分</text>
+      <text class="best-score-value">{{bestScore}}</text>
+    </view>
+  </view>
+  
+  <!-- 游戏开始界面 -->
+  <view class="start-screen" wx:if="{{gameState === 'start'}}">
+    <view class="game-title">跳一跳</view>
+    <view class="game-subtitle">长按蓄力，松开跳跃</view>
+    <button class="start-btn" bindtap="startGame">开始游戏</button>
+  </view>
+  
+  <!-- 游戏结束界面 -->
+  <view class="game-over-screen" wx:if="{{gameState === 'over'}}">
+    <view class="game-over-title">游戏结束</view>
+    <view class="final-score">本次分数: {{score}}</view>
+    <view class="best-score-display" wx:if="{{isNewRecord}}">🎉 新纪录!</view>
+    <button class="restart-btn" bindtap="restartGame">再来一局</button>
+    <button class="share-btn" bindtap="shareScore">分享成绩</button>
+  </view>
+  
+  <!-- 蓄力指示器 -->
+  <view class="power-indicator" wx:if="{{gameState === 'playing' && isPressing}}">
+    <view class="power-bar">
+      <view class="power-fill" style="height: {{power}}%"></view>
+    </view>
+    <text class="power-text">蓄力中...</text>
+  </view>
+  
+  <!-- 操作提示 -->
+  <view class="hint" wx:if="{{gameState === 'playing' && score === 0}}">
+    <text>长按屏幕蓄力，松开跳跃</text>
+  </view>
+</view>
