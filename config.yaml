@@ -1,0 +1,73 @@
+# 邮件服务器配置
+email_config:
+  # IMAP服务器设置
+  imap_server: "imap.gmail.com"  # Gmail IMAP服务器
+  imap_port: 993
+  use_ssl: true
+  
+  # 邮箱账号 (将在运行时从环境变量或keychain中读取)
+  email: ""
+  password: ""
+  
+  # 其他常用邮箱服务器配置示例:
+  # QQ邮箱: imap.qq.com:993
+  # 163邮箱: imap.163.com:993
+  # Outlook: outlook.office365.com:993
+
+# 关键字配置
+keywords:
+  # 关键字分类
+  urgent: ["紧急", "urgent", "asap", "立即", "马上"]
+  work: ["工作", "会议", "项目", "任务", "work", "meeting", "project"]
+  finance: ["账单", "付款", "发票", "财务", "bill", "payment", "invoice"]
+  personal: ["家庭", "朋友", "个人", "family", "friend", "personal"]
+  
+  # 自定义关键字 (可以根据需要添加)
+  custom: []
+
+# 抓取配置
+fetch_config:
+  # 抓取的邮箱文件夹
+  folders: ["INBOX", "Sent"]
+  
+  # 抓取时间范围 (天数)
+  days_back: 7
+  
+  # 是否只抓取未读邮件
+  unread_only: false
+  
+  # 最大邮件数量限制
+  max_emails: 100
+
+# 调度配置
+schedule_config:
+  # 执行间隔 (分钟)
+  interval_minutes: 30
+  
+  # 执行时间 (24小时制, 例如 "09:00", "14:30")
+  # 如果设置了specific_times，将忽略interval_minutes
+  specific_times: []
+  
+  # 是否在启动时立即执行一次
+  run_on_start: true
+
+# 输出配置
+output_config:
+  # 输出文件路径
+  output_dir: "./output"
+  
+  # 输出格式 (json, csv, xlsx)
+  format: "xlsx"
+  
+  # 是否包含邮件正文
+  include_body: true
+  
+  # 是否保存附件信息
+  include_attachments: false
+
+# 日志配置
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  file: "./logs/email_bot.log"
+  max_size_mb: 10
+  backup_count: 5
