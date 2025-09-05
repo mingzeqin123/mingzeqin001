@@ -1,0 +1,28 @@
+<!--game.wxml-->
+<view class="game-container" bindtap="jump">
+  <!-- 游戏画布 -->
+  <canvas 
+    canvas-id="gameCanvas" 
+    class="game-canvas"
+    disable-scroll="true"
+  ></canvas>
+  
+  <!-- 游戏UI -->
+  <view class="game-ui">
+    <view class="score">得分: {{score}}</view>
+    <view class="game-over" wx:if="{{gameOver}}">
+      <view class="game-over-content">
+        <view class="game-over-title">游戏结束</view>
+        <view class="final-score">最终得分: {{score}}</view>
+        <view class="best-score" wx:if="{{isNewRecord}}">新纪录！</view>
+        <view class="restart-btn" bindtap="restartGame">重新开始</view>
+        <view class="home-btn" bindtap="goHome">返回首页</view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 游戏说明 -->
+  <view class="instruction" wx:if="{{!gameStarted}}">
+    <view class="instruction-text">点击屏幕让小人跳跃</view>
+  </view>
+</view>
