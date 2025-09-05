@@ -1,0 +1,103 @@
+/* game.wxss */
+.game-container {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(180deg, #87CEEB 0%, #98FB98 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.game-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.game-ui {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.score {
+  position: absolute;
+  top: 40rpx;
+  left: 40rpx;
+  color: white;
+  font-size: 32rpx;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+
+.game-over {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.game-over-content {
+  background: white;
+  padding: 60rpx;
+  border-radius: 20rpx;
+  text-align: center;
+  box-shadow: 0 10rpx 30rpx rgba(0,0,0,0.3);
+}
+
+.game-over-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30rpx;
+}
+
+.final-score {
+  font-size: 36rpx;
+  color: #666;
+  margin-bottom: 20rpx;
+}
+
+.best-score {
+  font-size: 32rpx;
+  color: #ff6b6b;
+  font-weight: bold;
+  margin-bottom: 40rpx;
+}
+
+.restart-btn, .home-btn {
+  background: #4CAF50;
+  color: white;
+  padding: 20rpx 40rpx;
+  border-radius: 25rpx;
+  font-size: 28rpx;
+  margin: 10rpx;
+  display: inline-block;
+  pointer-events: auto;
+}
+
+.home-btn {
+  background: #2196F3;
+}
+
+.instruction {
+  position: absolute;
+  bottom: 200rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 20rpx 40rpx;
+  border-radius: 25rpx;
+  font-size: 28rpx;
+  pointer-events: none;
+}

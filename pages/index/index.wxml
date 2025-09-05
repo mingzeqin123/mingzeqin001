@@ -1,0 +1,7 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="title">跳一跳</view>
+  <view class="subtitle">点击屏幕控制小人跳跃</view>
+  <view class="start-btn" bindtap="startGame">开始游戏</view>
+  <view class="high-score">最高分: {{highScore}}</view>
+</view>
