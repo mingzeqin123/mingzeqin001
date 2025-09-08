@@ -1,0 +1,24 @@
+{
+  "mysql": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "backup_user",
+    "password": "your_password_here",
+    "databases": ["database1", "database2"]
+  },
+  "oss": {
+    "access_key_id": "your_access_key_id",
+    "access_key_secret": "your_access_key_secret",
+    "endpoint": "oss-cn-hangzhou.aliyuncs.com",
+    "bucket_name": "your-backup-bucket",
+    "prefix": "mysql_backup"
+  },
+  "backup_dir": "/tmp/mysql_backup",
+  "compress": true,
+  "auto_cleanup": true,
+  "cleanup_local": true,
+  "retention_days": 30,
+  "log_level": "INFO",
+  "log_file": "/var/log/mysql_backup.log",
+  "backup_log_file": "/var/log/mysql_backup_history.json"
+}
