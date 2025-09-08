@@ -1,177 +1,226 @@
-# 微信小程序跳一跳游戏
+# 数据汇总定时任务服务
 
-一个基于微信小程序平台开发的3D跳一跳小游戏，使用Three.js渲染引擎实现3D效果。
+这是一个用于定时汇总多张表数据并上传到阿里云OSS的Node.js服务。
 
-## 🎮 游戏特色
+## 功能特性
 
-- **3D视觉效果**：使用Three.js渲染引擎，呈现精美的3D场景
-- **物理引擎**：真实的跳跃物理模拟和碰撞检测
-- **多样方块**：普通、小型、高型、特殊等多种方块类型
-- **蓄力系统**：长按蓄力，控制跳跃距离和高度
-- **分数系统**：完美落地获得额外分数，挑战最高纪录
-- **视觉特效**：粒子效果、动画过渡、阴影系统
-- **音效支持**：跳跃、落地、完美、游戏结束等音效
-- **社交分享**：支持微信好友和朋友圈分享
+- 🕐 **定时任务**: 支持cron表达式配置的定时执行
+- 📊 **数据汇总**: 支持多表数据聚合和统计
+- ☁️ **OSS上传**: 自动上传汇总结果到阿里云OSS
+- 📁 **多格式支持**: 支持JSON、CSV、Excel格式输出
+- 🔧 **灵活配置**: 支持自定义表聚合规则
+- 📝 **日志记录**: 完整的操作日志和错误处理
+- 🐳 **Docker支持**: 提供Docker和Docker Compose部署
 
-## 🚀 快速开始
+## 快速开始
 
-### 环境要求
-- 微信开发者工具 1.05.0 或更高版本
-- 小程序基础库 2.9.0 或更高版本
+### 1. 环境准备
 
-### 安装步骤
+```bash
+# 克隆项目
+git clone <repository-url>
+cd data-aggregation-service
 
-1. **克隆项目**
-   ```bash
-   git clone [项目地址]
-   cd jump-jump-game
-   ```
-
-2. **导入项目**
-   - 打开微信开发者工具
-   - 选择"导入项目"
-   - 选择项目目录
-   - 填入AppID（测试可使用测试号）
-
-3. **添加资源文件**
-   - 将Three.js完整库文件放入 `/pages/game/libs/three.min.js`
-   - 添加音效文件到 `/sounds/` 目录
-   - 添加图片资源到 `/images/` 目录
-
-4. **编译运行**
-   - 点击"编译"按钮
-   - 在模拟器或真机上预览
-
-## 📁 项目结构
-
-```
-jump-jump-game/
-├── app.js                 # 小程序入口文件
-├── app.json               # 小程序配置文件
-├── app.wxss              # 全局样式文件
-├── sitemap.json          # 站点地图配置
-├── project.config.json   # 项目配置文件
-├── pages/
-│   └── game/             # 游戏页面
-│       ├── game.js       # 页面逻辑
-│       ├── game.json     # 页面配置
-│       ├── game.wxml     # 页面结构
-│       ├── game.wxss     # 页面样式
-│       ├── gameEngine.js # 游戏引擎核心
-│       ├── player.js     # 玩家角色类
-│       ├── block.js      # 方块类
-│       ├── utils.js      # 工具函数
-│       └── libs/
-│           └── three.min.js # Three.js库
-├── images/               # 图片资源
-│   └── README.md        # 图片说明
-├── sounds/               # 音效资源
-│   └── README.md        # 音效说明
-└── README.md            # 项目说明
+# 安装依赖
+npm install
 ```
 
-## 🎯 游戏玩法
+### 2. 配置环境变量
 
-1. **开始游戏**：点击"开始游戏"按钮
-2. **蓄力跳跃**：长按屏幕蓄力，右侧显示蓄力条
-3. **释放跳跃**：松开手指，角色跳向下一个方块
-4. **获得分数**：
-   - 成功落地：+1分
-   - 良好落地：+3分
-   - 完美落地：+5分（中心位置）
-5. **游戏结束**：跳跃失败掉落时游戏结束
-6. **分享成绩**：可分享到微信好友或朋友圈
+```bash
+# 复制环境变量模板
+cp .env.example .env
 
-## 🔧 核心技术
+# 编辑配置文件
+vim .env
+```
 
-### 渲染引擎
-- **Three.js**：3D场景渲染
-- **WebGL**：硬件加速渲染
-- **阴影系统**：实时阴影计算
-- **光照系统**：环境光+方向光
+配置以下环境变量：
 
-### 物理系统
-- **跳跃轨迹**：抛物线运动模拟
-- **碰撞检测**：圆形碰撞检测算法
-- **重力模拟**：自然下落效果
+```env
+# 数据库配置
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=your_username
+DB_PASSWORD=your_password
+DB_NAME=your_database
 
-### 动画系统
-- **缓动函数**：平滑的动画过渡
-- **骨骼动画**：角色动作表现
-- **粒子效果**：特殊效果展示
-- **相机跟随**：平滑的视角切换
+# OSS配置
+OSS_REGION=oss-cn-hangzhou
+OSS_ACCESS_KEY_ID=your_access_key_id
+OSS_ACCESS_KEY_SECRET=your_access_key_secret
+OSS_BUCKET=your_bucket_name
 
-## 🎨 自定义配置
+# 定时任务配置
+CRON_SCHEDULE=0 0 2 * * *
+AGGREGATION_TABLES=users,orders,products
+OUTPUT_FORMAT=json
+```
 
-### 游戏参数调整
-在 `gameEngine.js` 中可以调整：
-- `maxChargingTime`：最大蓄力时间
-- 跳跃距离和高度计算公式
-- 方块生成间距和角度
+### 3. 启动服务
 
-### 视觉效果
-在各个类文件中可以调整：
-- 方块颜色和材质
-- 光照强度和位置
-- 动画持续时间和缓动函数
+```bash
+# 开发模式
+npm run dev
 
-### 音效配置
-在 `utils.js` 的 `AudioManager` 类中：
-- 添加新的音效类型
-- 调整音量和播放逻辑
+# 生产模式
+npm start
+```
 
-## 📱 兼容性
+### 4. Docker部署
 
-- **iOS**：iOS 10.0+
-- **Android**：Android 5.0+
-- **微信版本**：7.0.0+
-- **小程序基础库**：2.9.0+
+```bash
+# 使用Docker Compose
+docker-compose up -d
 
-## 🔍 性能优化
+# 查看日志
+docker-compose logs -f data-aggregation
+```
 
-1. **渲染优化**
-   - 对象池管理，减少GC
-   - 视锥剔除，只渲染可见对象
-   - LOD系统，距离越远细节越少
+## API接口
 
-2. **内存管理**
-   - 及时销毁不需要的对象
-   - 纹理和几何体复用
-   - 音效资源预加载
+### 健康检查
+```http
+GET /health
+```
 
-3. **帧率优化**
-   - 固定时间步长更新
-   - 动画插值平滑
-   - 避免在渲染循环中创建对象
+### 手动触发汇总
+```http
+POST /aggregate
+```
 
-## 🐛 已知问题
+### 查看任务状态
+```http
+GET /status
+```
 
-1. 在部分低端Android设备上可能出现卡顿
-2. Three.js库文件较大，首次加载时间较长
-3. WebGL兼容性问题，部分老设备不支持
+## 配置说明
 
-## 🔄 更新日志
+### 定时任务配置
 
-### v1.0.0 (2024-01-15)
-- 基础游戏功能实现
-- 3D渲染和物理引擎
-- 完整的游戏流程
-- 分数系统和社交分享
+通过`CRON_SCHEDULE`环境变量配置执行时间：
 
-## 📄 许可证
+```env
+# 每天凌晨2点执行
+CRON_SCHEDULE=0 0 2 * * *
 
-本项目采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
+# 每小时执行一次
+CRON_SCHEDULE=0 * * * * *
 
-## 🤝 贡献
+# 每周一凌晨3点执行
+CRON_SCHEDULE=0 0 3 * * 1
+```
 
-欢迎提交 Issue 和 Pull Request 来改进这个项目！
+### 表聚合配置
 
-## 📞 联系方式
+在`config/aggregation.js`中配置每个表的聚合规则：
 
-如有问题或建议，请通过以下方式联系：
-- GitHub Issues
-- 邮箱：[your-email@example.com]
+```javascript
+tableConfigs: {
+  users: {
+    groupBy: ['status', 'DATE(created_at)'],
+    selectFields: ['id', 'username', 'email', 'status'],
+    aggregations: [
+      { function: 'COUNT', field: 'id', alias: 'user_count' },
+      { function: 'AVG', field: 'age', alias: 'avg_age' }
+    ],
+    where: 'created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)',
+    limit: 1000
+  }
+}
+```
 
----
+### 输出格式
 
-⭐ 如果这个项目对你有帮助，请给个星星支持一下！
+支持以下输出格式：
+
+- `json`: JSON格式（默认）
+- `csv`: CSV格式
+- `excel`: Excel格式
+- `all`: 所有格式
+
+## 目录结构
+
+```
+├── services/           # 服务层
+│   ├── DatabaseService.js    # 数据库服务
+│   ├── OSSService.js         # OSS上传服务
+│   ├── DataAggregator.js     # 数据汇总服务
+│   └── SchedulerService.js   # 定时任务服务
+├── config/             # 配置文件
+│   ├── database.js           # 数据库配置
+│   └── aggregation.js        # 聚合配置
+├── logs/               # 日志目录
+├── temp/               # 临时文件目录
+├── server.js           # 主服务文件
+├── package.json        # 依赖配置
+├── docker-compose.yml  # Docker Compose配置
+├── Dockerfile          # Docker镜像配置
+└── README.md          # 说明文档
+```
+
+## 监控和日志
+
+### 日志文件
+
+- `logs/combined.log`: 所有日志
+- `logs/error.log`: 错误日志
+- `logs/app.log`: 应用日志
+
+### 监控指标
+
+- 任务执行状态
+- 数据汇总统计
+- 文件上传结果
+- 错误率统计
+
+## 故障排除
+
+### 常见问题
+
+1. **数据库连接失败**
+   - 检查数据库配置
+   - 确认数据库服务运行状态
+   - 验证网络连接
+
+2. **OSS上传失败**
+   - 检查OSS配置
+   - 验证访问密钥
+   - 确认存储桶权限
+
+3. **定时任务不执行**
+   - 检查cron表达式格式
+   - 查看服务日志
+   - 确认时区设置
+
+### 调试模式
+
+```bash
+# 启用调试日志
+LOG_LEVEL=debug npm start
+
+# 查看详细日志
+tail -f logs/combined.log
+```
+
+## 扩展开发
+
+### 添加新的聚合规则
+
+1. 在`config/aggregation.js`中添加表配置
+2. 实现自定义聚合逻辑
+3. 更新输出格式处理
+
+### 添加新的数据源
+
+1. 扩展`DatabaseService`类
+2. 实现新的连接器
+3. 更新配置管理
+
+## 许可证
+
+MIT License
+
+## 贡献
+
+欢迎提交Issue和Pull Request！
