@@ -1,177 +1,280 @@
-# 微信小程序跳一跳游戏
+# MySQL数据库备份到阿里云OSS
 
-一个基于微信小程序平台开发的3D跳一跳小游戏，使用Three.js渲染引擎实现3D效果。
+这是一个自动化的MySQL数据库备份工具，可以将数据库定期备份到阿里云OSS存储桶中。
 
-## 🎮 游戏特色
+## 功能特性
 
-- **3D视觉效果**：使用Three.js渲染引擎，呈现精美的3D场景
-- **物理引擎**：真实的跳跃物理模拟和碰撞检测
-- **多样方块**：普通、小型、高型、特殊等多种方块类型
-- **蓄力系统**：长按蓄力，控制跳跃距离和高度
-- **分数系统**：完美落地获得额外分数，挑战最高纪录
-- **视觉特效**：粒子效果、动画过渡、阴影系统
-- **音效支持**：跳跃、落地、完美、游戏结束等音效
-- **社交分享**：支持微信好友和朋友圈分享
+- ✅ 支持备份所有数据库或指定数据库
+- ✅ 自动压缩备份文件（gzip）
+- ✅ 上传到阿里云OSS存储桶
+- ✅ 自动清理过期备份文件（本地和远程）
+- ✅ 支持定时任务（crontab）
+- ✅ 详细的日志记录
+- ✅ 配置文件管理
+- ✅ 错误处理和重试机制
 
-## 🚀 快速开始
+## 系统要求
 
-### 环境要求
-- 微信开发者工具 1.05.0 或更高版本
-- 小程序基础库 2.9.0 或更高版本
+- Python 3.6+
+- MySQL客户端工具（mysqldump）
+- 阿里云OSS账号和存储桶
+- Linux/Unix系统
 
-### 安装步骤
+## 快速开始
 
-1. **克隆项目**
+### 1. 安装
+
+```bash
+# 克隆或下载项目文件
+# 运行安装脚本
+sudo ./install.sh
+```
+
+### 2. 配置
+
+编辑配置文件 `/opt/mysql_backup/backup_config.json`：
+
+```json
+{
+    "mysql": {
+        "host": "localhost",
+        "port": 3306,
+        "username": "root",
+        "password": "your_mysql_password",
+        "databases": ["all"],
+        "exclude_databases": ["information_schema", "performance_schema", "mysql", "sys"]
+    },
+    "oss": {
+        "endpoint": "https://oss-cn-hangzhou.aliyuncs.com",
+        "bucket_name": "your-bucket-name",
+        "access_key_id": "your_access_key_id",
+        "access_key_secret": "your_access_key_secret",
+        "backup_path": "mysql_backups/"
+    },
+    "backup": {
+        "local_backup_dir": "/tmp/mysql_backups",
+        "compress": true,
+        "keep_local_days": 7,
+        "keep_remote_days": 30,
+        "backup_timeout": 3600,
+        "keep_local": false
+    },
+    "logging": {
+        "level": "INFO",
+        "file": "/var/log/mysql_backup.log"
+    }
+}
+```
+
+### 3. 设置定时任务
+
+```bash
+# 运行定时任务设置脚本
+sudo ./setup_cron.sh
+```
+
+### 4. 手动测试
+
+```bash
+# 测试备份功能
+python3 /opt/mysql_backup/mysql_backup_to_oss.py /opt/mysql_backup/backup_config.json
+```
+
+## 配置说明
+
+### MySQL配置
+
+- `host`: MySQL服务器地址
+- `port`: MySQL端口（默认3306）
+- `username`: MySQL用户名
+- `password`: MySQL密码
+- `databases`: 要备份的数据库列表，`["all"]`表示备份所有数据库
+- `exclude_databases`: 排除的数据库列表
+
+### OSS配置
+
+- `endpoint`: 阿里云OSS端点地址
+- `bucket_name`: OSS存储桶名称
+- `access_key_id`: 阿里云访问密钥ID
+- `access_key_secret`: 阿里云访问密钥Secret
+- `backup_path`: OSS中的备份文件路径前缀
+
+### 备份配置
+
+- `local_backup_dir`: 本地临时备份目录
+- `compress`: 是否压缩备份文件
+- `keep_local_days`: 本地备份文件保留天数（0表示不保留）
+- `keep_remote_days`: 远程备份文件保留天数（0表示不删除）
+- `backup_timeout`: 备份超时时间（秒）
+- `keep_local`: 是否保留本地备份文件
+
+### 日志配置
+
+- `level`: 日志级别（DEBUG, INFO, WARNING, ERROR）
+- `file`: 日志文件路径
+
+## 阿里云OSS设置
+
+### 1. 创建存储桶
+
+1. 登录阿里云控制台
+2. 进入对象存储OSS服务
+3. 创建存储桶，选择合适的地域
+4. 记录存储桶名称和endpoint地址
+
+### 2. 创建访问密钥
+
+1. 进入RAM访问控制
+2. 创建用户并分配OSS权限
+3. 创建访问密钥对
+4. 记录AccessKey ID和AccessKey Secret
+
+### 3. 权限配置
+
+确保用户具有以下权限：
+- `oss:PutObject` - 上传文件
+- `oss:DeleteObject` - 删除文件
+- `oss:ListObjects` - 列出对象
+
+## 定时任务设置
+
+### 使用提供的脚本
+
+```bash
+sudo ./setup_cron.sh
+```
+
+### 手动设置crontab
+
+```bash
+# 编辑crontab
+crontab -e
+
+# 添加以下行（每天凌晨2点执行）
+0 2 * * * /usr/bin/python3 /opt/mysql_backup/mysql_backup_to_oss.py /opt/mysql_backup/backup_config.json >> /var/log/mysql_backup_cron.log 2>&1
+```
+
+### 常用时间设置
+
+- `0 2 * * *` - 每天凌晨2点
+- `0 2 * * 0` - 每周日凌晨2点
+- `0 2 1 * *` - 每月1日凌晨2点
+- `0 */6 * * *` - 每6小时执行一次
+
+## 监控和维护
+
+### 查看日志
+
+```bash
+# 查看备份日志
+tail -f /var/log/mysql_backup.log
+
+# 查看定时任务日志
+tail -f /var/log/mysql_backup_cron.log
+```
+
+### 检查定时任务
+
+```bash
+# 查看当前定时任务
+crontab -l
+
+# 查看定时任务执行历史
+grep "mysql_backup" /var/log/syslog
+```
+
+### 手动执行备份
+
+```bash
+# 使用默认配置
+python3 /opt/mysql_backup/mysql_backup_to_oss.py
+
+# 使用指定配置
+python3 /opt/mysql_backup/mysql_backup_to_oss.py /path/to/config.json
+```
+
+## 故障排除
+
+### 常见问题
+
+1. **mysqldump命令未找到**
    ```bash
-   git clone [项目地址]
-   cd jump-jump-game
+   # Ubuntu/Debian
+   sudo apt-get install mysql-client
+   
+   # CentOS/RHEL
+   sudo yum install mysql
    ```
 
-2. **导入项目**
-   - 打开微信开发者工具
-   - 选择"导入项目"
-   - 选择项目目录
-   - 填入AppID（测试可使用测试号）
+2. **权限不足**
+   ```bash
+   # 确保脚本有执行权限
+   sudo chmod +x /opt/mysql_backup/mysql_backup_to_oss.py
+   
+   # 确保配置文件可读
+   sudo chmod 600 /opt/mysql_backup/backup_config.json
+   ```
 
-3. **添加资源文件**
-   - 将Three.js完整库文件放入 `/pages/game/libs/three.min.js`
-   - 添加音效文件到 `/sounds/` 目录
-   - 添加图片资源到 `/images/` 目录
+3. **OSS连接失败**
+   - 检查endpoint地址是否正确
+   - 验证AccessKey ID和Secret
+   - 确认存储桶名称正确
+   - 检查网络连接
 
-4. **编译运行**
-   - 点击"编译"按钮
-   - 在模拟器或真机上预览
+4. **MySQL连接失败**
+   - 验证MySQL服务是否运行
+   - 检查用户名和密码
+   - 确认数据库权限
 
-## 📁 项目结构
+### 日志分析
 
-```
-jump-jump-game/
-├── app.js                 # 小程序入口文件
-├── app.json               # 小程序配置文件
-├── app.wxss              # 全局样式文件
-├── sitemap.json          # 站点地图配置
-├── project.config.json   # 项目配置文件
-├── pages/
-│   └── game/             # 游戏页面
-│       ├── game.js       # 页面逻辑
-│       ├── game.json     # 页面配置
-│       ├── game.wxml     # 页面结构
-│       ├── game.wxss     # 页面样式
-│       ├── gameEngine.js # 游戏引擎核心
-│       ├── player.js     # 玩家角色类
-│       ├── block.js      # 方块类
-│       ├── utils.js      # 工具函数
-│       └── libs/
-│           └── three.min.js # Three.js库
-├── images/               # 图片资源
-│   └── README.md        # 图片说明
-├── sounds/               # 音效资源
-│   └── README.md        # 音效说明
-└── README.md            # 项目说明
+```bash
+# 查看错误日志
+grep "ERROR" /var/log/mysql_backup.log
+
+# 查看最近的备份记录
+grep "备份完成" /var/log/mysql_backup.log | tail -10
 ```
 
-## 🎯 游戏玩法
+## 安全建议
 
-1. **开始游戏**：点击"开始游戏"按钮
-2. **蓄力跳跃**：长按屏幕蓄力，右侧显示蓄力条
-3. **释放跳跃**：松开手指，角色跳向下一个方块
-4. **获得分数**：
-   - 成功落地：+1分
-   - 良好落地：+3分
-   - 完美落地：+5分（中心位置）
-5. **游戏结束**：跳跃失败掉落时游戏结束
-6. **分享成绩**：可分享到微信好友或朋友圈
+1. **配置文件权限**
+   ```bash
+   sudo chmod 600 /opt/mysql_backup/backup_config.json
+   ```
 
-## 🔧 核心技术
+2. **使用环境变量**
+   ```bash
+   export OSS_ACCESS_KEY_ID="your_key_id"
+   export OSS_ACCESS_KEY_SECRET="your_key_secret"
+   ```
 
-### 渲染引擎
-- **Three.js**：3D场景渲染
-- **WebGL**：硬件加速渲染
-- **阴影系统**：实时阴影计算
-- **光照系统**：环境光+方向光
+3. **定期轮换访问密钥**
 
-### 物理系统
-- **跳跃轨迹**：抛物线运动模拟
-- **碰撞检测**：圆形碰撞检测算法
-- **重力模拟**：自然下落效果
+4. **监控备份状态**
+   - 设置日志监控
+   - 定期检查备份文件
+   - 测试恢复流程
 
-### 动画系统
-- **缓动函数**：平滑的动画过渡
-- **骨骼动画**：角色动作表现
-- **粒子效果**：特殊效果展示
-- **相机跟随**：平滑的视角切换
+## 文件结构
 
-## 🎨 自定义配置
+```
+/opt/mysql_backup/
+├── mysql_backup_to_oss.py    # 主备份脚本
+├── backup_config.json        # 配置文件
+└── README.md                 # 说明文档
 
-### 游戏参数调整
-在 `gameEngine.js` 中可以调整：
-- `maxChargingTime`：最大蓄力时间
-- 跳跃距离和高度计算公式
-- 方块生成间距和角度
+/var/log/
+├── mysql_backup.log          # 备份日志
+└── mysql_backup_cron.log     # 定时任务日志
 
-### 视觉效果
-在各个类文件中可以调整：
-- 方块颜色和材质
-- 光照强度和位置
-- 动画持续时间和缓动函数
+/tmp/mysql_backups/           # 临时备份目录（可选）
+```
 
-### 音效配置
-在 `utils.js` 的 `AudioManager` 类中：
-- 添加新的音效类型
-- 调整音量和播放逻辑
+## 许可证
 
-## 📱 兼容性
+MIT License
 
-- **iOS**：iOS 10.0+
-- **Android**：Android 5.0+
-- **微信版本**：7.0.0+
-- **小程序基础库**：2.9.0+
+## 支持
 
-## 🔍 性能优化
-
-1. **渲染优化**
-   - 对象池管理，减少GC
-   - 视锥剔除，只渲染可见对象
-   - LOD系统，距离越远细节越少
-
-2. **内存管理**
-   - 及时销毁不需要的对象
-   - 纹理和几何体复用
-   - 音效资源预加载
-
-3. **帧率优化**
-   - 固定时间步长更新
-   - 动画插值平滑
-   - 避免在渲染循环中创建对象
-
-## 🐛 已知问题
-
-1. 在部分低端Android设备上可能出现卡顿
-2. Three.js库文件较大，首次加载时间较长
-3. WebGL兼容性问题，部分老设备不支持
-
-## 🔄 更新日志
-
-### v1.0.0 (2024-01-15)
-- 基础游戏功能实现
-- 3D渲染和物理引擎
-- 完整的游戏流程
-- 分数系统和社交分享
-
-## 📄 许可证
-
-本项目采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
-
-## 🤝 贡献
-
-欢迎提交 Issue 和 Pull Request 来改进这个项目！
-
-## 📞 联系方式
-
-如有问题或建议，请通过以下方式联系：
-- GitHub Issues
-- 邮箱：[your-email@example.com]
-
----
-
-⭐ 如果这个项目对你有帮助，请给个星星支持一下！
+如有问题，请检查日志文件或提交issue。
