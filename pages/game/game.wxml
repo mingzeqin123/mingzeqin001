@@ -31,6 +31,7 @@
     <view class="game-title">跳一跳</view>
     <view class="game-subtitle">长按蓄力，松开跳跃</view>
     <button class="start-btn" bindtap="startGame">开始游戏</button>
+    <button class="tool-btn" bindtap="goToWatermark">图片水印工具</button>
   </view>
   
   <!-- 游戏结束界面 -->

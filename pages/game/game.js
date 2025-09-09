@@ -135,6 +135,13 @@ Page({
     })
   },
 
+  // 跳转到水印工具
+  goToWatermark() {
+    wx.navigateTo({
+      url: '/pages/watermark/watermark'
+    })
+  },
+
   // 触摸开始
   onTouchStart(e) {
     if (this.data.gameState !== 'playing') return
