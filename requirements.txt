@@ -1,0 +1,42 @@
+# 百度云千帆大模型使用情况统计工具依赖包
+
+# HTTP请求库
+requests>=2.28.0
+
+# 配置文件解析
+configparser>=5.3.0
+
+# 日期时间处理 (Python内置，无需安装)
+# datetime
+
+# JSON处理 (Python内置，无需安装)
+# json
+
+# 日志记录 (Python内置，无需安装)
+# logging
+
+# CSV文件处理 (Python内置，无需安装)
+# csv
+
+# 操作系统接口 (Python内置，无需安装)
+# os
+
+# 时间处理 (Python内置，无需安装)
+# time
+
+# 类型提示 (Python 3.5+内置，无需安装)
+# typing
+
+# 可选依赖 - 用于更好的数据处理和可视化
+pandas>=1.5.0          # 数据分析和处理
+matplotlib>=3.6.0       # 数据可视化
+seaborn>=0.12.0        # 统计数据可视化
+openpyxl>=3.0.0        # Excel文件支持
+xlsxwriter>=3.0.0      # Excel文件写入
+
+# 开发和测试依赖
+pytest>=7.0.0          # 单元测试框架
+pytest-cov>=4.0.0      # 测试覆盖率
+black>=22.0.0          # 代码格式化
+flake8>=5.0.0          # 代码检查
+mypy>=0.991            # 类型检查
