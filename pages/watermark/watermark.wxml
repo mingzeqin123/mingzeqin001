@@ -1,0 +1,270 @@
+<!--pages/watermark/watermark.wxml-->
+<view class="container">
+  <view class="header">
+    <text class="title">图片水印工具</text>
+    <text class="subtitle">为图片添加文字或图片水印</text>
+  </view>
+
+  <!-- 模式切换 -->
+  <view class="mode-switch">
+    <button 
+      class="mode-btn {{!batchMode ? 'active' : ''}}" 
+      bindtap="{{batchMode ? 'reset' : ''}}"
+    >
+      单张处理
+    </button>
+    <button 
+      class="mode-btn {{batchMode ? 'active' : ''}}" 
+      bindtap="selectBatchImages"
+    >
+      批量处理
+    </button>
+  </view>
+
+  <!-- 单张图片处理 -->
+  <view wx:if="{{!batchMode}}" class="single-mode">
+    <!-- 图片选择 -->
+    <view class="section">
+      <view class="section-title">选择图片</view>
+      <view class="image-selector" bindtap="selectImage">
+        <image 
+          wx:if="{{selectedImage}}" 
+          src="{{selectedImage}}" 
+          class="selected-image"
+          data-src="{{selectedImage}}"
+          bindtap="previewImage"
+        />
+        <view wx:else class="select-placeholder">
+          <text class="iconfont">📷</text>
+          <text>点击选择图片</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 处理结果 -->
+    <view wx:if="{{processedImage}}" class="section">
+      <view class="section-title">处理结果</view>
+      <view class="result-container">
+        <image 
+          src="{{processedImage}}" 
+          class="processed-image"
+          data-src="{{processedImage}}"
+          bindtap="previewImage"
+        />
+        <button class="save-btn" bindtap="saveToAlbum">保存到相册</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 批量处理 -->
+  <view wx:if="{{batchMode}}" class="batch-mode">
+    <view class="section">
+      <view class="section-title">已选择 {{selectedImages.length}} 张图片</view>
+      <view class="batch-images">
+        <view 
+          wx:for="{{selectedImages}}" 
+          wx:key="index" 
+          class="batch-image-item"
+        >
+          <image 
+            src="{{item}}" 
+            class="batch-image"
+            data-src="{{item}}"
+            bindtap="previewImage"
+          />
+        </view>
+        <view class="add-more-btn" bindtap="selectBatchImages">
+          <text>+</text>
+        </view>
+      </view>
+      
+      <view wx:if="{{processing && batchProgress > 0}}" class="progress">
+        <view class="progress-bar">
+          <view class="progress-fill" style="width: {{batchProgress}}%"></view>
+        </view>
+        <text class="progress-text">{{batchProgress}}%</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 水印类型选择 -->
+  <view class="section">
+    <view class="section-title">水印类型</view>
+    <radio-group class="radio-group" bindchange="onWatermarkTypeChange">
+      <label class="radio-item">
+        <radio value="text" checked="{{watermarkType === 'text'}}" />
+        <text>文字水印</text>
+      </label>
+      <label class="radio-item">
+        <radio value="image" checked="{{watermarkType === 'image'}}" />
+        <text>图片水印</text>
+      </label>
+    </radio-group>
+  </view>
+
+  <!-- 文字水印配置 -->
+  <view wx:if="{{watermarkType === 'text'}}" class="section">
+    <view class="section-title">文字水印设置</view>
+    
+    <view class="config-item">
+      <text class="config-label">水印文字</text>
+      <input 
+        class="config-input" 
+        value="{{textConfig.text}}" 
+        bindinput="onTextChange"
+        placeholder="请输入水印文字"
+      />
+    </view>
+
+    <view class="config-item">
+      <text class="config-label">文字颜色</text>
+      <picker mode="selector" range="{{['白色', '黑色', '红色', '蓝色', '绿色']}}" range-key="" bindchange="onColorChange">
+        <view class="picker">
+          <input 
+            class="config-input color-input" 
+            value="{{textConfig.color}}" 
+            bindinput="onColorChange"
+          />
+        </view>
+      </picker>
+    </view>
+
+    <view class="config-item">
+      <text class="config-label">字体大小: {{textConfig.fontSize}}px</text>
+      <slider 
+        min="12" 
+        max="60" 
+        value="{{textConfig.fontSize}}" 
+        bindchange="onFontSizeChange"
+        show-value
+      />
+    </view>
+
+    <view class="config-item">
+      <text class="config-label">透明度: {{textConfig.opacity * 100}}%</text>
+      <slider 
+        min="10" 
+        max="100" 
+        value="{{textConfig.opacity * 100}}" 
+        bindchange="onOpacityChange"
+        show-value
+      />
+    </view>
+
+    <view class="config-item">
+      <text class="config-label">位置</text>
+      <picker 
+        mode="selector" 
+        range="{{['右下角', '右上角', '左下角', '左上角', '居中']}}"
+        range-key=""
+        value="{{['bottom-right', 'top-right', 'bottom-left', 'top-left', 'center'].indexOf(textConfig.position)}}"
+        bindchange="onPositionChange"
+      >
+        <view class="picker">
+          <text>{{['右下角', '右上角', '左下角', '左上角', '居中'][['bottom-right', 'top-right', 'bottom-left', 'top-left', 'center'].indexOf(textConfig.position)]}}</text>
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 图片水印配置 -->
+  <view wx:if="{{watermarkType === 'image'}}" class="section">
+    <view class="section-title">图片水印设置</view>
+    
+    <view class="config-item">
+      <text class="config-label">选择水印图片</text>
+      <view class="watermark-image-selector" bindtap="selectWatermarkImage">
+        <image 
+          wx:if="{{imageConfig.watermarkImage}}" 
+          src="{{imageConfig.watermarkImage}}" 
+          class="watermark-image-preview"
+        />
+        <view wx:else class="watermark-placeholder">
+          <text>选择水印图片</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="config-item">
+      <text class="config-label">透明度: {{imageConfig.opacity * 100}}%</text>
+      <slider 
+        min="10" 
+        max="100" 
+        value="{{imageConfig.opacity * 100}}" 
+        bindchange="onImageOpacityChange"
+        show-value
+      />
+    </view>
+
+    <view class="config-item">
+      <text class="config-label">宽度: {{imageConfig.width}}px</text>
+      <slider 
+        min="50" 
+        max="300" 
+        value="{{imageConfig.width}}" 
+        bindchange="onWatermarkSizeChange"
+        data-field="width"
+        show-value
+      />
+    </view>
+
+    <view class="config-item">
+      <text class="config-label">高度: {{imageConfig.height}}px</text>
+      <slider 
+        min="50" 
+        max="300" 
+        value="{{imageConfig.height}}" 
+        bindchange="onWatermarkSizeChange"
+        data-field="height"
+        show-value
+      />
+    </view>
+
+    <view class="config-item">
+      <text class="config-label">位置</text>
+      <picker 
+        mode="selector" 
+        range="{{['右下角', '右上角', '左下角', '左上角', '居中']}}"
+        range-key=""
+        value="{{['bottom-right', 'top-right', 'bottom-left', 'top-left', 'center'].indexOf(imageConfig.position)}}"
+        bindchange="onImagePositionChange"
+      >
+        <view class="picker">
+          <text>{{['右下角', '右上角', '左下角', '左上角', '居中'][['bottom-right', 'top-right', 'bottom-left', 'top-left', 'center'].indexOf(imageConfig.position)]}}</text>
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="actions">
+    <button 
+      wx:if="{{!batchMode}}"
+      class="action-btn primary" 
+      bindtap="addWatermark"
+      disabled="{{processing}}"
+    >
+      {{processing ? '处理中...' : '添加水印'}}
+    </button>
+    
+    <button 
+      wx:if="{{batchMode}}"
+      class="action-btn primary" 
+      bindtap="batchAddWatermark"
+      disabled="{{processing || selectedImages.length === 0}}"
+    >
+      {{processing ? '批量处理中...' : '批量添加水印'}}
+    </button>
+
+    <button class="action-btn secondary" bindtap="reset">
+      重置
+    </button>
+  </view>
+</view>
+
+<!-- Canvas用于绘制水印 -->
+<canvas 
+  canvas-id="watermark-canvas-{{timestamp}}" 
+  class="watermark-canvas"
+  style="position: absolute; top: -9999px; left: -9999px;"
+></canvas>
