@@ -1,0 +1,243 @@
+<!--watermark.wxml-->
+<view class="container">
+  <!-- 标题 -->
+  <view class="header">
+    <text class="title">图片水印工具</text>
+  </view>
+
+  <!-- 图片选择区域 -->
+  <view class="image-section">
+    <view class="image-upload" wx:if="{{!originalImage}}" bindtap="chooseImage">
+      <view class="upload-icon">📷</view>
+      <text class="upload-text">点击选择图片</text>
+    </view>
+    
+    <view class="image-preview" wx:if="{{originalImage}}">
+      <image 
+        class="preview-img" 
+        src="{{originalImage}}" 
+        mode="aspectFit"
+        bindtap="previewImage"
+        data-type="original"
+      />
+      <view class="image-info" wx:if="{{imageInfo}}">
+        <text>尺寸: {{imageInfo.width}} × {{imageInfo.height}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 控制按钮 -->
+  <view class="control-section" wx:if="{{originalImage}}">
+    <button class="btn btn-primary" bindtap="toggleConfig">
+      {{showConfig ? '隐藏配置' : '水印配置'}}
+    </button>
+    
+    <button 
+      class="btn btn-success" 
+      bindtap="processImage"
+      disabled="{{isProcessing}}"
+    >
+      {{isProcessing ? '处理中...' : '添加水印'}}
+    </button>
+  </view>
+
+  <!-- 水印配置面板 -->
+  <view class="config-panel" wx:if="{{showConfig}}">
+    <view class="config-title">水印配置</view>
+    
+    <!-- 水印类型选择 -->
+    <view class="config-group">
+      <text class="config-label">水印类型</text>
+      <view class="type-selector">
+        <button 
+          class="type-btn {{watermarkConfig.type === 'text' ? 'active' : ''}}"
+          bindtap="updateWatermarkType"
+          data-type="text"
+        >
+          文字水印
+        </button>
+        <button 
+          class="type-btn {{watermarkConfig.type === 'image' ? 'active' : ''}}"
+          bindtap="updateWatermarkType"
+          data-type="image"
+        >
+          图片水印
+        </button>
+        <button 
+          class="type-btn {{watermarkConfig.type === 'repeat' ? 'active' : ''}}"
+          bindtap="updateWatermarkType"
+          data-type="repeat"
+        >
+          重复水印
+        </button>
+      </view>
+    </view>
+
+    <!-- 文字水印配置 -->
+    <view class="config-group" wx:if="{{watermarkConfig.type === 'text' || watermarkConfig.type === 'repeat'}}">
+      <text class="config-label">水印文字</text>
+      <input 
+        class="config-input"
+        value="{{watermarkConfig.text}}"
+        bindinput="updateWatermarkConfig"
+        data-field="text"
+        placeholder="请输入水印文字"
+      />
+    </view>
+
+    <!-- 图片水印配置 -->
+    <view class="config-group" wx:if="{{watermarkConfig.type === 'image'}}">
+      <text class="config-label">水印图片</text>
+      <button class="btn btn-secondary" bindtap="chooseWatermarkImage">
+        {{watermarkConfig.imagePath ? '重新选择' : '选择图片'}}
+      </button>
+      <image 
+        wx:if="{{watermarkConfig.imagePath}}"
+        class="watermark-preview"
+        src="{{watermarkConfig.imagePath}}"
+        mode="aspectFit"
+      />
+    </view>
+
+    <!-- 位置配置 -->
+    <view class="config-group" wx:if="{{watermarkConfig.type !== 'repeat'}}">
+      <text class="config-label">位置 (X, Y)</text>
+      <view class="position-inputs">
+        <input 
+          class="position-input"
+          type="number"
+          value="{{watermarkConfig.x}}"
+          bindinput="updateWatermarkConfig"
+          data-field="x"
+          placeholder="X"
+        />
+        <input 
+          class="position-input"
+          type="number"
+          value="{{watermarkConfig.y}}"
+          bindinput="updateWatermarkConfig"
+          data-field="y"
+          placeholder="Y"
+        />
+      </view>
+    </view>
+
+    <!-- 字体大小 -->
+    <view class="config-group" wx:if="{{watermarkConfig.type === 'text' || watermarkConfig.type === 'repeat'}}">
+      <text class="config-label">字体大小: {{watermarkConfig.fontSize}}px</text>
+      <slider 
+        class="config-slider"
+        value="{{watermarkConfig.fontSize}}"
+        min="12"
+        max="48"
+        step="2"
+        bindchange="updateWatermarkConfig"
+        data-field="fontSize"
+      />
+    </view>
+
+    <!-- 透明度 -->
+    <view class="config-group">
+      <text class="config-label">透明度: {{Math.round(watermarkConfig.opacity * 100)}}%</text>
+      <slider 
+        class="config-slider"
+        value="{{watermarkConfig.opacity}}"
+        min="0.1"
+        max="1"
+        step="0.1"
+        bindchange="updateWatermarkConfig"
+        data-field="opacity"
+      />
+    </view>
+
+    <!-- 旋转角度 -->
+    <view class="config-group">
+      <text class="config-label">旋转角度: {{watermarkConfig.angle}}°</text>
+      <slider 
+        class="config-slider"
+        value="{{watermarkConfig.angle}}"
+        min="-180"
+        max="180"
+        step="15"
+        bindchange="updateWatermarkConfig"
+        data-field="angle"
+      />
+    </view>
+
+    <!-- 颜色选择 -->
+    <view class="config-group" wx:if="{{watermarkConfig.type === 'text' || watermarkConfig.type === 'repeat'}}">
+      <text class="config-label">文字颜色</text>
+      <view class="color-picker">
+        <view 
+          class="color-option {{watermarkConfig.color === '#ffffff' ? 'active' : ''}}"
+          style="background-color: #ffffff"
+          bindtap="updateWatermarkConfig"
+          data-field="color"
+          data-value="#ffffff"
+        ></view>
+        <view 
+          class="color-option {{watermarkConfig.color === '#000000' ? 'active' : ''}}"
+          style="background-color: #000000"
+          bindtap="updateWatermarkConfig"
+          data-field="color"
+          data-value="#000000"
+        ></view>
+        <view 
+          class="color-option {{watermarkConfig.color === '#ff0000' ? 'active' : ''}}"
+          style="background-color: #ff0000"
+          bindtap="updateWatermarkConfig"
+          data-field="color"
+          data-value="#ff0000"
+        ></view>
+        <view 
+          class="color-option {{watermarkConfig.color === '#00ff00' ? 'active' : ''}}"
+          style="background-color: #00ff00"
+          bindtap="updateWatermarkConfig"
+          data-field="color"
+          data-value="#00ff00"
+        ></view>
+        <view 
+          class="color-option {{watermarkConfig.color === '#0000ff' ? 'active' : ''}}"
+          style="background-color: #0000ff"
+          bindtap="updateWatermarkConfig"
+          data-field="color"
+          data-value="#0000ff"
+        ></view>
+        <view 
+          class="color-option {{watermarkConfig.color === '#ffff00' ? 'active' : ''}}"
+          style="background-color: #ffff00"
+          bindtap="updateWatermarkConfig"
+          data-field="color"
+          data-value="#ffff00"
+        ></view>
+      </view>
+    </view>
+
+    <!-- 重置按钮 -->
+    <button class="btn btn-warning" bindtap="resetConfig">重置配置</button>
+  </view>
+
+  <!-- 处理结果 -->
+  <view class="result-section" wx:if="{{showPreview}}">
+    <view class="result-title">处理结果</view>
+    <image 
+      class="result-img" 
+      src="{{processedImage}}" 
+      mode="aspectFit"
+      bindtap="previewImage"
+      data-type="processed"
+    />
+    
+    <view class="result-actions">
+      <button class="btn btn-primary" bindtap="saveImage">保存到相册</button>
+      <button class="btn btn-success" bindtap="shareImage">分享图片</button>
+    </view>
+  </view>
+
+  <!-- 隐藏的Canvas -->
+  <canvas 
+    id="watermarkCanvas" 
+    type="2d" 
+    style="position: fixed; top: -9999px; left: -9999px; width: 1px; height: 1px;"
+  ></canvas>
+</view>
