@@ -6,11 +6,30 @@
 }
 
 .header {
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 40rpx;
   padding: 30rpx;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 20rpx;
+  color: white;
+}
+
+.header-content {
+  text-align: left;
+}
+
+.header-nav {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  text-decoration: none;
   color: white;
 }
 
