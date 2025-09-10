@@ -1,0 +1,689 @@
+/* pages/statistics/statistics.wxss */
+
+.container {
+  padding: 0;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* 页面头部 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.header-actions {
+  display: flex;
+  gap: 20rpx;
+}
+
+.btn-icon {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  padding: 0;
+}
+
+.btn-icon .icon {
+  font-size: 32rpx;
+}
+
+/* 加载状态 */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400rpx;
+  color: #999;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 4rpx solid #e1e1e1;
+  border-top: 4rpx solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20rpx;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 标签页导航 */
+.tabs {
+  display: flex;
+  background: white;
+  border-bottom: 2rpx solid #e1e1e1;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 30rpx 0;
+  font-size: 28rpx;
+  color: #666;
+  position: relative;
+}
+
+.tab-item.active {
+  color: #667eea;
+  font-weight: bold;
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60rpx;
+  height: 4rpx;
+  background: #667eea;
+  border-radius: 2rpx;
+}
+
+/* 内容区域 */
+.content {
+  padding: 0 0 40rpx 0;
+}
+
+.tab-content {
+  min-height: 600rpx;
+}
+
+/* 区块 */
+.section {
+  margin: 30rpx 0;
+  background: white;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin: 20rpx 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30rpx;
+}
+
+/* 今日统计 */
+.today-stats {
+  display: flex;
+  justify-content: space-around;
+}
+
+.today-item {
+  text-align: center;
+  padding: 30rpx;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border-radius: 16rpx;
+  color: white;
+  flex: 1;
+  margin: 0 10rpx;
+}
+
+.today-item .label {
+  display: block;
+  font-size: 24rpx;
+  opacity: 0.9;
+  margin-bottom: 10rpx;
+}
+
+.today-item .value {
+  display: block;
+  font-size: 48rpx;
+  font-weight: bold;
+}
+
+/* 统计卡片 */
+.stats-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.stats-card {
+  flex: 1;
+  min-width: 300rpx;
+  padding: 30rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  color: white;
+}
+
+.pv-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.uv-card {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.active-card {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.avg-card {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.card-icon {
+  font-size: 48rpx;
+}
+
+.card-content {
+  flex: 1;
+}
+
+.card-title {
+  display: block;
+  font-size: 24rpx;
+  opacity: 0.9;
+  margin-bottom: 8rpx;
+}
+
+.card-value {
+  display: block;
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 4rpx;
+}
+
+.card-label {
+  font-size: 20rpx;
+  opacity: 0.8;
+}
+
+/* 快速趋势 */
+.quick-trend {
+  display: flex;
+  justify-content: space-between;
+  gap: 10rpx;
+}
+
+.trend-item {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 10rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  cursor: pointer;
+}
+
+.trend-item:active {
+  background: #e9ecef;
+}
+
+.trend-date {
+  display: block;
+  font-size: 22rpx;
+  color: #666;
+  margin-bottom: 15rpx;
+}
+
+.trend-bars {
+  height: 80rpx;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4rpx;
+  margin-bottom: 10rpx;
+}
+
+.trend-bar {
+  width: 16rpx;
+  border-radius: 2rpx;
+  min-height: 4rpx;
+}
+
+.pv-bar {
+  background: #667eea;
+}
+
+.uv-bar {
+  background: #f5576c;
+}
+
+.trend-values {
+  font-size: 20rpx;
+  color: #999;
+}
+
+.trend-legend {
+  display: flex;
+  justify-content: center;
+  gap: 40rpx;
+  margin-top: 20rpx;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.legend-color {
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 4rpx;
+}
+
+.pv-color {
+  background: #667eea;
+}
+
+.uv-color {
+  background: #f5576c;
+}
+
+/* 页面列表 */
+.page-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.page-item {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  cursor: pointer;
+}
+
+.page-item:active {
+  background: #e9ecef;
+}
+
+.page-info {
+  flex: 1;
+}
+
+.page-name {
+  display: block;
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.page-path {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.page-stats {
+  display: flex;
+  gap: 30rpx;
+  margin-right: 20rpx;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: 20rpx;
+  color: #999;
+  margin-bottom: 4rpx;
+}
+
+.stat-value {
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.page-arrow {
+  font-size: 32rpx;
+  color: #ccc;
+}
+
+/* 图表容器 */
+.chart-container {
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+
+.chart-header {
+  margin-bottom: 30rpx;
+}
+
+.chart-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.chart-area {
+  display: flex;
+  height: 200rpx;
+  margin-bottom: 20rpx;
+}
+
+.chart-y-axis {
+  width: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.y-label {
+  font-size: 22rpx;
+  color: #666;
+}
+
+.chart-content {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 20rpx;
+}
+
+.chart-bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4rpx;
+  height: 150rpx;
+}
+
+.chart-bar {
+  width: 12rpx;
+  border-radius: 2rpx;
+  min-height: 4rpx;
+}
+
+.chart-label {
+  font-size: 20rpx;
+  color: #666;
+}
+
+.chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: 40rpx;
+}
+
+.legend-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+}
+
+/* 趋势列表 */
+.trend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.trend-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25rpx 30rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  cursor: pointer;
+}
+
+.trend-list-item:active {
+  background: #e9ecef;
+}
+
+.trend-date-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5rpx;
+}
+
+.date {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.weekday {
+  font-size: 22rpx;
+  color: #667eea;
+}
+
+.trend-values {
+  display: flex;
+  gap: 30rpx;
+}
+
+.value-item {
+  text-align: center;
+}
+
+.value-item .label {
+  display: block;
+  font-size: 20rpx;
+  color: #999;
+  margin-bottom: 4rpx;
+}
+
+.value-item .value {
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+/* 详细信息 */
+.detail-section {
+  margin-bottom: 40rpx;
+}
+
+.detail-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.recent-records {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.record-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 25rpx;
+  background: #f8f9fa;
+  border-radius: 8rpx;
+}
+
+.record-info {
+  flex: 1;
+}
+
+.record-page {
+  display: block;
+  font-size: 26rpx;
+  color: #333;
+  margin-bottom: 5rpx;
+}
+
+.record-time {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.record-user {
+  font-size: 22rpx;
+  color: #667eea;
+  font-family: monospace;
+}
+
+.data-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15rpx 0;
+  border-bottom: 1rpx solid #e1e1e1;
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+}
+
+.summary-label {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.summary-value {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 弹窗样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 600rpx;
+  background: white;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #e1e1e1;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.modal-close {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  background: #f5f5f5;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  color: #999;
+  padding: 0;
+}
+
+.modal-body {
+  padding: 30rpx;
+}
+
+.modal-desc {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 30rpx;
+}
+
+.export-options {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.export-btn {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 25rpx 30rpx;
+  background: #f8f9fa;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.export-btn:active {
+  background: #e9ecef;
+}
+
+.export-icon {
+  font-size: 36rpx;
+}
+
+/* 响应式设计 */
+@media (max-width: 750rpx) {
+  .stats-cards {
+    flex-direction: column;
+  }
+  
+  .stats-card {
+    min-width: auto;
+  }
+  
+  .quick-trend {
+    flex-wrap: wrap;
+  }
+  
+  .trend-item {
+    min-width: 100rpx;
+  }
+}
