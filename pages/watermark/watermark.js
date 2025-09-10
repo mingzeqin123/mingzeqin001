@@ -28,6 +28,12 @@ Page({
 
   onLoad: function (options) {
     console.log('水印页面加载');
+    
+    // 记录页面访问
+    const statsManager = getApp().globalData.statsManager
+    if (statsManager) {
+      statsManager.recordPageView('watermark', '图片水印工具')
+    }
   },
 
   // 选择要添加水印的图片
@@ -362,6 +368,13 @@ Page({
       selectedImages: [],
       batchMode: false,
       batchProgress: 0
+    });
+  },
+
+  // 跳转到统计页面
+  goToStats: function() {
+    wx.navigateTo({
+      url: '/pages/stats/stats'
     });
   }
 });

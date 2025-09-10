@@ -1,0 +1,138 @@
+<!--pages/stats/stats.wxml-->
+<view class="stats-container">
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 主要内容 -->
+  <view wx:else class="content">
+    <!-- 总体统计卡片 -->
+    <view class="overview-card">
+      <view class="card-title">总体统计</view>
+      <view class="stats-grid">
+        <view class="stat-item">
+          <view class="stat-value">{{overallStats.totalPV}}</view>
+          <view class="stat-label">总PV</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-value">{{overallStats.totalUV}}</view>
+          <view class="stat-label">总UV</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-value">{{overallStats.pageCount}}</view>
+          <view class="stat-label">页面数</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 标签页切换 -->
+    <view class="tab-bar">
+      <view 
+        class="tab-item {{currentTab === 'overview' ? 'active' : ''}}"
+        data-tab="overview"
+        bindtap="onTabChange"
+      >
+        概览
+      </view>
+      <view 
+        class="tab-item {{currentTab === 'pages' ? 'active' : ''}}"
+        data-tab="pages"
+        bindtap="onTabChange"
+      >
+        页面排行
+      </view>
+      <view 
+        class="tab-item {{currentTab === 'daily' ? 'active' : ''}}"
+        data-tab="daily"
+        bindtap="onTabChange"
+      >
+        日统计
+      </view>
+    </view>
+
+    <!-- 概览标签页 -->
+    <view wx:if="{{currentTab === 'overview'}}" class="tab-content">
+      <!-- 最近7天趋势 -->
+      <view class="trend-card">
+        <view class="card-title">最近7天趋势</view>
+        <view class="trend-chart">
+          <view wx:for="{{recentDaysStats}}" wx:key="date" class="trend-item">
+            <view class="trend-bar">
+              <view 
+                class="bar-fill" 
+                style="height: {{item.pv > 0 ? (item.pv / 100) * 100 : 0}}%"
+              ></view>
+            </view>
+            <view class="trend-label">{{formatDate(item.date)}}</view>
+            <view class="trend-value">{{item.pv}}</view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 页面统计列表 -->
+      <view class="page-list-card">
+        <view class="card-title">页面统计</view>
+        <view wx:for="{{pageStats}}" wx:key="name" class="page-item" bindtap="viewPageDetail" data-page="{{item.name}}">
+          <view class="page-info">
+            <view class="page-name">{{item.title}}</view>
+            <view class="page-path">{{item.name}}</view>
+          </view>
+          <view class="page-stats">
+            <view class="page-pv">PV: {{item.pv}}</view>
+            <view class="page-uv">UV: {{item.uv}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 页面排行标签页 -->
+    <view wx:if="{{currentTab === 'pages'}}" class="tab-content">
+      <view class="ranking-card">
+        <view class="card-title">页面访问排行</view>
+        <view wx:for="{{pageRanking}}" wx:key="name" class="ranking-item">
+          <view class="ranking-number">{{index + 1}}</view>
+          <view class="ranking-info">
+            <view class="ranking-name">{{item.title}}</view>
+            <view class="ranking-path">{{item.name}}</view>
+          </view>
+          <view class="ranking-stats">
+            <view class="ranking-pv">{{item.pv}}</view>
+            <view class="ranking-uv">{{item.uv}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 日统计标签页 -->
+    <view wx:if="{{currentTab === 'daily'}}" class="tab-content">
+      <view class="daily-card">
+        <view class="card-title">日统计查询</view>
+        <view class="date-picker">
+          <picker mode="date" value="{{selectedDate}}" bindchange="onDateChange">
+            <view class="picker-text">选择日期: {{selectedDate}}</view>
+          </picker>
+          <button class="query-btn" bindtap="getDailyStats">查询</button>
+        </view>
+        
+        <view class="daily-trend">
+          <view class="trend-title">最近7天数据</view>
+          <view class="daily-list">
+            <view wx:for="{{recentDaysStats}}" wx:key="date" class="daily-item">
+              <view class="daily-date">{{formatDate(item.date)}}</view>
+              <view class="daily-pv">PV: {{item.pv}}</view>
+              <view class="daily-uv">UV: {{item.uv}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button class="action-btn refresh-btn" bindtap="refreshData">刷新数据</button>
+      <button class="action-btn export-btn" bindtap="exportData">导出数据</button>
+      <button class="action-btn clear-btn" bindtap="clearData">清除数据</button>
+    </view>
+  </view>
+</view>
