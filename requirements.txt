@@ -1,0 +1,12 @@
+# Python依赖包
+requests>=2.25.1
+cryptography>=3.4.8
+
+# 可选：用于更好的HTTP客户端
+# httpx>=0.24.0
+
+# 可选：用于配置管理
+# python-dotenv>=0.19.0
+
+# 可选：用于日志记录
+# loguru>=0.6.0
