@@ -2,17 +2,61 @@
 import * as THREE from './libs/three.min.js'
 
 class Block {
-  constructor(scene, x, y, z, type = 'normal') {
+  constructor(scene, x, y, z, type = 'normal', addToScene = true) {
     this.scene = scene
     this.position = new THREE.Vector3(x, y, z)
     this.type = type
+    this.isActive = true
     
     // 创建方块模型
-    this.createModel()
+    this.createModel(addToScene)
+  }
+  
+  // 设置激活状态
+  setActive(active) {
+    this.isActive = active
+    if (this.group) {
+      this.group.visible = active
+      if (active && !this.scene.children.includes(this.group)) {
+        this.scene.add(this.group)
+      } else if (!active && this.scene.children.includes(this.group)) {
+        this.scene.remove(this.group)
+      }
+    }
+  }
+  
+  // 重置方块属性（用于对象池重用）
+  reset(x, y, z, type) {
+    this.position.set(x, y, z)
+    this.type = type
+    
+    // 重新配置模型
+    if (this.group) {
+      this.scene.remove(this.group)
+      // 清理旧的几何体和材质
+      this.disposeGeometry()
+    }
+    
+    this.createModel(true)
+  }
+  
+  // 清理几何体和材质
+  disposeGeometry() {
+    if (this.group) {
+      this.group.traverse((child) => {
+        if (child.geometry) {
+          child.geometry.dispose()
+        }
+        if (child.material) {
+          if (child.material.map) child.material.map.dispose()
+          child.material.dispose()
+        }
+      })
+    }
   }
   
   // 创建方块模型
-  createModel() {
+  createModel(addToScene = true) {
     this.group = new THREE.Group()
     
     // 根据类型创建不同的方块
@@ -35,10 +79,12 @@ class Block {
     
     // 设置位置
     this.group.position.copy(this.position)
-    this.scene.add(this.group)
     
-    // 添加入场动画
-    this.playEntranceAnimation()
+    if (addToScene) {
+      this.scene.add(this.group)
+      // 添加入场动画
+      this.playEntranceAnimation()
+    }
   }
   
   // 创建普通方块

@@ -203,14 +203,24 @@ class Player {
     animateParticles()
   }
   
-  // 更新动画
+  // 更新动画 - 优化版本
   update(deltaTime) {
     const currentTime = Date.now()
     
-    // 蓄力动画
+    // 蓄力动画 - 减少三角函数计算
     if (this.isCharging) {
       const chargingTime = currentTime - this.chargingStartTime
-      const intensity = Math.sin(chargingTime * 0.01) * 0.1 + 1
+      
+      // 缓存三角函数计算结果
+      if (!this.cachedSinValues || this.lastChargingTime !== chargingTime) {
+        this.cachedSinValues = {
+          intensity: Math.sin(chargingTime * 0.01) * 0.1 + 1,
+          vibration: Math.sin(chargingTime * 0.02) * 0.02
+        }
+        this.lastChargingTime = chargingTime
+      }
+      
+      const { intensity, vibration } = this.cachedSinValues
       
       // 身体压缩效果
       this.body.scale.y = this.originalBodyScale.y * (1 - intensity * 0.2)
@@ -218,7 +228,7 @@ class Player {
       this.body.scale.z = this.originalBodyScale.z * (1 + intensity * 0.1)
       
       // 整体震动
-      this.group.position.y = this.position.y + Math.sin(chargingTime * 0.02) * 0.02
+      this.group.position.y = this.position.y + vibration
     }
     
     // 跳跃动画
@@ -284,14 +294,21 @@ class Player {
       }
     }
     
-    // 空闲时的微动画
+    // 空闲时的微动画 - 优化版本
     if (!this.isJumping && !this.isCharging && !this.isFalling) {
-      const time = currentTime * 0.002
-      this.group.position.y = this.position.y + Math.sin(time) * 0.02
+      // 减少计算频率
+      if (!this.lastIdleTime || currentTime - this.lastIdleTime > 16) { // ~60fps
+        const time = currentTime * 0.002
+        this.group.position.y = this.position.y + Math.sin(time) * 0.02
+        this.lastIdleTime = currentTime
+      }
       
-      // 眼睛眨动
-      if (Math.random() < 0.01) {
-        this.blink()
+      // 眼睛眨动 - 降低频率
+      if (!this.lastBlinkTime || currentTime - this.lastBlinkTime > 3000) {
+        if (Math.random() < 0.3) { // 30%概率
+          this.blink()
+          this.lastBlinkTime = currentTime
+        }
       }
     }
   }

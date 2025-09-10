@@ -1,17 +1,25 @@
 // pages/game/utils.js
 
-// 线性插值
+// 线性插值 - 优化版本
 export function lerp(start, end, factor) {
+  // 添加边界检查以提高性能
+  if (factor <= 0) return start
+  if (factor >= 1) return end
   return start + (end - start) * factor
 }
 
-// 缓动函数 - 四次方缓出
+// 缓动函数 - 四次方缓出 - 优化版本
 export function easeOutQuart(t) {
-  return 1 - Math.pow(1 - t, 4)
+  if (t <= 0) return 0
+  if (t >= 1) return 1
+  const oneMinusT = 1 - t
+  return 1 - oneMinusT * oneMinusT * oneMinusT * oneMinusT
 }
 
-// 缓动函数 - 四次方缓入
+// 缓动函数 - 四次方缓入 - 优化版本
 export function easeInQuart(t) {
+  if (t <= 0) return 0
+  if (t >= 1) return 1
   return t * t * t * t
 }
 
@@ -20,32 +28,7 @@ export function easeInOutCubic(t) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
 }
 
-// 缓动函数 - 弹性缓出
-export function easeOutElastic(t) {
-  const c4 = (2 * Math.PI) / 3
-  
-  return t === 0
-    ? 0
-    : t === 1
-    ? 1
-    : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1
-}
-
-// 缓动函数 - 反弹缓出
-export function easeOutBounce(t) {
-  const n1 = 7.5625
-  const d1 = 2.75
-  
-  if (t < 1 / d1) {
-    return n1 * t * t
-  } else if (t < 2 / d1) {
-    return n1 * (t -= 1.5 / d1) * t + 0.75
-  } else if (t < 2.5 / d1) {
-    return n1 * (t -= 2.25 / d1) * t + 0.9375
-  } else {
-    return n1 * (t -= 2.625 / d1) * t + 0.984375
-  }
-}
+// 移除了未使用的弹性和反弹缓动函数以减少代码复杂度
 
 // 角度转弧度
 export function degToRad(degrees) {
@@ -72,19 +55,26 @@ export function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-// 计算两点距离
+// 计算两点距离 - 优化版本
 export function distance(x1, y1, x2, y2) {
   const dx = x2 - x1
   const dy = y2 - y1
   return Math.sqrt(dx * dx + dy * dy)
 }
 
-// 计算三维距离
-export function distance3D(x1, y1, z1, x2, y2, z2) {
+// 计算平方距离（避免开方运算）
+export function distanceSquared(x1, y1, x2, y2) {
+  const dx = x2 - x1
+  const dy = y2 - y1
+  return dx * dx + dy * dy
+}
+
+// 计算三维平方距离（避免开方运算）
+export function distance3DSquared(x1, y1, z1, x2, y2, z2) {
   const dx = x2 - x1
   const dy = y2 - y1
   const dz = z2 - z1
-  return Math.sqrt(dx * dx + dy * dy + dz * dz)
+  return dx * dx + dy * dy + dz * dz
 }
 
 // 向量归一化
