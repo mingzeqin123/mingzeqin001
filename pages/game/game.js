@@ -12,6 +12,12 @@ Page({
   },
 
   onLoad() {
+    // 记录页面访问
+    const statsManager = getApp().globalData.statsManager
+    if (statsManager) {
+      statsManager.recordPageView('game', '跳一跳游戏')
+    }
+    
     // 获取最高分
     this.setData({
       bestScore: getApp().getBestScore()
@@ -184,5 +190,12 @@ Page({
       query: 'from=timeline',
       imageUrl: '/images/share.png'
     }
+  },
+
+  // 跳转到统计页面
+  goToStats() {
+    wx.navigateTo({
+      url: '/pages/stats/stats'
+    })
   }
 })

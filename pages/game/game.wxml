@@ -24,6 +24,11 @@
       <text class="best-score-label">最高分</text>
       <text class="best-score-value">{{bestScore}}</text>
     </view>
+    
+    <!-- 统计按钮 -->
+    <view class="stats-btn" bindtap="goToStats">
+      <text class="stats-icon">📊</text>
+    </view>
   </view>
   
   <!-- 游戏开始界面 -->

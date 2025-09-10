@@ -67,6 +67,27 @@
   color: #ffd700;
 }
 
+/* 统计按钮 */
+.stats-btn {
+  position: absolute;
+  top: 80rpx;
+  right: 200rpx;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 20rpx;
+  border-radius: 50%;
+  color: white;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80rpx;
+  height: 80rpx;
+}
+
+.stats-icon {
+  font-size: 32rpx;
+}
+
 /* 开始界面 */
 .start-screen {
   position: absolute;
