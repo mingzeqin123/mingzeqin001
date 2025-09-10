@@ -1,0 +1,29 @@
+{
+  "name": "wechat-transfer-demo",
+  "version": "1.0.0",
+  "description": "微信商家转账到零钱接口示例",
+  "main": "wechat_transfer_nodejs.js",
+  "scripts": {
+    "start": "node wechat_transfer_nodejs.js",
+    "test": "node test/test.js"
+  },
+  "keywords": [
+    "wechat",
+    "wechatpay",
+    "transfer",
+    "payment"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "crypto": "^1.0.1",
+    "fs": "^0.0.1-security"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
