@@ -1,6 +1,7 @@
 // pages/game/player.js
 import * as THREE from './libs/three.min.js'
 import { lerp, easeOutQuart, easeInQuart } from './utils.js'
+import { animationManager } from './animationManager.js'
 
 class Player {
   constructor(scene) {
@@ -111,14 +112,12 @@ class Player {
     this.chargingStartTime = Date.now()
   }
   
-  // 跳跃
+  // 跳跃 - 使用动画管理器优化
   jump(distance, height, onComplete) {
     if (this.isJumping) return
     
     this.isJumping = true
     this.isCharging = false
-    this.jumpStartTime = Date.now()
-    this.jumpDuration = 800 // 跳跃持续时间
     this.jumpHeight = height
     this.onJumpComplete = onComplete
     
@@ -132,6 +131,53 @@ class Player {
       this.position.y,
       this.position.z + Math.cos(angle) * distance
     )
+    
+    // 使用动画管理器创建跳跃动画
+    this.jumpAnimationId = animationManager.createAnimation({
+      duration: 800,
+      easing: (t) => {
+        // 跳跃的抛物线效果
+        if (t <= 0.5) {
+          return easeOutQuart(t * 2) * 0.5
+        } else {
+          return 0.5 + easeInQuart((t - 0.5) * 2) * 0.5
+        }
+      },
+      onUpdate: (progress) => {
+        // 水平移动
+        this.position.x = lerp(this.jumpStartPos.x, this.jumpEndPos.x, progress)
+        this.position.z = lerp(this.jumpStartPos.z, this.jumpEndPos.z, progress)
+        
+        // 垂直移动（抛物线）
+        const jumpProgress = progress * 2
+        let heightMultiplier
+        if (jumpProgress <= 1) {
+          heightMultiplier = easeOutQuart(jumpProgress)
+        } else {
+          heightMultiplier = 1 - easeInQuart(jumpProgress - 1)
+        }
+        
+        this.position.y = this.jumpStartPos.y + this.jumpHeight * heightMultiplier
+        
+        // 旋转动画
+        this.group.rotation.x = progress * Math.PI * 2
+        
+        // 恢复身体形状
+        this.body.scale.copy(this.originalBodyScale)
+        
+        this.group.position.copy(this.position)
+      },
+      onComplete: () => {
+        this.isJumping = false
+        this.group.rotation.x = 0
+        this.position.copy(this.jumpEndPos)
+        this.group.position.copy(this.position)
+        
+        if (this.onJumpComplete) {
+          this.onJumpComplete()
+        }
+      }
+    })
     
     // 播放跳跃音效（如果有的话）
     this.playJumpSound()
@@ -203,7 +249,7 @@ class Player {
     animateParticles()
   }
   
-  // 更新动画
+  // 更新动画 - 简化版本，使用动画管理器
   update(deltaTime) {
     const currentTime = Date.now()
     
@@ -219,47 +265,6 @@ class Player {
       
       // 整体震动
       this.group.position.y = this.position.y + Math.sin(chargingTime * 0.02) * 0.02
-    }
-    
-    // 跳跃动画
-    if (this.isJumping) {
-      const elapsed = currentTime - this.jumpStartTime
-      const progress = Math.min(elapsed / this.jumpDuration, 1)
-      
-      if (progress < 1) {
-        // 水平移动（线性）
-        this.position.x = lerp(this.jumpStartPos.x, this.jumpEndPos.x, progress)
-        this.position.z = lerp(this.jumpStartPos.z, this.jumpEndPos.z, progress)
-        
-        // 垂直移动（抛物线）
-        const jumpProgress = progress * 2
-        let heightMultiplier
-        if (jumpProgress <= 1) {
-          heightMultiplier = easeOutQuart(jumpProgress)
-        } else {
-          heightMultiplier = 1 - easeInQuart(jumpProgress - 1)
-        }
-        
-        this.position.y = this.jumpStartPos.y + this.jumpHeight * heightMultiplier
-        
-        // 旋转动画
-        this.group.rotation.x = progress * Math.PI * 2
-        
-        // 恢复身体形状
-        this.body.scale.copy(this.originalBodyScale)
-        
-        this.group.position.copy(this.position)
-      } else {
-        // 跳跃结束
-        this.isJumping = false
-        this.group.rotation.x = 0
-        this.position.copy(this.jumpEndPos)
-        this.group.position.copy(this.position)
-        
-        if (this.onJumpComplete) {
-          this.onJumpComplete()
-        }
-      }
     }
     
     // 坠落动画
