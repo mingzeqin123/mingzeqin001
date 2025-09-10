@@ -1,177 +1,177 @@
-# 微信小程序跳一跳游戏
+# 微信支付 - 商家转账到零钱
 
-一个基于微信小程序平台开发的3D跳一跳小游戏，使用Three.js渲染引擎实现3D效果。
+本项目实现了微信支付"商家转账到零钱"功能的完整接口接入，支持向个人微信用户转账。
 
-## 🎮 游戏特色
+## 功能特性
 
-- **3D视觉效果**：使用Three.js渲染引擎，呈现精美的3D场景
-- **物理引擎**：真实的跳跃物理模拟和碰撞检测
-- **多样方块**：普通、小型、高型、特殊等多种方块类型
-- **蓄力系统**：长按蓄力，控制跳跃距离和高度
-- **分数系统**：完美落地获得额外分数，挑战最高纪录
-- **视觉特效**：粒子效果、动画过渡、阴影系统
-- **音效支持**：跳跃、落地、完美、游戏结束等音效
-- **社交分享**：支持微信好友和朋友圈分享
+- ✅ 转账到零钱
+- ✅ 转账结果查询
+- ✅ 签名验证
+- ✅ 沙箱环境支持
+- ✅ 错误处理
+- ✅ 证书支持
 
-## 🚀 快速开始
+## 前置条件
 
-### 环境要求
-- 微信开发者工具 1.05.0 或更高版本
-- 小程序基础库 2.9.0 或更高版本
+1. **商户号要求**：
+   - 商户号已入驻90日
+   - 最近30天内保持连续不间断的交易
 
-### 安装步骤
+2. **开通功能**：
+   - 在微信支付商户平台开通"商家转账到零钱"功能
 
-1. **克隆项目**
-   ```bash
-   git clone [项目地址]
-   cd jump-jump-game
-   ```
+3. **获取证书**：
+   - 下载API证书（apiclient_cert.pem）
+   - 下载私钥文件（apiclient_key.pem）
+   - 设置API密钥
 
-2. **导入项目**
-   - 打开微信开发者工具
-   - 选择"导入项目"
-   - 选择项目目录
-   - 填入AppID（测试可使用测试号）
+## 安装依赖
 
-3. **添加资源文件**
-   - 将Three.js完整库文件放入 `/pages/game/libs/three.min.js`
-   - 添加音效文件到 `/sounds/` 目录
-   - 添加图片资源到 `/images/` 目录
-
-4. **编译运行**
-   - 点击"编译"按钮
-   - 在模拟器或真机上预览
-
-## 📁 项目结构
-
-```
-jump-jump-game/
-├── app.js                 # 小程序入口文件
-├── app.json               # 小程序配置文件
-├── app.wxss              # 全局样式文件
-├── sitemap.json          # 站点地图配置
-├── project.config.json   # 项目配置文件
-├── pages/
-│   └── game/             # 游戏页面
-│       ├── game.js       # 页面逻辑
-│       ├── game.json     # 页面配置
-│       ├── game.wxml     # 页面结构
-│       ├── game.wxss     # 页面样式
-│       ├── gameEngine.js # 游戏引擎核心
-│       ├── player.js     # 玩家角色类
-│       ├── block.js      # 方块类
-│       ├── utils.js      # 工具函数
-│       └── libs/
-│           └── three.min.js # Three.js库
-├── images/               # 图片资源
-│   └── README.md        # 图片说明
-├── sounds/               # 音效资源
-│   └── README.md        # 音效说明
-└── README.md            # 项目说明
+```bash
+pip install -r requirements.txt
 ```
 
-## 🎯 游戏玩法
+## 配置说明
 
-1. **开始游戏**：点击"开始游戏"按钮
-2. **蓄力跳跃**：长按屏幕蓄力，右侧显示蓄力条
-3. **释放跳跃**：松开手指，角色跳向下一个方块
-4. **获得分数**：
-   - 成功落地：+1分
-   - 良好落地：+3分
-   - 完美落地：+5分（中心位置）
-5. **游戏结束**：跳跃失败掉落时游戏结束
-6. **分享成绩**：可分享到微信好友或朋友圈
+1. 修改 `config.py` 中的配置信息：
 
-## 🔧 核心技术
+```python
+WECHAT_PAY_CONFIG = {
+    'mch_id': 'your_mch_id',        # 您的商户号
+    'app_id': 'your_app_id',        # 您的应用ID
+    'api_key': 'your_api_key',      # 您的API密钥
+    'cert_path': 'cert/apiclient_cert.pem',  # 证书路径
+    'key_path': 'cert/apiclient_key.pem',    # 私钥路径
+    'sandbox': True,                # 是否使用沙箱环境
+}
+```
 
-### 渲染引擎
-- **Three.js**：3D场景渲染
-- **WebGL**：硬件加速渲染
-- **阴影系统**：实时阴影计算
-- **光照系统**：环境光+方向光
+2. 将证书文件放在 `cert/` 目录下
 
-### 物理系统
-- **跳跃轨迹**：抛物线运动模拟
-- **碰撞检测**：圆形碰撞检测算法
-- **重力模拟**：自然下落效果
+## 使用方法
 
-### 动画系统
-- **缓动函数**：平滑的动画过渡
-- **骨骼动画**：角色动作表现
-- **粒子效果**：特殊效果展示
-- **相机跟随**：平滑的视角切换
+### 基本转账
 
-## 🎨 自定义配置
+```python
+from wechat_transfer import WeChatTransfer
+from config import WECHAT_PAY_CONFIG
 
-### 游戏参数调整
-在 `gameEngine.js` 中可以调整：
-- `maxChargingTime`：最大蓄力时间
-- 跳跃距离和高度计算公式
-- 方块生成间距和角度
+# 创建转账实例
+transfer = WeChatTransfer(**WECHAT_PAY_CONFIG)
 
-### 视觉效果
-在各个类文件中可以调整：
-- 方块颜色和材质
-- 光照强度和位置
-- 动画持续时间和缓动函数
+# 执行转账
+success, result = transfer.transfer_to_balance(
+    partner_trade_no="transfer_20241201_001",  # 商户订单号
+    openid="user_openid_here",                # 用户openid
+    amount=100,                               # 转账金额（分）
+    desc="测试转账"                           # 转账描述
+)
 
-### 音效配置
-在 `utils.js` 的 `AudioManager` 类中：
-- 添加新的音效类型
-- 调整音量和播放逻辑
+if success:
+    print("转账成功！")
+    print(f"微信单号: {result.get('payment_no')}")
+else:
+    print(f"转账失败: {result}")
+```
 
-## 📱 兼容性
+### 带姓名校验的转账
 
-- **iOS**：iOS 10.0+
-- **Android**：Android 5.0+
-- **微信版本**：7.0.0+
-- **小程序基础库**：2.9.0+
+```python
+success, result = transfer.transfer_to_balance(
+    partner_trade_no="transfer_20241201_002",
+    openid="user_openid_here",
+    amount=100,
+    desc="测试转账",
+    check_name="FORCE_CHECK",  # 强制校验姓名
+    re_user_name="张三"        # 收款人姓名
+)
+```
 
-## 🔍 性能优化
+### 查询转账结果
 
-1. **渲染优化**
-   - 对象池管理，减少GC
-   - 视锥剔除，只渲染可见对象
-   - LOD系统，距离越远细节越少
+```python
+success, result = transfer.query_transfer("transfer_20241201_001")
 
-2. **内存管理**
-   - 及时销毁不需要的对象
-   - 纹理和几何体复用
-   - 音效资源预加载
+if success:
+    print(f"转账状态: {result.get('status')}")
+    print(f"转账金额: {result.get('transfer_amount')}")
+```
 
-3. **帧率优化**
-   - 固定时间步长更新
-   - 动画插值平滑
-   - 避免在渲染循环中创建对象
+## API 接口说明
 
-## 🐛 已知问题
+### 转账到零钱
 
-1. 在部分低端Android设备上可能出现卡顿
-2. Three.js库文件较大，首次加载时间较长
-3. WebGL兼容性问题，部分老设备不支持
+**接口地址**: `/mmpaymkttransfers/promotion/transfers`
 
-## 🔄 更新日志
+**请求参数**:
+- `mch_appid`: 应用ID
+- `mchid`: 商户号
+- `nonce_str`: 随机字符串
+- `partner_trade_no`: 商户订单号
+- `openid`: 用户openid
+- `amount`: 转账金额（分）
+- `desc`: 转账描述
+- `check_name`: 校验用户姓名选项
+- `re_user_name`: 收款用户姓名（可选）
+- `sign`: 签名
 
-### v1.0.0 (2024-01-15)
-- 基础游戏功能实现
-- 3D渲染和物理引擎
-- 完整的游戏流程
-- 分数系统和社交分享
+**响应参数**:
+- `return_code`: 返回状态码
+- `return_msg`: 返回信息
+- `result_code`: 业务结果
+- `payment_no`: 微信单号
+- `payment_time`: 转账时间
 
-## 📄 许可证
+### 查询转账结果
 
-本项目采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
+**接口地址**: `/mmpaymkttransfers/gettransferinfo`
 
-## 🤝 贡献
+**请求参数**:
+- `appid`: 应用ID
+- `mch_id`: 商户号
+- `partner_trade_no`: 商户订单号
+- `nonce_str`: 随机字符串
+- `sign`: 签名
 
-欢迎提交 Issue 和 Pull Request 来改进这个项目！
+## 错误处理
 
-## 📞 联系方式
+常见错误码：
 
-如有问题或建议，请通过以下方式联系：
-- GitHub Issues
-- 邮箱：[your-email@example.com]
+- `NOAUTH`: 商户无此接口权限
+- `AMOUNT_LIMIT`: 金额超限
+- `PARAM_ERROR`: 参数错误
+- `OPENID_ERROR`: OpenID错误
+- `NOTENOUGH`: 余额不足
+- `SYSTEMERROR`: 系统错误
 
----
+## 安全注意事项
 
-⭐ 如果这个项目对你有帮助，请给个星星支持一下！
+1. **API密钥安全**：
+   - 妥善保管API密钥，不要硬编码在代码中
+   - 建议使用环境变量或配置文件管理
+
+2. **证书安全**：
+   - 证书文件要妥善保管
+   - 不要将证书文件提交到版本控制系统
+
+3. **签名验证**：
+   - 所有接口调用都要验证返回签名
+   - 使用HTTPS传输
+
+4. **金额校验**：
+   - 转账前要校验金额范围
+   - 防止重复转账
+
+## 测试
+
+使用沙箱环境进行测试：
+
+```python
+config = WECHAT_PAY_CONFIG.copy()
+config['sandbox'] = True
+transfer = WeChatTransfer(**config)
+```
+
+## 许可证
+
+MIT License
