@@ -1,2 +1,13 @@
-pandas>=1.3.0
-openpyxl>=3.0.0
+# Python邮件发送演示程序依赖包
+# 注意：smtplib, email等是Python标准库，无需额外安装
+
+# 可选：如果需要更高级的邮件功能
+# secure-smtplib>=0.1.1  # 更安全的SMTP连接
+# yagmail>=0.15.0        # 简化的邮件发送库
+# sendgrid>=6.10.0       # SendGrid邮件服务
+# mailgun>=0.1.0         # Mailgun邮件服务
+
+# 开发和测试相关
+pytest>=7.0.0           # 单元测试
+black>=22.0.0           # 代码格式化
+flake8>=4.0.0           # 代码检查
