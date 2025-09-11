@@ -1,0 +1,165 @@
+<!-- 开票系统主页面 -->
+<view class="invoice-container">
+  <!-- 头部搜索栏 -->
+  <view class="header">
+    <view class="search-bar">
+      <input 
+        class="search-input" 
+        placeholder="搜索发票号、客户名称..." 
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        confirm-type="search"
+        bindconfirm="onSearch"
+      />
+      <view class="search-btn" bindtap="onSearch">
+        <text class="iconfont icon-search"></text>
+      </view>
+    </view>
+    <view class="filter-btn" bindtap="showFilterModal">
+      <text class="iconfont icon-filter"></text>
+    </view>
+  </view>
+
+  <!-- 标签页 -->
+  <view class="tabs">
+    <view 
+      class="tab-item {{currentTab === 'all' ? 'active' : ''}}" 
+      data-tab="all" 
+      bindtap="switchTab"
+    >
+      全部
+    </view>
+    <view 
+      class="tab-item {{currentTab === 'pending' ? 'active' : ''}}" 
+      data-tab="pending" 
+      bindtap="switchTab"
+    >
+      待开票
+    </view>
+    <view 
+      class="tab-item {{currentTab === 'completed' ? 'active' : ''}}" 
+      data-tab="completed" 
+      bindtap="switchTab"
+    >
+      已开票
+    </view>
+    <view 
+      class="tab-item {{currentTab === 'cancelled' ? 'active' : ''}}" 
+      data-tab="cancelled" 
+      bindtap="switchTab"
+    >
+      已作废
+    </view>
+  </view>
+
+  <!-- 发票列表 -->
+  <view class="invoice-list">
+    <view wx:if="{{loading && !refreshing}}" class="loading">
+      <text>加载中...</text>
+    </view>
+    
+    <view wx:elif="{{invoiceList.length === 0}}" class="empty">
+      <image class="empty-icon" src="/images/empty-invoice.png" mode="aspectFit"></image>
+      <text class="empty-text">暂无发票数据</text>
+      <button class="create-btn" bindtap="createInvoice">创建发票</button>
+    </view>
+    
+    <view wx:else>
+      <view 
+        class="invoice-item" 
+        wx:for="{{invoiceList}}" 
+        wx:key="id"
+        bindtap="viewInvoiceDetail"
+        data-id="{{item.id}}"
+      >
+        <view class="invoice-header">
+          <view class="invoice-number">{{item.invoiceNumber}}</view>
+          <view class="invoice-status status-{{item.status}}">
+            {{item.statusText}}
+          </view>
+        </view>
+        
+        <view class="invoice-info">
+          <view class="info-row">
+            <text class="label">客户名称：</text>
+            <text class="value">{{item.customerName}}</text>
+          </view>
+          <view class="info-row">
+            <text class="label">开票金额：</text>
+            <text class="value amount">¥{{item.amount}}</text>
+          </view>
+          <view class="info-row">
+            <text class="label">开票日期：</text>
+            <text class="value">{{item.invoiceDate}}</text>
+          </view>
+        </view>
+        
+        <view class="invoice-actions">
+          <button 
+            class="action-btn edit" 
+            catchtap="editInvoice" 
+            data-id="{{item.id}}"
+          >
+            编辑
+          </button>
+          <button 
+            class="action-btn delete" 
+            catchtap="deleteInvoice" 
+            data-id="{{item.id}}"
+          >
+            删除
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 创建发票按钮 -->
+  <view class="fab" bindtap="createInvoice">
+    <text class="iconfont icon-add"></text>
+  </view>
+</view>
+
+<!-- 筛选弹窗 -->
+<view class="filter-modal {{showFilter ? 'show' : ''}}" catchtap="hideFilterModal">
+  <view class="filter-content" catchtap="">
+    <view class="filter-header">
+      <text class="filter-title">筛选条件</text>
+      <text class="close-btn" bindtap="hideFilterModal">×</text>
+    </view>
+    
+    <view class="filter-body">
+      <view class="filter-item">
+        <text class="filter-label">发票状态</text>
+        <picker 
+          range="{{['全部', '待开票', '已开票', '已作废']}}" 
+          range-key=""
+          value="{{filterStatus === 'all' ? 0 : filterStatus === 'pending' ? 1 : filterStatus === 'completed' ? 2 : 3}}"
+          bindchange="onFilterStatusChange"
+        >
+          <view class="picker-text">
+            {{filterStatus === 'all' ? '全部' : filterStatus === 'pending' ? '待开票' : filterStatus === 'completed' ? '已开票' : '已作废'}}
+          </view>
+        </picker>
+      </view>
+      
+      <view class="filter-item">
+        <text class="filter-label">开票日期</text>
+        <picker 
+          mode="date" 
+          value="{{filterDateRange}}" 
+          bindchange="onFilterDateChange"
+        >
+          <view class="picker-text">
+            {{filterDateRange || '选择日期'}}
+          </view>
+        </picker>
+      </view>
+    </view>
+    
+    <view class="filter-footer">
+      <button class="filter-btn reset" bindtap="resetFilter">重置</button>
+      <button class="filter-btn apply" bindtap="applyFilter">应用</button>
+    </view>
+  </view>
+</view>

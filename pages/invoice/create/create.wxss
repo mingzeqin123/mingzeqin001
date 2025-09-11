@@ -1,0 +1,190 @@
+/* 创建发票页面样式 */
+.create-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 头部 */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  background-color: #fff;
+  border-bottom: 1rpx solid #eee;
+}
+
+.back-btn {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  font-size: 32rpx;
+}
+
+.title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.placeholder {
+  width: 60rpx;
+}
+
+/* 表单内容 */
+.form-content {
+  flex: 1;
+  padding: 20rpx;
+}
+
+.form-section {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30rpx;
+  position: relative;
+}
+
+.form-item:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  width: 160rpx;
+  font-size: 28rpx;
+  color: #333;
+  flex-shrink: 0;
+}
+
+.label.required::after {
+  content: '*';
+  color: #ff4757;
+  margin-left: 4rpx;
+}
+
+.input {
+  flex: 1;
+  height: 80rpx;
+  padding: 0 20rpx;
+  background-color: #f8f8f8;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  color: #333;
+  border: 1rpx solid transparent;
+}
+
+.input:focus {
+  background-color: #fff;
+  border-color: #007aff;
+}
+
+.input.readonly {
+  background-color: #f0f0f0;
+  color: #999;
+}
+
+.input.total {
+  font-weight: bold;
+  color: #ff6b35;
+  font-size: 32rpx;
+}
+
+.textarea {
+  flex: 1;
+  min-height: 120rpx;
+  padding: 20rpx;
+  background-color: #f8f8f8;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  color: #333;
+  border: 1rpx solid transparent;
+  line-height: 1.5;
+}
+
+.textarea:focus {
+  background-color: #fff;
+  border-color: #007aff;
+}
+
+.picker-text {
+  flex: 1;
+  height: 80rpx;
+  padding: 0 20rpx;
+  background-color: #f8f8f8;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.select-btn {
+  margin-left: 20rpx;
+  padding: 16rpx 24rpx;
+  background-color: #007aff;
+  color: #fff;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+}
+
+/* 底部操作栏 */
+.footer {
+  display: flex;
+  padding: 30rpx;
+  background-color: #fff;
+  border-top: 1rpx solid #eee;
+  gap: 20rpx;
+}
+
+.btn {
+  flex: 1;
+  height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn.primary {
+  background-color: #007aff;
+  color: #fff;
+}
+
+.btn.primary:disabled {
+  background-color: #ccc;
+  color: #999;
+}
+
+.btn.secondary {
+  background-color: #f8f8f8;
+  color: #666;
+  border: 1rpx solid #ddd;
+}
+
+.btn.secondary:disabled {
+  background-color: #f0f0f0;
+  color: #999;
+}

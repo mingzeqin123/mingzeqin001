@@ -1,0 +1,154 @@
+<!-- 发票详情页面 -->
+<view class="detail-container">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="back-btn" bindtap="onBack">
+      <text class="iconfont icon-back"></text>
+    </view>
+    <text class="title">发票详情</text>
+    <view class="placeholder"></view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 发票详情内容 -->
+  <view wx:elif="{{invoiceData}}" class="content">
+    <!-- 发票状态卡片 -->
+    <view class="status-card">
+      <view class="status-info">
+        <text class="invoice-number">{{invoiceData.invoiceNumber}}</text>
+        <view class="status-badge status-{{invoiceData.status}}">
+          {{invoiceData.statusText}}
+        </view>
+      </view>
+      <view class="copy-btn" bindtap="copyInvoiceNumber">
+        <text class="iconfont icon-copy"></text>
+      </view>
+    </view>
+
+    <!-- 基本信息 -->
+    <view class="info-section">
+      <view class="section-title">基本信息</view>
+      
+      <view class="info-item">
+        <text class="label">发票类型</text>
+        <text class="value">{{invoiceData.invoiceType === 'normal' ? '普通发票' : '专用发票'}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="label">开票日期</text>
+        <text class="value">{{invoiceData.invoiceDate}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="label">开票内容</text>
+        <text class="value">{{invoiceData.invoiceContent}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="label">开票金额</text>
+        <text class="value amount">¥{{invoiceData.amount}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="label">税率</text>
+        <text class="value">{{(invoiceData.taxRate * 100).toFixed(0)}}%</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="label">税额</text>
+        <text class="value">¥{{invoiceData.taxAmount}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="label">价税合计</text>
+        <text class="value total-amount">¥{{invoiceData.totalAmount}}</text>
+      </view>
+      
+      <view class="info-item" wx:if="{{invoiceData.remark}}">
+        <text class="label">备注</text>
+        <text class="value">{{invoiceData.remark}}</text>
+      </view>
+    </view>
+
+    <!-- 客户信息 -->
+    <view class="info-section">
+      <view class="section-title">客户信息</view>
+      
+      <view class="info-item">
+        <text class="label">客户名称</text>
+        <text class="value">{{invoiceData.customerName}}</text>
+      </view>
+      
+      <view class="info-item" wx:if="{{invoiceData.customerTaxNumber}}">
+        <text class="label">纳税人识别号</text>
+        <text class="value">{{invoiceData.customerTaxNumber}}</text>
+      </view>
+      
+      <view class="info-item" wx:if="{{invoiceData.customerAddress}}">
+        <text class="label">客户地址</text>
+        <text class="value">{{invoiceData.customerAddress}}</text>
+      </view>
+      
+      <view class="info-item" wx:if="{{invoiceData.customerPhone}}">
+        <text class="label">联系电话</text>
+        <text class="value">{{invoiceData.customerPhone}}</text>
+      </view>
+      
+      <view class="info-item" wx:if="{{invoiceData.customerBank}}">
+        <text class="label">开户银行</text>
+        <text class="value">{{invoiceData.customerBank}}</text>
+      </view>
+      
+      <view class="info-item" wx:if="{{invoiceData.customerAccount}}">
+        <text class="label">银行账号</text>
+        <text class="value">{{invoiceData.customerAccount}}</text>
+      </view>
+    </view>
+
+    <!-- 操作记录 -->
+    <view class="info-section" wx:if="{{invoiceData.operationLogs && invoiceData.operationLogs.length > 0}}">
+      <view class="section-title">操作记录</view>
+      
+      <view class="log-list">
+        <view 
+          class="log-item" 
+          wx:for="{{invoiceData.operationLogs}}" 
+          wx:key="id"
+        >
+          <view class="log-content">
+            <text class="log-text">{{item.operation}}</text>
+            <text class="log-time">{{item.operationTime}}</text>
+          </view>
+          <view class="log-operator">
+            <text>{{item.operator}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 错误状态 -->
+  <view wx:else class="error">
+    <image class="error-icon" src="/images/error.png" mode="aspectFit"></image>
+    <text class="error-text">加载失败</text>
+    <button class="retry-btn" bindtap="loadInvoiceDetail">重试</button>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="footer" wx:if="{{actions.length > 0}}">
+    <button 
+      class="action-btn" 
+      wx:for="{{actions}}" 
+      wx:key="type"
+      style="color: {{item.color}}; border-color: {{item.color}};"
+      bindtap="onActionTap"
+      data-action="{{item.type}}"
+    >
+      {{item.text}}
+    </button>
+  </view>
+</view>

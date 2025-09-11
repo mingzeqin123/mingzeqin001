@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "发票管理",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 50,
+  "backgroundTextStyle": "dark"
+}

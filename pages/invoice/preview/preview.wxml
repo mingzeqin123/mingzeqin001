@@ -1,0 +1,130 @@
+<!-- 发票预览页面 -->
+<view class="preview-container">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="back-btn" bindtap="onBack">
+      <text class="iconfont icon-back"></text>
+    </view>
+    <text class="title">发票预览</text>
+    <view class="actions">
+      <view class="action-btn" bindtap="printInvoice">
+        <text class="iconfont icon-print"></text>
+      </view>
+      <view class="action-btn" bindtap="saveAsImage">
+        <text class="iconfont icon-download"></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <!-- 发票预览内容 -->
+  <view wx:elif="{{invoiceData}}" class="invoice-preview">
+    <!-- 发票主体 -->
+    <view class="invoice-body">
+      <!-- 发票头部 -->
+      <view class="invoice-header">
+        <view class="invoice-title">
+          <text class="title-text">{{invoiceData.invoiceType === 'normal' ? '普通发票' : '增值税专用发票'}}</text>
+        </view>
+        <view class="invoice-number">
+          <text class="number-label">发票号码：</text>
+          <text class="number-value">{{invoiceData.invoiceNumber}}</text>
+        </view>
+      </view>
+
+      <!-- 开票信息 -->
+      <view class="invoice-info">
+        <view class="info-row">
+          <text class="label">开票日期：</text>
+          <text class="value">{{invoiceData.invoiceDate}}</text>
+        </view>
+        <view class="info-row">
+          <text class="label">开票内容：</text>
+          <text class="value">{{invoiceData.invoiceContent}}</text>
+        </view>
+      </view>
+
+      <!-- 客户信息 -->
+      <view class="customer-section">
+        <view class="section-title">购买方信息</view>
+        <view class="customer-info">
+          <view class="info-row">
+            <text class="label">名称：</text>
+            <text class="value">{{invoiceData.customerName}}</text>
+          </view>
+          <view class="info-row" wx:if="{{invoiceData.customerTaxNumber}}">
+            <text class="label">纳税人识别号：</text>
+            <text class="value">{{invoiceData.customerTaxNumber}}</text>
+          </view>
+          <view class="info-row" wx:if="{{invoiceData.customerAddress}}">
+            <text class="label">地址：</text>
+            <text class="value">{{invoiceData.customerAddress}}</text>
+          </view>
+          <view class="info-row" wx:if="{{invoiceData.customerPhone}}">
+            <text class="label">电话：</text>
+            <text class="value">{{invoiceData.customerPhone}}</text>
+          </view>
+          <view class="info-row" wx:if="{{invoiceData.customerBank}}">
+            <text class="label">开户银行：</text>
+            <text class="value">{{invoiceData.customerBank}}</text>
+          </view>
+          <view class="info-row" wx:if="{{invoiceData.customerAccount}}">
+            <text class="label">银行账号：</text>
+            <text class="value">{{invoiceData.customerAccount}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 金额信息 -->
+      <view class="amount-section">
+        <view class="section-title">金额信息</view>
+        <view class="amount-table">
+          <view class="table-header">
+            <text class="col-1">项目</text>
+            <text class="col-2">金额</text>
+            <text class="col-3">税率</text>
+            <text class="col-4">税额</text>
+          </view>
+          <view class="table-row">
+            <text class="col-1">{{invoiceData.invoiceContent}}</text>
+            <text class="col-2">¥{{invoiceData.amount}}</text>
+            <text class="col-3">{{(invoiceData.taxRate * 100).toFixed(0)}}%</text>
+            <text class="col-4">¥{{invoiceData.taxAmount}}</text>
+          </view>
+          <view class="table-footer">
+            <text class="total-label">价税合计：</text>
+            <text class="total-amount">¥{{invoiceData.totalAmount}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 备注信息 -->
+      <view class="remark-section" wx:if="{{invoiceData.remark}}">
+        <view class="section-title">备注</view>
+        <view class="remark-content">
+          <text>{{invoiceData.remark}}</text>
+        </view>
+      </view>
+
+      <!-- 发票状态 -->
+      <view class="status-section">
+        <view class="status-info">
+          <text class="status-label">发票状态：</text>
+          <text class="status-value status-{{invoiceData.status}}">
+            {{invoiceData.statusText}}
+          </text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 错误状态 -->
+  <view wx:else class="error">
+    <image class="error-icon" src="/images/error.png" mode="aspectFit"></image>
+    <text class="error-text">预览失败</text>
+  </view>
+</view>
