@@ -1,7 +1,8 @@
 {
   "pages": [
     "pages/game/game",
-    "pages/watermark/watermark"
+    "pages/watermark/watermark",
+    "pages/sentiment/sentiment"
   ],
   "window": {
     "backgroundTextStyle": "light",

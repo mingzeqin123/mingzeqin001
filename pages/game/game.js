@@ -184,5 +184,12 @@ Page({
       query: 'from=timeline',
       imageUrl: '/images/share.png'
     }
+  },
+
+  // 导航到情感分析页面
+  goToSentiment() {
+    wx.navigateTo({
+      url: '/pages/sentiment/sentiment'
+    })
   }
 })

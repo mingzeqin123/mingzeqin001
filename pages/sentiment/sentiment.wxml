@@ -1,0 +1,63 @@
+<!--情感分析页面-->
+<view class="container">
+  <view class="header">
+    <text class="title">情感分析助手</text>
+    <text class="subtitle">输入您的问题，我将分析您的情感并给出相应回复</text>
+  </view>
+
+  <view class="input-section">
+    <textarea 
+      class="input-text" 
+      placeholder="请输入您的问题或想法..." 
+      value="{{inputText}}"
+      bindinput="onInputChange"
+      maxlength="500"
+      auto-height
+    ></textarea>
+    <view class="char-count">{{inputText.length}}/500</view>
+  </view>
+
+  <view class="button-section">
+    <button class="analyze-btn" bindtap="analyzeSentiment" disabled="{{!inputText.trim()}}">
+      分析情感
+    </button>
+  </view>
+
+  <view class="result-section" wx:if="{{analysisResult}}">
+    <view class="result-card">
+      <view class="emotion-display">
+        <view class="emotion-icon {{analysisResult.emotion}}">
+          {{analysisResult.emotionIcon}}
+        </view>
+        <view class="emotion-text">
+          <text class="emotion-label">{{analysisResult.emotionLabel}}</text>
+          <text class="confidence">置信度: {{analysisResult.confidence}}%</text>
+        </view>
+      </view>
+      
+      <view class="response-section">
+        <text class="response-title">我的回复：</text>
+        <text class="response-content">{{analysisResult.response}}</text>
+      </view>
+
+      <view class="keywords-section" wx:if="{{analysisResult.keywords.length > 0}}">
+        <text class="keywords-title">关键词：</text>
+        <view class="keywords-list">
+          <text class="keyword-tag" wx:for="{{analysisResult.keywords}}" wx:key="index">
+            {{item}}
+          </text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="history-section" wx:if="{{history.length > 0}}">
+    <text class="history-title">分析历史</text>
+    <view class="history-list">
+      <view class="history-item" wx:for="{{history}}" wx:key="index" bindtap="selectHistory" data-index="{{index}}">
+        <view class="history-text">{{item.text}}</view>
+        <view class="history-emotion">{{item.emotionLabel}}</view>
+      </view>
+    </view>
+  </view>
+</view>
