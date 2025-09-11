@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情感分析系统 - Web界面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-section label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .input-section textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 16px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        .input-section textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        .button-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .analyze-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa726 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .results-section {
+            display: none;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .result-item {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .result-item h3 {
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .result-item h3 span {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        .sentiment-positive {
+            color: #28a745;
+        }
+
+        .sentiment-negative {
+            color: #dc3545;
+        }
+
+        .sentiment-neutral {
+            color: #6c757d;
+        }
+
+        .confidence-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .confidence-positive {
+            background: linear-gradient(90deg, #28a745, #20c997);
+        }
+
+        .confidence-negative {
+            background: linear-gradient(90deg, #dc3545, #fd7e14);
+        }
+
+        .confidence-neutral {
+            background: linear-gradient(90deg, #6c757d, #adb5bd);
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .feature-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .reply-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .reply-box h3 {
+            margin-bottom: 10px;
+        }
+
+        .reply-text {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .demo-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e1e8ed;
+        }
+
+        .demo-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .demo-btn {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .demo-btn:hover {
+            background: #e9ecef;
+            border-color: #4facfe;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .demo-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 情感分析系统</h1>
+            <p>智能分析文本情感，生成个性化回复</p>
+        </div>
+
+        <div class="content">
+            <div class="input-section">
+                <label for="userInput">请输入您的文本内容：</label>
+                <textarea id="userInput" placeholder="例如：这个产品真的很不错，我很满意！"></textarea>
+            </div>
+
+            <div class="button-section">
+                <button class="analyze-btn" onclick="analyzeText()">🔍 开始分析</button>
+            </div>
+
+            <div id="results" class="results-section">
+                <!-- 分析结果将显示在这里 -->
+            </div>
+
+            <div class="demo-section">
+                <h3>💡 快速测试示例</h3>
+                <p>点击下面的示例文本快速体验：</p>
+                <div class="demo-buttons">
+                    <button class="demo-btn" onclick="setDemoText('这个产品真的太棒了！我很满意！')">😊 积极评价</button>
+                    <button class="demo-btn" onclick="setDemoText('太糟糕了，完全不能用，我很失望')">😞 消极反馈</button>
+                    <button class="demo-btn" onclick="setDemoText('请问这个功能怎么使用？')">❓ 询问问题</button>
+                    <button class="demo-btn" onclick="setDemoText('能帮我解决一下这个问题吗？')">🆘 请求帮助</button>
+                    <button class="demo-btn" onclick="setDemoText('我要投诉这个服务质量')">😠 投诉内容</button>
+                    <button class="demo-btn" onclick="setDemoText('太惊讶了！没想到这么快')">😮 表达惊讶</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简化版情感分析器 - JavaScript实现
+        class WebSentimentAnalyzer {
+            constructor() {
+                this.positiveWords = new Set([
+                    '好', '棒', '优秀', '完美', '满意', '开心', '高兴', '快乐', '喜欢', '爱',
+                    '赞', '不错', '很好', '太好了', '厉害', '牛', '给力', '优质', '满分',
+                    '惊喜', '感谢', '谢谢', '赞美', '称赞', '夸奖', '表扬', '认可',
+                    '支持', '同意', '赞同', '肯定', '确定', '正确', '对的', '没错',
+                    '成功', '胜利', '顺利', '完成', '达成', '实现', '解决', '搞定'
+                ]);
+
+                this.negativeWords = new Set([
+                    '不好', '差', '糟糕', '失望', '难过', '伤心', '生气', '愤怒', '讨厌', '恨',
+                    '烦', '烦躁', '郁闷', '沮丧', '无聊', '累', '疲惫', '困难', '麻烦',
+                    '问题', '错误', '失败', '不行', '不对', '错了', '不会', '不懂',
+                    '担心', '害怕', '紧张', '焦虑', '压力', '痛苦', '难受', '不舒服',
+                    '抱怨', '投诉', '批评', '指责', '质疑', '怀疑', '反对', '拒绝'
+                ]);
+
+                this.emotionWords = {
+                    'joy': new Set(['开心', '高兴', '快乐', '愉快', '兴奋', '激动', '欣喜', '喜悦']),
+                    'anger': new Set(['生气', '愤怒', '恼火', '气愤', '暴怒', '发火', '火大', '怒']),
+                    'sadness': new Set(['难过', '伤心', '悲伤', '沮丧', '失落', '郁闷', '忧伤', '痛苦']),
+                    'fear': new Set(['害怕', '恐惧', '担心', '紧张', '焦虑', '不安', '忧虑', '慌张']),
+                    'surprise': new Set(['惊讶', '震惊', '意外', '吃惊', '惊奇', '诧异', '惊喜', '惊叹']),
+                    'disgust': new Set(['厌恶', '讨厌', '恶心', '反感', '嫌弃', '排斥', '憎恨', '憎恶'])
+                };
+
+                this.replyTemplates = {
+                    'positive': [
+                        "很高兴听到您的积极反馈！😊",
+                        "您的满意是我们最大的动力！",
+                        "感谢您的认可，我们会继续努力！",
+                        "太棒了！很开心能帮到您！",
+                        "您的支持让我们倍感温暖！❤️"
+                    ],
+                    'negative': [
+                        "很抱歉给您带来了不好的体验 😔",
+                        "我理解您的困扰，让我们一起解决这个问题",
+                        "感谢您的反馈，我们会认真改进",
+                        "对不起，请告诉我们如何能做得更好",
+                        "您的意见对我们很重要，我们会努力改善"
+                    ],
+                    'neutral': [
+                        "感谢您的提问，我来为您详细解答",
+                        "我明白了您的需求，让我来帮助您",
+                        "这是一个很好的问题，我来为您分析",
+                        "我理解您的疑问，让我们一起探讨"
+                    ],
+                    'question': [
+                        "这是一个很好的问题！让我来为您解答",
+                        "我来帮您分析这个问题",
+                        "关于您的问题，我的建议是...",
+                        "让我为您详细说明一下"
+                    ],
+                    'help_request': [
+                        "我很乐意帮助您解决这个问题！",
+                        "让我来协助您处理这个事情",
+                        "我会尽我所能为您提供帮助",
+                        "别担心，我们一起来解决这个问题"
+                    ],
+                    'complaint': [
+                        "非常抱歉给您带来了困扰 😔",
+                        "我完全理解您的不满，让我们来解决这个问题",
+                        "感谢您向我们反映这个问题",
+                        "您的投诉我们会认真对待"
+                    ]
+                };
+            }
+
+            analyzeText(text) {
+                // 简单分词
+                const words = this.tokenize(text);
+                
+                // 计算情感分数
+                let positiveScore = 0;
+                let negativeScore = 0;
+
+                words.forEach(word => {
+                    if (this.containsWord(word, this.positiveWords)) {
+                        positiveScore++;
+                    }
+                    if (this.containsWord(word, this.negativeWords)) {
+                        negativeScore++;
+                    }
+                });
+
+                // 检测特征
+                const isQuestion = /[？?]$|^(什么|怎么|如何|为什么|哪里|哪个|谁|何时|多少)/.test(text);
+                const isHelpRequest = /(帮助|帮忙|协助|指导|教|告诉)/.test(text);
+                const isComplaint = /(投诉|抱怨|不满|问题|故障|错误|失败)/.test(text);
+
+                // 计算情感倾向
+                const totalScore = positiveScore - negativeScore;
+                let sentiment, confidence;
+
+                if (totalScore > 0) {
+                    sentiment = 'positive';
+                    confidence = Math.min(positiveScore / words.length, 1.0);
+                } else if (totalScore < 0) {
+                    sentiment = 'negative';
+                    confidence = Math.min(negativeScore / words.length, 1.0);
+                } else {
+                    sentiment = 'neutral';
+                    confidence = 0.5;
+                }
+
+                // 检测具体情感
+                const emotion = this.detectEmotion(text);
+
+                // 生成回复
+                const reply = this.generateReply({
+                    sentiment,
+                    isQuestion,
+                    isHelpRequest,
+                    isComplaint,
+                    emotion: emotion.type
+                });
+
+                return {
+                    text,
+                    sentiment,
+                    confidence,
+                    emotion: emotion.type,
+                    emotionConfidence: emotion.confidence,
+                    positiveScore,
+                    negativeScore,
+                    isQuestion,
+                    isHelpRequest,
+                    isComplaint,
+                    reply
+                };
+            }
+
+            tokenize(text) {
+                // 简单的中文分词
+                const cleanText = text.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '');
+                const words = [];
+                
+                for (let i = 0; i < cleanText.length; i++) {
+                    for (let j = i + 1; j <= Math.min(i + 4, cleanText.length); j++) {
+                        words.push(cleanText.substring(i, j));
+                    }
+                }
+                
+                return words;
+            }
+
+            containsWord(text, wordSet) {
+                for (let word of wordSet) {
+                    if (text.includes(word) || word.includes(text)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            detectEmotion(text) {
+                let maxScore = 0;
+                let dominantEmotion = 'neutral';
+
+                for (let [emotion, words] of Object.entries(this.emotionWords)) {
+                    let score = 0;
+                    for (let word of words) {
+                        if (text.includes(word)) {
+                            score++;
+                        }
+                    }
+                    if (score > maxScore) {
+                        maxScore = score;
+                        dominantEmotion = emotion;
+                    }
+                }
+
+                return {
+                    type: dominantEmotion,
+                    confidence: maxScore > 0 ? maxScore / text.length : 0
+                };
+            }
+
+            generateReply(analysis) {
+                let templates;
+
+                if (analysis.isComplaint) {
+                    templates = this.replyTemplates['complaint'];
+                } else if (analysis.isHelpRequest) {
+                    templates = this.replyTemplates['help_request'];
+                } else if (analysis.isQuestion) {
+                    templates = this.replyTemplates['question'];
+                } else {
+                    templates = this.replyTemplates[analysis.sentiment];
+                }
+
+                return templates[Math.floor(Math.random() * templates.length)];
+            }
+        }
+
+        // 全局分析器实例
+        const analyzer = new WebSentimentAnalyzer();
+
+        function setDemoText(text) {
+            document.getElementById('userInput').value = text;
+        }
+
+        function analyzeText() {
+            const input = document.getElementById('userInput').value.trim();
+            
+            if (!input) {
+                alert('请输入要分析的文本内容');
+                return;
+            }
+
+            const result = analyzer.analyzeText(input);
+            displayResults(result);
+        }
+
+        function displayResults(result) {
+            const resultsDiv = document.getElementById('results');
+            
+            // 情感颜色映射
+            const sentimentClass = `sentiment-${result.sentiment}`;
+            const confidenceClass = `confidence-${result.sentiment}`;
+            
+            // 情感emoji映射
+            const sentimentEmoji = {
+                'positive': '😊',
+                'negative': '😞',
+                'neutral': '😐'
+            };
+
+            const emotionEmoji = {
+                'joy': '😄',
+                'anger': '😠',
+                'sadness': '😢',
+                'fear': '😰',
+                'surprise': '😮',
+                'disgust': '🤢',
+                'neutral': '😐'
+            };
+
+            // 构建特征标签
+            let features = '';
+            if (result.isQuestion) features += '<span class="feature-tag">❓ 问句</span>';
+            if (result.isHelpRequest) features += '<span class="feature-tag">🆘 求助</span>';
+            if (result.isComplaint) features += '<span class="feature-tag">😠 投诉</span>';
+
+            resultsDiv.innerHTML = `
+                <div class="result-item">
+                    <h3><span>${sentimentEmoji[result.sentiment]}</span>情感倾向</h3>
+                    <p class="${sentimentClass}">
+                        ${result.sentiment === 'positive' ? '积极' : result.sentiment === 'negative' ? '消极' : '中性'}
+                    </p>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill ${confidenceClass}" style="width: ${result.confidence * 100}%"></div>
+                    </div>
+                    <small>置信度: ${(result.confidence * 100).toFixed(1)}%</small>
+                </div>
+
+                <div class="result-item">
+                    <h3><span>${emotionEmoji[result.emotion]}</span>具体情感</h3>
+                    <p>${this.getEmotionName(result.emotion)}</p>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill confidence-neutral" style="width: ${result.emotionConfidence * 100}%"></div>
+                    </div>
+                    <small>置信度: ${(result.emotionConfidence * 100).toFixed(1)}%</small>
+                </div>
+
+                <div class="result-item">
+                    <h3><span>📊</span>情感统计</h3>
+                    <p>积极词汇: ${result.positiveScore} | 消极词汇: ${result.negativeScore}</p>
+                    ${features ? `<div class="features">${features}</div>` : ''}
+                </div>
+
+                <div class="reply-box">
+                    <h3>🤖 智能回复</h3>
+                    <div class="reply-text">${result.reply}</div>
+                </div>
+            `;
+
+            resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function getEmotionName(emotion) {
+            const emotionNames = {
+                'joy': '喜悦',
+                'anger': '愤怒',
+                'sadness': '悲伤',
+                'fear': '恐惧',
+                'surprise': '惊讶',
+                'disgust': '厌恶',
+                'neutral': '中性'
+            };
+            return emotionNames[emotion] || '未知';
+        }
+
+        // 回车键触发分析
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                analyzeText();
+            }
+        });
+    </script>
+</body>
+</html>
