@@ -1,0 +1,291 @@
+/* 发票预览页面样式 */
+.preview-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 头部 */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  background-color: #fff;
+  border-bottom: 1rpx solid #eee;
+}
+
+.back-btn {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  font-size: 32rpx;
+}
+
+.title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.actions {
+  display: flex;
+  gap: 20rpx;
+}
+
+.action-btn {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 32rpx;
+}
+
+/* 加载状态 */
+.loading {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 发票预览 */
+.invoice-preview {
+  flex: 1;
+  padding: 20rpx;
+}
+
+.invoice-body {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 40rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 发票头部 */
+.invoice-header {
+  text-align: center;
+  margin-bottom: 40rpx;
+  padding-bottom: 30rpx;
+  border-bottom: 2rpx solid #333;
+}
+
+.invoice-title {
+  margin-bottom: 20rpx;
+}
+
+.title-text {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.invoice-number {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.number-label {
+  margin-right: 10rpx;
+}
+
+.number-value {
+  font-weight: bold;
+  color: #333;
+}
+
+/* 开票信息 */
+.invoice-info {
+  margin-bottom: 40rpx;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 16rpx;
+  font-size: 28rpx;
+}
+
+.label {
+  width: 160rpx;
+  color: #666;
+  flex-shrink: 0;
+}
+
+.value {
+  flex: 1;
+  color: #333;
+  word-break: break-all;
+}
+
+/* 客户信息 */
+.customer-section {
+  margin-bottom: 40rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  padding-bottom: 10rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.customer-info {
+  background-color: #f8f8f8;
+  padding: 20rpx;
+  border-radius: 8rpx;
+}
+
+/* 金额信息 */
+.amount-section {
+  margin-bottom: 40rpx;
+}
+
+.amount-table {
+  border: 1rpx solid #ddd;
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+
+.table-header {
+  display: flex;
+  background-color: #f8f8f8;
+  font-weight: bold;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.table-row {
+  display: flex;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.table-header,
+.table-row {
+  border-bottom: 1rpx solid #ddd;
+}
+
+.table-header:last-child,
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.col-1 {
+  flex: 2;
+  padding: 20rpx;
+  border-right: 1rpx solid #ddd;
+}
+
+.col-2,
+.col-3,
+.col-4 {
+  flex: 1;
+  padding: 20rpx;
+  text-align: center;
+  border-right: 1rpx solid #ddd;
+}
+
+.col-4 {
+  border-right: none;
+}
+
+.table-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 20rpx;
+  background-color: #f8f8f8;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.total-label {
+  margin-right: 20rpx;
+  color: #333;
+}
+
+.total-amount {
+  color: #ff6b35;
+  font-size: 32rpx;
+}
+
+/* 备注信息 */
+.remark-section {
+  margin-bottom: 40rpx;
+}
+
+.remark-content {
+  background-color: #f8f8f8;
+  padding: 20rpx;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* 状态信息 */
+.status-section {
+  text-align: center;
+  padding-top: 30rpx;
+  border-top: 1rpx solid #eee;
+}
+
+.status-info {
+  font-size: 28rpx;
+}
+
+.status-label {
+  color: #666;
+  margin-right: 10rpx;
+}
+
+.status-value {
+  font-weight: bold;
+}
+
+.status-pending {
+  color: #856404;
+}
+
+.status-completed {
+  color: #155724;
+}
+
+.status-cancelled {
+  color: #721c24;
+}
+
+.status-draft {
+  color: #383d41;
+}
+
+/* 错误状态 */
+.error {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 0;
+}
+
+.error-icon {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 40rpx;
+}
+
+.error-text {
+  color: #999;
+  font-size: 28rpx;
+}

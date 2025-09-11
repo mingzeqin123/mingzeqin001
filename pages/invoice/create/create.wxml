@@ -1,0 +1,196 @@
+<!-- 创建发票页面 -->
+<view class="create-container">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="back-btn" bindtap="onBack">
+      <text class="iconfont icon-back"></text>
+    </view>
+    <text class="title">创建发票</text>
+    <view class="placeholder"></view>
+  </view>
+
+  <!-- 表单内容 -->
+  <scroll-view class="form-content" scroll-y>
+    <!-- 发票类型 -->
+    <view class="form-section">
+      <view class="section-title">发票类型</view>
+      <view class="form-item">
+        <picker 
+          range="{{invoiceTypes}}" 
+          range-key="label"
+          value="{{formData.invoiceType === 'normal' ? 0 : 1}}"
+          bindchange="onPickerChange"
+          data-field="invoiceType"
+        >
+          <view class="picker-text">
+            {{formData.invoiceType === 'normal' ? '普通发票' : '专用发票'}}
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 客户信息 -->
+    <view class="form-section">
+      <view class="section-title">客户信息</view>
+      
+      <view class="form-item">
+        <text class="label required">客户名称</text>
+        <input 
+          class="input" 
+          placeholder="请输入客户名称" 
+          value="{{formData.customerName}}"
+          bindinput="onInputChange"
+          data-field="customerName"
+        />
+        <view class="select-btn" bindtap="selectCustomer">选择</view>
+      </view>
+      
+      <view class="form-item" wx:if="{{formData.invoiceType === 'special'}}">
+        <text class="label required">纳税人识别号</text>
+        <input 
+          class="input" 
+          placeholder="请输入纳税人识别号" 
+          value="{{formData.customerTaxNumber}}"
+          bindinput="onInputChange"
+          data-field="customerTaxNumber"
+        />
+      </view>
+      
+      <view class="form-item">
+        <text class="label">客户地址</text>
+        <input 
+          class="input" 
+          placeholder="请输入客户地址" 
+          value="{{formData.customerAddress}}"
+          bindinput="onInputChange"
+          data-field="customerAddress"
+        />
+      </view>
+      
+      <view class="form-item">
+        <text class="label">联系电话</text>
+        <input 
+          class="input" 
+          placeholder="请输入联系电话" 
+          value="{{formData.customerPhone}}"
+          bindinput="onInputChange"
+          data-field="customerPhone"
+        />
+      </view>
+      
+      <view class="form-item" wx:if="{{formData.invoiceType === 'special'}}">
+        <text class="label">开户银行</text>
+        <input 
+          class="input" 
+          placeholder="请输入开户银行" 
+          value="{{formData.customerBank}}"
+          bindinput="onInputChange"
+          data-field="customerBank"
+        />
+      </view>
+      
+      <view class="form-item" wx:if="{{formData.invoiceType === 'special'}}">
+        <text class="label">银行账号</text>
+        <input 
+          class="input" 
+          placeholder="请输入银行账号" 
+          value="{{formData.customerAccount}}"
+          bindinput="onInputChange"
+          data-field="customerAccount"
+        />
+      </view>
+    </view>
+
+    <!-- 开票信息 -->
+    <view class="form-section">
+      <view class="section-title">开票信息</view>
+      
+      <view class="form-item">
+        <text class="label required">开票内容</text>
+        <textarea 
+          class="textarea" 
+          placeholder="请输入开票内容" 
+          value="{{formData.invoiceContent}}"
+          bindinput="onInputChange"
+          data-field="invoiceContent"
+          maxlength="200"
+        ></textarea>
+      </view>
+      
+      <view class="form-item">
+        <text class="label required">开票金额</text>
+        <input 
+          class="input" 
+          type="digit"
+          placeholder="请输入开票金额" 
+          value="{{formData.amount}}"
+          bindinput="onInputChange"
+          data-field="amount"
+        />
+      </view>
+      
+      <view class="form-item">
+        <text class="label">税率</text>
+        <picker 
+          range="{{taxRates}}" 
+          range-key="label"
+          value="{{taxRates.findIndex(item => item.value === formData.taxRate)}}"
+          bindchange="onPickerChange"
+          data-field="taxRate"
+        >
+          <view class="picker-text">
+            {{(formData.taxRate * 100).toFixed(0)}}%
+          </view>
+        </picker>
+      </view>
+      
+      <view class="form-item">
+        <text class="label">税额</text>
+        <input 
+          class="input readonly" 
+          value="{{formData.taxAmount}}"
+          disabled
+        />
+      </view>
+      
+      <view class="form-item">
+        <text class="label">价税合计</text>
+        <input 
+          class="input readonly total" 
+          value="{{formData.totalAmount}}"
+          disabled
+        />
+      </view>
+      
+      <view class="form-item">
+        <text class="label">备注</text>
+        <textarea 
+          class="textarea" 
+          placeholder="请输入备注信息" 
+          value="{{formData.remark}}"
+          bindinput="onInputChange"
+          data-field="remark"
+          maxlength="200"
+        ></textarea>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部操作栏 -->
+  <view class="footer">
+    <button 
+      class="btn secondary" 
+      bindtap="saveDraft"
+      disabled="{{submitting}}"
+    >
+      保存草稿
+    </button>
+    <button 
+      class="btn primary" 
+      bindtap="submitInvoice"
+      disabled="{{submitting}}"
+    >
+      {{submitting ? '提交中...' : '提交发票'}}
+    </button>
+  </view>
+</view>

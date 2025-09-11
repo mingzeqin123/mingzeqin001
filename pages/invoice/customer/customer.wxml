@@ -1,0 +1,56 @@
+<!-- 客户管理页面 -->
+<view class="customer-container">
+  <!-- 头部搜索栏 -->
+  <view class="header">
+    <view class="search-bar">
+      <input 
+        class="search-input" 
+        placeholder="搜索客户名称..." 
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        confirm-type="search"
+        bindconfirm="onSearch"
+      />
+      <view class="search-btn" bindtap="onSearch">
+        <text class="iconfont icon-search"></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 客户列表 -->
+  <view class="customer-list">
+    <view wx:if="{{loading}}" class="loading">
+      <text>加载中...</text>
+    </view>
+    
+    <view wx:elif="{{customerList.length === 0}}" class="empty">
+      <image class="empty-icon" src="/images/empty-customer.png" mode="aspectFit"></image>
+      <text class="empty-text">暂无客户数据</text>
+      <button class="create-btn" bindtap="createCustomer">添加客户</button>
+    </view>
+    
+    <view wx:else>
+      <view 
+        class="customer-item" 
+        wx:for="{{customerList}}" 
+        wx:key="id"
+        bindtap="selectCustomer"
+        data-customer="{{item}}"
+      >
+        <view class="customer-info">
+          <text class="customer-name">{{item.name}}</text>
+          <text class="customer-tax" wx:if="{{item.taxNumber}}">税号：{{item.taxNumber}}</text>
+          <text class="customer-phone" wx:if="{{item.phone}}">电话：{{item.phone}}</text>
+        </view>
+        <view class="select-icon">
+          <text class="iconfont icon-arrow-right"></text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 创建客户按钮 -->
+  <view class="fab" bindtap="createCustomer">
+    <text class="iconfont icon-add"></text>
+  </view>
+</view>
