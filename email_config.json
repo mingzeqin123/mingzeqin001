@@ -1,0 +1,44 @@
+{
+  "email_settings": {
+    "sender_email": "your_email@example.com",
+    "sender_password": "your_password_or_app_password",
+    "provider": "gmail",
+    "custom_smtp": {
+      "smtp_server": "smtp.example.com",
+      "smtp_port": 587,
+      "use_tls": true
+    }
+  },
+  "common_providers": {
+    "gmail": {
+      "smtp_server": "smtp.gmail.com",
+      "smtp_port": 587,
+      "use_tls": true,
+      "note": "需要启用两步验证并使用应用密码"
+    },
+    "163": {
+      "smtp_server": "smtp.163.com",
+      "smtp_port": 25,
+      "use_tls": true,
+      "note": "需要在邮箱设置中开启SMTP服务"
+    },
+    "qq": {
+      "smtp_server": "smtp.qq.com",
+      "smtp_port": 587,
+      "use_tls": true,
+      "note": "需要获取授权码替代密码"
+    },
+    "outlook": {
+      "smtp_server": "smtp-mail.outlook.com",
+      "smtp_port": 587,
+      "use_tls": true,
+      "note": "支持Outlook.com和Hotmail.com"
+    }
+  },
+  "usage_examples": {
+    "text_email": "发送纯文本邮件",
+    "html_email": "发送HTML格式邮件",
+    "attachment_email": "发送带附件邮件",
+    "batch_email": "群发邮件"
+  }
+}
