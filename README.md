@@ -1,177 +1,195 @@
-# 微信小程序跳一跳游戏
+# Python邮件发送演示程序
 
-一个基于微信小程序平台开发的3D跳一跳小游戏，使用Three.js渲染引擎实现3D效果。
+这是一个功能完整的Python邮件发送演示程序，支持多种邮件服务商和各种邮件类型。
 
-## 🎮 游戏特色
+## 🚀 功能特点
 
-- **3D视觉效果**：使用Three.js渲染引擎，呈现精美的3D场景
-- **物理引擎**：真实的跳跃物理模拟和碰撞检测
-- **多样方块**：普通、小型、高型、特殊等多种方块类型
-- **蓄力系统**：长按蓄力，控制跳跃距离和高度
-- **分数系统**：完美落地获得额外分数，挑战最高纪录
-- **视觉特效**：粒子效果、动画过渡、阴影系统
-- **音效支持**：跳跃、落地、完美、游戏结束等音效
-- **社交分享**：支持微信好友和朋友圈分享
+- ✅ 支持多种邮件服务商 (Gmail, Outlook, QQ, 163, 新浪等)
+- ✅ 支持纯文本和HTML格式邮件
+- ✅ 支持附件发送
+- ✅ 支持批量发送
+- ✅ 支持中文内容
+- ✅ 完整的错误处理
+- ✅ 面向对象设计，易于扩展
 
-## 🚀 快速开始
+## 📦 安装依赖
 
-### 环境要求
-- 微信开发者工具 1.05.0 或更高版本
-- 小程序基础库 2.9.0 或更高版本
-
-### 安装步骤
-
-1. **克隆项目**
-   ```bash
-   git clone [项目地址]
-   cd jump-jump-game
-   ```
-
-2. **导入项目**
-   - 打开微信开发者工具
-   - 选择"导入项目"
-   - 选择项目目录
-   - 填入AppID（测试可使用测试号）
-
-3. **添加资源文件**
-   - 将Three.js完整库文件放入 `/pages/game/libs/three.min.js`
-   - 添加音效文件到 `/sounds/` 目录
-   - 添加图片资源到 `/images/` 目录
-
-4. **编译运行**
-   - 点击"编译"按钮
-   - 在模拟器或真机上预览
-
-## 📁 项目结构
-
-```
-jump-jump-game/
-├── app.js                 # 小程序入口文件
-├── app.json               # 小程序配置文件
-├── app.wxss              # 全局样式文件
-├── sitemap.json          # 站点地图配置
-├── project.config.json   # 项目配置文件
-├── pages/
-│   └── game/             # 游戏页面
-│       ├── game.js       # 页面逻辑
-│       ├── game.json     # 页面配置
-│       ├── game.wxml     # 页面结构
-│       ├── game.wxss     # 页面样式
-│       ├── gameEngine.js # 游戏引擎核心
-│       ├── player.js     # 玩家角色类
-│       ├── block.js      # 方块类
-│       ├── utils.js      # 工具函数
-│       └── libs/
-│           └── three.min.js # Three.js库
-├── images/               # 图片资源
-│   └── README.md        # 图片说明
-├── sounds/               # 音效资源
-│   └── README.md        # 音效说明
-└── README.md            # 项目说明
+```bash
+# 克隆或下载项目文件
+# 安装依赖（可选，主要使用Python标准库）
+pip install -r requirements.txt
 ```
 
-## 🎯 游戏玩法
+## 🔧 配置说明
 
-1. **开始游戏**：点击"开始游戏"按钮
-2. **蓄力跳跃**：长按屏幕蓄力，右侧显示蓄力条
-3. **释放跳跃**：松开手指，角色跳向下一个方块
-4. **获得分数**：
-   - 成功落地：+1分
-   - 良好落地：+3分
-   - 完美落地：+5分（中心位置）
-5. **游戏结束**：跳跃失败掉落时游戏结束
-6. **分享成绩**：可分享到微信好友或朋友圈
+### 1. 邮箱配置
 
-## 🔧 核心技术
+在 `email_demo.py` 文件中修改以下配置：
 
-### 渲染引擎
-- **Three.js**：3D场景渲染
-- **WebGL**：硬件加速渲染
-- **阴影系统**：实时阴影计算
-- **光照系统**：环境光+方向光
+```python
+EMAIL_PROVIDER = 'gmail'  # 邮件服务商
+SENDER_EMAIL = 'your_email@gmail.com'  # 发送者邮箱
+SENDER_PASSWORD = 'your_app_password'  # 发送者密码
+RECIPIENT_EMAIL = 'recipient@example.com'  # 收件人邮箱
+```
 
-### 物理系统
-- **跳跃轨迹**：抛物线运动模拟
-- **碰撞检测**：圆形碰撞检测算法
-- **重力模拟**：自然下落效果
+### 2. 支持的邮件服务商
 
-### 动画系统
-- **缓动函数**：平滑的动画过渡
-- **骨骼动画**：角色动作表现
-- **粒子效果**：特殊效果展示
-- **相机跟随**：平滑的视角切换
+| 服务商 | SMTP服务器 | 端口 | 说明 |
+|--------|------------|------|------|
+| Gmail | smtp.gmail.com | 587 | 需要应用专用密码 |
+| Outlook | smtp-mail.outlook.com | 587 | 支持Microsoft账户 |
+| QQ邮箱 | smtp.qq.com | 587 | 需要开启SMTP服务 |
+| 163邮箱 | smtp.163.com | 587 | 需要开启SMTP服务 |
+| 新浪邮箱 | smtp.sina.com | 587 | 需要开启SMTP服务 |
 
-## 🎨 自定义配置
+### 3. 获取应用专用密码
 
-### 游戏参数调整
-在 `gameEngine.js` 中可以调整：
-- `maxChargingTime`：最大蓄力时间
-- 跳跃距离和高度计算公式
-- 方块生成间距和角度
+#### Gmail
+1. 启用两步验证
+2. 生成应用专用密码
+3. 使用应用专用密码而不是账户密码
 
-### 视觉效果
-在各个类文件中可以调整：
-- 方块颜色和材质
-- 光照强度和位置
-- 动画持续时间和缓动函数
+#### QQ邮箱
+1. 登录QQ邮箱
+2. 设置 → 账户 → 开启SMTP服务
+3. 获取授权码
 
-### 音效配置
-在 `utils.js` 的 `AudioManager` 类中：
-- 添加新的音效类型
-- 调整音量和播放逻辑
+#### 163邮箱
+1. 登录163邮箱
+2. 设置 → POP3/SMTP/IMAP → 开启SMTP服务
+3. 获取授权码
 
-## 📱 兼容性
+## 🎯 使用方法
 
-- **iOS**：iOS 10.0+
-- **Android**：Android 5.0+
-- **微信版本**：7.0.0+
-- **小程序基础库**：2.9.0+
+### 基本使用
 
-## 🔍 性能优化
+```bash
+python email_demo.py
+```
 
-1. **渲染优化**
-   - 对象池管理，减少GC
-   - 视锥剔除，只渲染可见对象
-   - LOD系统，距离越远细节越少
+### 自定义使用
 
-2. **内存管理**
-   - 及时销毁不需要的对象
-   - 纹理和几何体复用
-   - 音效资源预加载
+```python
+from email_demo import EmailSender, get_smtp_config
 
-3. **帧率优化**
-   - 固定时间步长更新
-   - 动画插值平滑
-   - 避免在渲染循环中创建对象
+# 获取SMTP配置
+config = get_smtp_config('gmail')
 
-## 🐛 已知问题
+# 创建邮件发送器
+sender = EmailSender(
+    smtp_server=config['smtp_server'],
+    smtp_port=config['smtp_port'],
+    sender_email='your_email@gmail.com',
+    sender_password='your_app_password'
+)
 
-1. 在部分低端Android设备上可能出现卡顿
-2. Three.js库文件较大，首次加载时间较长
-3. WebGL兼容性问题，部分老设备不支持
+# 发送纯文本邮件
+sender.send_text_email(
+    recipient_email='recipient@example.com',
+    subject='测试邮件',
+    body='这是一封测试邮件'
+)
 
-## 🔄 更新日志
+# 发送HTML邮件
+html_content = '<h1>Hello World!</h1><p>这是HTML邮件</p>'
+sender.send_html_email(
+    recipient_email='recipient@example.com',
+    subject='HTML测试邮件',
+    html_body=html_content
+)
 
-### v1.0.0 (2024-01-15)
-- 基础游戏功能实现
-- 3D渲染和物理引擎
-- 完整的游戏流程
-- 分数系统和社交分享
+# 发送带附件的邮件
+sender.send_email_with_attachment(
+    recipient_email='recipient@example.com',
+    subject='带附件邮件',
+    body='请查看附件',
+    attachment_path='/path/to/file.txt'
+)
+
+# 批量发送邮件
+recipients = ['user1@example.com', 'user2@example.com']
+sender.send_bulk_email(recipients, '批量邮件', '批量发送内容')
+```
+
+## 📋 演示内容
+
+程序包含以下演示：
+
+1. **纯文本邮件发送** - 发送简单的文本邮件
+2. **HTML邮件发送** - 发送格式化的HTML邮件
+3. **带附件邮件发送** - 发送包含附件的邮件
+4. **批量邮件发送** - 向多个收件人发送邮件
+
+## ⚠️ 注意事项
+
+1. **安全性**：不要在代码中硬编码密码，建议使用环境变量
+2. **频率限制**：注意邮件服务商的发送频率限制
+3. **垃圾邮件**：避免发送垃圾邮件，遵守相关法律法规
+4. **网络连接**：确保网络连接正常，能够访问SMTP服务器
+
+## 🔒 安全建议
+
+### 使用环境变量
+
+```python
+import os
+
+SENDER_EMAIL = os.getenv('SENDER_EMAIL', 'your_email@gmail.com')
+SENDER_PASSWORD = os.getenv('SENDER_PASSWORD', 'your_app_password')
+```
+
+### 配置文件方式
+
+创建 `config.py` 文件：
+
+```python
+# config.py
+EMAIL_CONFIG = {
+    'gmail': {
+        'smtp_server': 'smtp.gmail.com',
+        'smtp_port': 587,
+        'sender_email': 'your_email@gmail.com',
+        'sender_password': 'your_app_password'
+    }
+}
+```
+
+## 🐛 常见问题
+
+### 1. 认证失败
+- 检查邮箱和密码是否正确
+- 确认是否使用了应用专用密码
+- 检查是否开启了SMTP服务
+
+### 2. 连接超时
+- 检查网络连接
+- 确认SMTP服务器地址和端口
+- 检查防火墙设置
+
+### 3. 中文乱码
+- 确保使用UTF-8编码
+- 检查邮件头设置
+
+## 📚 扩展功能
+
+可以基于此程序扩展以下功能：
+
+- 邮件模板系统
+- 邮件队列管理
+- 邮件发送状态跟踪
+- 邮件统计分析
+- 多线程批量发送
+- 邮件内容加密
 
 ## 📄 许可证
 
-本项目采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
+MIT License
 
 ## 🤝 贡献
 
-欢迎提交 Issue 和 Pull Request 来改进这个项目！
-
-## 📞 联系方式
-
-如有问题或建议，请通过以下方式联系：
-- GitHub Issues
-- 邮箱：[your-email@example.com]
+欢迎提交Issue和Pull Request来改进这个项目！
 
 ---
 
-⭐ 如果这个项目对你有帮助，请给个星星支持一下！
+**注意**：请确保遵守相关法律法规和邮件服务商的使用条款。
