@@ -11,11 +11,19 @@ App({
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
       }
     })
+    
+    // 初始化开票系统
+    this.initInvoiceSystem()
   },
   
   globalData: {
     userInfo: null,
-    bestScore: 0
+    bestScore: 0,
+    // 开票系统相关数据
+    invoiceConfig: {
+      initialized: false,
+      apiAvailable: true
+    }
   },
   
   // 获取最高分
@@ -39,5 +47,27 @@ App({
     } catch (e) {
       console.error('保存分数失败', e)
     }
+  },
+  
+  // 初始化开票系统
+  initInvoiceSystem() {
+    try {
+      const config = require('./config/invoiceConfig.js')
+      this.globalData.invoiceConfig = {
+        ...this.globalData.invoiceConfig,
+        initialized: true,
+        version: config.CLIENT_VERSION,
+        environment: config.ENV
+      }
+      console.log('开票系统初始化成功')
+    } catch (e) {
+      console.error('开票系统初始化失败', e)
+      this.globalData.invoiceConfig.apiAvailable = false
+    }
+  },
+  
+  // 获取开票系统状态
+  getInvoiceSystemStatus() {
+    return this.globalData.invoiceConfig
   }
 })

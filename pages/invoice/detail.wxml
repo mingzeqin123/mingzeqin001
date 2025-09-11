@@ -1,0 +1,194 @@
+<!--发票详情页面-->
+<view class="container" wx:if="{{!loading && invoiceDetail}}">
+  <!-- 发票状态卡片 -->
+  <view class="status-card">
+    <view class="status-header">
+      <text class="status-text" style="color: {{statusMap[invoiceDetail.status].color}}">
+        {{statusMap[invoiceDetail.status].text}}
+      </text>
+      <view class="status-badge" style="background-color: {{statusMap[invoiceDetail.status].color}}">
+        {{statusMap[invoiceDetail.status].text}}
+      </view>
+    </view>
+    
+    <view class="invoice-number" wx:if="{{invoiceDetail.invoiceNumber}}">
+      <text class="number-label">发票号码</text>
+      <text class="number-value" bindtap="onCopyInfo" data-field="number">
+        {{invoiceDetail.invoiceNumber}}
+      </text>
+    </view>
+    
+    <view class="status-time">
+      <text class="time-label">申请时间：</text>
+      <text class="time-value">{{invoiceDetail.createTime}}</text>
+    </view>
+    
+    <view class="status-time" wx:if="{{invoiceDetail.completeTime}}">
+      <text class="time-label">完成时间：</text>
+      <text class="time-value">{{invoiceDetail.completeTime}}</text>
+    </view>
+  </view>
+
+  <!-- 发票基本信息 -->
+  <view class="info-section">
+    <view class="section-title">
+      <text class="title-text">发票信息</text>
+    </view>
+    
+    <view class="info-list">
+      <view class="info-item">
+        <text class="info-label">发票抬头</text>
+        <text class="info-value">{{invoiceDetail.title}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="info-label">纳税人识别号</text>
+        <text class="info-value">{{invoiceDetail.taxNumber}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="info-label">发票类型</text>
+        <text class="info-value">{{invoiceDetail.type === 1 ? '增值税普通发票' : '增值税专用发票'}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="info-label">开票金额</text>
+        <text class="info-value amount">¥{{invoiceDetail.amount}}</text>
+      </view>
+      
+      <view class="info-item">
+        <text class="info-label">开票内容</text>
+        <text class="info-value">{{invoiceDetail.content}}</text>
+      </view>
+      
+      <view class="info-item" wx:if="{{invoiceDetail.remark}}">
+        <text class="info-label">备注</text>
+        <text class="info-value">{{invoiceDetail.remark}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 专票企业信息 -->
+  <view class="info-section" wx:if="{{invoiceDetail.type === 2}}">
+    <view class="section-title">
+      <text class="title-text">企业信息</text>
+    </view>
+    
+    <view class="info-list">
+      <view class="info-item" wx:if="{{invoiceDetail.address}}">
+        <text class="info-label">企业地址</text>
+        <text class="info-value">{{invoiceDetail.address}}</text>
+      </view>
+      
+      <view class="info-item" wx:if="{{invoiceDetail.phone}}">
+        <text class="info-label">企业电话</text>
+        <text class="info-value">{{invoiceDetail.phone}}</text>
+      </view>
+      
+      <view class="info-item" wx:if="{{invoiceDetail.bankName}}">
+        <text class="info-label">开户银行</text>
+        <text class="info-value">{{invoiceDetail.bankName}}</text>
+      </view>
+      
+      <view class="info-item" wx:if="{{invoiceDetail.bankAccount}}">
+        <text class="info-label">银行账号</text>
+        <text class="info-value">{{invoiceDetail.bankAccount}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 发票文件信息 -->
+  <view class="info-section" wx:if="{{invoiceDetail.status === 'completed'}}">
+    <view class="section-title">
+      <text class="title-text">发票文件</text>
+    </view>
+    
+    <view class="file-info">
+      <view class="file-item" wx:if="{{invoiceDetail.invoiceCode}}">
+        <text class="file-label">发票代码</text>
+        <text class="file-value" bindtap="onCopyInfo" data-field="code">
+          {{invoiceDetail.invoiceCode}}
+        </text>
+      </view>
+      
+      <view class="file-item" wx:if="{{invoiceDetail.checkCode}}">
+        <text class="file-label">校验码</text>
+        <text class="file-value" bindtap="onCopyInfo" data-field="checkCode">
+          {{invoiceDetail.checkCode}}
+        </text>
+      </view>
+      
+      <!-- 发票预览 -->
+      <view class="file-preview" wx:if="{{invoiceDetail.imageUrl}}">
+        <image 
+          class="preview-image" 
+          src="{{invoiceDetail.imageUrl}}" 
+          mode="aspectFit"
+          bindtap="onPreviewImage"
+        />
+        <text class="preview-tip">点击查看大图</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮区域 -->
+  <view class="action-section">
+    <!-- 已完成状态的操作 -->
+    <block wx:if="{{invoiceDetail.status === 'completed'}}">
+      <button class="action-btn primary" bindtap="onDownloadPDF" wx:if="{{invoiceDetail.pdfUrl}}">
+        下载PDF发票
+      </button>
+      
+      <button class="action-btn secondary" bindtap="onCopyInfo" data-field="all">
+        复制发票信息
+      </button>
+    </block>
+    
+    <!-- 处理中状态的操作 -->
+    <block wx:if="{{invoiceDetail.status === 'processing'}}">
+      <button class="action-btn primary" bindtap="onViewProgress">
+        查看开票进度
+      </button>
+    </block>
+    
+    <!-- 失败状态的操作 -->
+    <block wx:if="{{invoiceDetail.status === 'failed'}}">
+      <button class="action-btn primary" bindtap="onReissueInvoice">
+        重新开票
+      </button>
+      
+      <button class="action-btn secondary" bindtap="onContactService">
+        联系客服
+      </button>
+    </block>
+    
+    <!-- 通用操作 -->
+    <button class="action-btn outline" bindtap="onReissueInvoice">
+      基于此信息重新开票
+    </button>
+  </view>
+
+  <!-- 错误信息 -->
+  <view class="error-section" wx:if="{{invoiceDetail.status === 'failed' && invoiceDetail.errorMessage}}">
+    <view class="error-title">开票失败原因</view>
+    <view class="error-message">{{invoiceDetail.errorMessage}}</view>
+    <view class="error-tip">如有疑问请联系客服：400-123-4567</view>
+  </view>
+</view>
+
+<!-- 加载状态 -->
+<view class="loading-container" wx:if="{{loading}}">
+  <view class="loading-content">
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>
+
+<!-- 错误状态 -->
+<view class="error-container" wx:if="{{!loading && !invoiceDetail}}">
+  <view class="error-content">
+    <image class="error-icon" src="/images/error-invoice.png" mode="aspectFit" />
+    <text class="error-title">发票信息加载失败</text>
+    <text class="error-desc">请检查网络连接或稍后重试</text>
+    <button class="retry-btn" bindtap="onLoad">重新加载</button>
+  </view>
+</view>

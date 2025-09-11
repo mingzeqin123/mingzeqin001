@@ -1,0 +1,226 @@
+<!--开票页面结构-->
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">电子发票开具</text>
+    <text class="page-subtitle">请填写准确的开票信息</text>
+  </view>
+
+  <!-- 开票表单 -->
+  <view class="form-section">
+    <!-- 发票类型选择 -->
+    <view class="form-group">
+      <text class="label required">发票类型</text>
+      <radio-group bindchange="onInvoiceTypeChange">
+        <view class="radio-group">
+          <block wx:for="{{invoiceTypes}}" wx:key="value">
+            <label class="radio-item">
+              <radio value="{{item.value}}" checked="{{invoiceForm.type === item.value}}" />
+              <text class="radio-text">{{item.text}}</text>
+            </label>
+          </block>
+        </view>
+      </radio-group>
+    </view>
+
+    <!-- 发票抬头 -->
+    <view class="form-group">
+      <text class="label required">发票抬头</text>
+      <input 
+        class="input" 
+        type="text" 
+        placeholder="请输入发票抬头"
+        value="{{invoiceForm.title}}"
+        data-field="title"
+        bindinput="onInputChange"
+        maxlength="100"
+      />
+    </view>
+
+    <!-- 纳税人识别号 -->
+    <view class="form-group">
+      <text class="label required">纳税人识别号</text>
+      <input 
+        class="input" 
+        type="text" 
+        placeholder="请输入纳税人识别号"
+        value="{{invoiceForm.taxNumber}}"
+        data-field="taxNumber"
+        bindinput="onInputChange"
+        maxlength="20"
+      />
+      <text class="input-tip">统一社会信用代码或纳税人识别号</text>
+    </view>
+
+    <!-- 开票金额 -->
+    <view class="form-group">
+      <text class="label required">开票金额</text>
+      <input 
+        class="input" 
+        type="digit" 
+        placeholder="请输入开票金额"
+        value="{{invoiceForm.amount}}"
+        data-field="amount"
+        bindinput="onInputChange"
+      />
+      <text class="input-tip">单位：元（不含税金额）</text>
+    </view>
+
+    <!-- 开票内容 -->
+    <view class="form-group">
+      <text class="label required">开票内容</text>
+      <picker 
+        bindchange="onContentSelect" 
+        value="{{invoiceForm.content}}"
+        range="{{contentOptions}}"
+      >
+        <view class="picker">
+          {{invoiceForm.content || '请选择开票内容'}}
+          <text class="picker-arrow">></text>
+        </view>
+      </picker>
+      <input 
+        class="input custom-content" 
+        type="text" 
+        placeholder="或手动输入开票内容"
+        value="{{invoiceForm.content}}"
+        data-field="content"
+        bindinput="onInputChange"
+        maxlength="50"
+      />
+    </view>
+
+    <!-- 专票额外信息 -->
+    <view class="form-group" wx:if="{{invoiceForm.type === 2}}">
+      <text class="section-title">专用发票企业信息</text>
+      
+      <!-- 地址 -->
+      <view class="sub-form-group">
+        <text class="label required">企业地址</text>
+        <input 
+          class="input" 
+          type="text" 
+          placeholder="请输入企业地址"
+          value="{{invoiceForm.address}}"
+          data-field="address"
+          bindinput="onInputChange"
+          maxlength="200"
+        />
+      </view>
+
+      <!-- 电话 -->
+      <view class="sub-form-group">
+        <text class="label required">企业电话</text>
+        <input 
+          class="input" 
+          type="text" 
+          placeholder="请输入企业电话"
+          value="{{invoiceForm.phone}}"
+          data-field="phone"
+          bindinput="onInputChange"
+          maxlength="20"
+        />
+      </view>
+
+      <!-- 开户行 -->
+      <view class="sub-form-group">
+        <text class="label required">开户银行</text>
+        <input 
+          class="input" 
+          type="text" 
+          placeholder="请输入开户银行"
+          value="{{invoiceForm.bankName}}"
+          data-field="bankName"
+          bindinput="onInputChange"
+          maxlength="100"
+        />
+      </view>
+
+      <!-- 银行账号 -->
+      <view class="sub-form-group">
+        <text class="label required">银行账号</text>
+        <input 
+          class="input" 
+          type="text" 
+          placeholder="请输入银行账号"
+          value="{{invoiceForm.bankAccount}}"
+          data-field="bankAccount"
+          bindinput="onInputChange"
+          maxlength="30"
+        />
+      </view>
+    </view>
+
+    <!-- 备注信息 -->
+    <view class="form-group">
+      <text class="label">备注</text>
+      <textarea 
+        class="textarea" 
+        placeholder="请输入备注信息（选填）"
+        value="{{invoiceForm.remark}}"
+        data-field="remark"
+        bindinput="onInputChange"
+        maxlength="200"
+      />
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-section">
+    <button 
+      class="submit-btn" 
+      bindtap="onSubmitInvoice"
+      loading="{{submitLoading}}"
+      disabled="{{submitLoading}}"
+    >
+      {{submitLoading ? '提交中...' : '提交开票申请'}}
+    </button>
+  </view>
+
+  <!-- 发票历史记录 -->
+  <view class="history-section" wx:if="{{invoiceHistory.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">最近开票记录</text>
+    </view>
+    
+    <view class="history-list">
+      <block wx:for="{{invoiceHistory}}" wx:key="id">
+        <view class="history-item" bindtap="onViewInvoice" data-id="{{item.id}}">
+          <view class="history-main">
+            <view class="history-title">{{item.title}}</view>
+            <view class="history-amount">¥{{item.amount}}</view>
+          </view>
+          <view class="history-info">
+            <text class="history-content">{{item.content}}</text>
+            <text class="history-status status-{{item.status}}">{{item.statusText}}</text>
+          </view>
+          <view class="history-time">{{item.createTime}}</view>
+          
+          <!-- 操作按钮 -->
+          <view class="history-actions" catchtap="stopPropagation">
+            <button 
+              class="action-btn reissue-btn" 
+              size="mini" 
+              bindtap="onReissueInvoice"
+              data-invoice="{{item}}"
+            >
+              重新开票
+            </button>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && invoiceHistory.length === 0}}">
+    <image class="empty-icon" src="/images/empty-invoice.png" mode="aspectFit" />
+    <text class="empty-text">暂无开票记录</text>
+    <text class="empty-tip">填写上方表单开始第一次开票</text>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>

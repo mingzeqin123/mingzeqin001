@@ -1,0 +1,167 @@
+/* 首页导航样式 */
+.container {
+  padding: 40rpx 30rpx;
+  background: linear-gradient(180deg, #f8f9ff 0%, #ffffff 100%);
+  min-height: 100vh;
+}
+
+/* 页面头部 */
+.header {
+  text-align: center;
+  margin-bottom: 80rpx;
+  padding: 60rpx 0;
+}
+
+.app-title {
+  display: block;
+  font-size: 56rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.app-subtitle {
+  display: block;
+  font-size: 32rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* 功能网格 */
+.features-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 30rpx;
+}
+
+.feature-card {
+  display: flex;
+  align-items: center;
+  padding: 40rpx;
+  background: white;
+  border-radius: 24rpx;
+  border: 2rpx solid transparent;
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: inherit;
+  opacity: 0.6;
+  z-index: -1;
+}
+
+.feature-card:active {
+  transform: translateY(-4rpx);
+  box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.12);
+}
+
+.feature-icon {
+  width: 120rpx;
+  height: 120rpx;
+  margin-right: 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 15rpx rgba(0, 0, 0, 0.1);
+}
+
+.icon-image {
+  width: 80rpx;
+  height: 80rpx;
+}
+
+.feature-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 12rpx;
+  line-height: 1.2;
+}
+
+.feature-desc {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.4;
+}
+
+.feature-arrow {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.arrow-icon {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+/* 底部信息 */
+.footer {
+  text-align: center;
+  margin-top: 100rpx;
+  padding: 40rpx 0;
+}
+
+.footer-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 响应式适配 */
+@media screen and (max-width: 375px) {
+  .container {
+    padding: 30rpx 20rpx;
+  }
+  
+  .app-title {
+    font-size: 48rpx;
+  }
+  
+  .feature-card {
+    padding: 30rpx;
+  }
+  
+  .feature-icon {
+    width: 100rpx;
+    height: 100rpx;
+    margin-right: 25rpx;
+  }
+  
+  .icon-image {
+    width: 60rpx;
+    height: 60rpx;
+  }
+  
+  .feature-title {
+    font-size: 32rpx;
+  }
+  
+  .feature-desc {
+    font-size: 26rpx;
+  }
+}

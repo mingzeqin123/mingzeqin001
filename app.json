@@ -1,7 +1,10 @@
 {
   "pages": [
+    "pages/index/index",
     "pages/game/game",
-    "pages/watermark/watermark"
+    "pages/watermark/watermark",
+    "pages/invoice/invoice",
+    "pages/invoice/detail"
   ],
   "window": {
     "backgroundTextStyle": "light",

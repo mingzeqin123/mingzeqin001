@@ -1,0 +1,356 @@
+/* 发票详情页面样式 */
+.container {
+  padding: 20rpx;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* 状态卡片 */
+.status-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 30rpx;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.status-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.status-text {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.status-badge {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  background-color: rgba(255,255,255,0.2);
+}
+
+.invoice-number {
+  margin-bottom: 20rpx;
+}
+
+.number-label {
+  display: block;
+  font-size: 28rpx;
+  opacity: 0.8;
+  margin-bottom: 10rpx;
+}
+
+.number-value {
+  font-size: 32rpx;
+  font-weight: bold;
+  letter-spacing: 2rpx;
+  background-color: rgba(255,255,255,0.1);
+  padding: 10rpx 20rpx;
+  border-radius: 10rpx;
+  display: inline-block;
+}
+
+.status-time {
+  font-size: 26rpx;
+  opacity: 0.9;
+  margin-bottom: 10rpx;
+}
+
+.time-label {
+  opacity: 0.8;
+}
+
+.time-value {
+  font-weight: 500;
+}
+
+/* 信息区域 */
+.info-section {
+  background: white;
+  border-radius: 20rpx;
+  margin-bottom: 30rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  background-color: #f8f9fa;
+  padding: 30rpx 40rpx;
+  border-bottom: 1rpx solid #e9ecef;
+}
+
+.title-text {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.info-list {
+  padding: 0 40rpx;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 30rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-size: 30rpx;
+  color: #666;
+  min-width: 200rpx;
+  flex-shrink: 0;
+}
+
+.info-value {
+  font-size: 30rpx;
+  color: #333;
+  text-align: right;
+  flex: 1;
+  word-break: break-all;
+}
+
+.info-value.amount {
+  color: #667eea;
+  font-weight: bold;
+  font-size: 34rpx;
+}
+
+/* 文件信息 */
+.file-info {
+  padding: 40rpx;
+}
+
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+  padding: 20rpx;
+  background-color: #f8f9fa;
+  border-radius: 12rpx;
+}
+
+.file-label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.file-value {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+  background-color: rgba(102, 126, 234, 0.1);
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+  font-family: monospace;
+}
+
+.file-preview {
+  text-align: center;
+  margin-top: 30rpx;
+}
+
+.preview-image {
+  width: 100%;
+  max-width: 600rpx;
+  height: 400rpx;
+  border-radius: 12rpx;
+  border: 2rpx solid #e9ecef;
+  margin-bottom: 20rpx;
+}
+
+.preview-tip {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 操作按钮区域 */
+.action-section {
+  margin-bottom: 40rpx;
+}
+
+.action-btn {
+  width: 100%;
+  height: 90rpx;
+  border-radius: 45rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  margin-bottom: 20rpx;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 6rpx 20rpx rgba(102, 126, 234, 0.3);
+}
+
+.action-btn.primary:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 3rpx 15rpx rgba(102, 126, 234, 0.3);
+}
+
+.action-btn.secondary {
+  background-color: #6c757d;
+  color: white;
+  box-shadow: 0 4rpx 15rpx rgba(108, 117, 125, 0.2);
+}
+
+.action-btn.secondary:active {
+  transform: translateY(2rpx);
+  background-color: #5a6268;
+}
+
+.action-btn.outline {
+  background-color: transparent;
+  color: #667eea;
+  border: 2rpx solid #667eea;
+}
+
+.action-btn.outline:active {
+  background-color: rgba(102, 126, 234, 0.1);
+}
+
+/* 错误信息区域 */
+.error-section {
+  background: #fff5f5;
+  border: 2rpx solid #fed7d7;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 30rpx;
+}
+
+.error-title {
+  font-size: 32rpx;
+  color: #e53e3e;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+
+.error-message {
+  font-size: 30rpx;
+  color: #c53030;
+  line-height: 1.6;
+  margin-bottom: 20rpx;
+}
+
+.error-tip {
+  font-size: 26rpx;
+  color: #a0aec0;
+  text-align: center;
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.loading-content {
+  text-align: center;
+  padding: 60rpx;
+  background: white;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+
+.loading-text {
+  font-size: 30rpx;
+  color: #999;
+}
+
+/* 错误状态 */
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.error-content {
+  text-align: center;
+  padding: 60rpx;
+  background: white;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+
+.error-icon {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 40rpx;
+  opacity: 0.5;
+}
+
+.error-title {
+  font-size: 36rpx;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+
+.error-desc {
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 40rpx;
+  line-height: 1.5;
+}
+
+.retry-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 20rpx 60rpx;
+  border-radius: 30rpx;
+  font-size: 30rpx;
+}
+
+/* 响应式适配 */
+@media screen and (max-width: 375px) {
+  .container {
+    padding: 15rpx;
+  }
+  
+  .status-card {
+    padding: 30rpx;
+  }
+  
+  .info-list {
+    padding: 0 30rpx;
+  }
+  
+  .file-info {
+    padding: 30rpx;
+  }
+}
