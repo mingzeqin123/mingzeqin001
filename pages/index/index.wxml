@@ -1,0 +1,42 @@
+<!--首页导航-->
+<view class="container">
+  <!-- 页面头部 -->
+  <view class="header">
+    <text class="app-title">多功能小程序</text>
+    <text class="app-subtitle">游戏娱乐 | 电子开票 | 实用工具</text>
+  </view>
+
+  <!-- 功能列表 -->
+  <view class="features-grid">
+    <block wx:for="{{features}}" wx:key="id">
+      <view 
+        class="feature-card" 
+        bindtap="navigateToFeature"
+        data-feature="{{item}}"
+        style="background: linear-gradient(135deg, {{item.color}}40 0%, {{item.color}}20 100%); border-color: {{item.color}};"
+      >
+        <view class="feature-icon">
+          <image 
+            src="{{item.icon}}" 
+            mode="aspectFit"
+            class="icon-image"
+          />
+        </view>
+        
+        <view class="feature-info">
+          <text class="feature-title">{{item.title}}</text>
+          <text class="feature-desc">{{item.description}}</text>
+        </view>
+        
+        <view class="feature-arrow" style="color: {{item.color}};">
+          <text class="arrow-icon">></text>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 底部信息 -->
+  <view class="footer">
+    <text class="footer-text">选择功能开始使用</text>
+  </view>
+</view>
