@@ -1,0 +1,722 @@
+[
+  {
+    "level": "省",
+    "code": "110000",
+    "name": "北京市",
+    "type": "直辖市",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "北京市"
+  },
+  {
+    "level": "省",
+    "code": "120000",
+    "name": "天津市",
+    "type": "直辖市",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "天津市"
+  },
+  {
+    "level": "省",
+    "code": "310000",
+    "name": "上海市",
+    "type": "直辖市",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "上海市"
+  },
+  {
+    "level": "省",
+    "code": "500000",
+    "name": "重庆市",
+    "type": "直辖市",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "重庆市"
+  },
+  {
+    "level": "省",
+    "code": "130000",
+    "name": "河北省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "河北省"
+  },
+  {
+    "level": "省",
+    "code": "140000",
+    "name": "山西省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "山西省"
+  },
+  {
+    "level": "省",
+    "code": "150000",
+    "name": "内蒙古自治区",
+    "type": "自治区",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "内蒙古自治区"
+  },
+  {
+    "level": "省",
+    "code": "210000",
+    "name": "辽宁省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "辽宁省"
+  },
+  {
+    "level": "省",
+    "code": "220000",
+    "name": "吉林省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "吉林省"
+  },
+  {
+    "level": "省",
+    "code": "230000",
+    "name": "黑龙江省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "黑龙江省"
+  },
+  {
+    "level": "省",
+    "code": "320000",
+    "name": "江苏省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "江苏省"
+  },
+  {
+    "level": "省",
+    "code": "330000",
+    "name": "浙江省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "浙江省"
+  },
+  {
+    "level": "省",
+    "code": "340000",
+    "name": "安徽省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "安徽省"
+  },
+  {
+    "level": "省",
+    "code": "350000",
+    "name": "福建省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "福建省"
+  },
+  {
+    "level": "省",
+    "code": "360000",
+    "name": "江西省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "江西省"
+  },
+  {
+    "level": "省",
+    "code": "370000",
+    "name": "山东省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "山东省"
+  },
+  {
+    "level": "省",
+    "code": "410000",
+    "name": "河南省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "河南省"
+  },
+  {
+    "level": "省",
+    "code": "420000",
+    "name": "湖北省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "湖北省"
+  },
+  {
+    "level": "省",
+    "code": "430000",
+    "name": "湖南省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "湖南省"
+  },
+  {
+    "level": "省",
+    "code": "440000",
+    "name": "广东省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "广东省"
+  },
+  {
+    "level": "省",
+    "code": "450000",
+    "name": "广西壮族自治区",
+    "type": "自治区",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "广西壮族自治区"
+  },
+  {
+    "level": "省",
+    "code": "460000",
+    "name": "海南省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "海南省"
+  },
+  {
+    "level": "省",
+    "code": "510000",
+    "name": "四川省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "四川省"
+  },
+  {
+    "level": "省",
+    "code": "520000",
+    "name": "贵州省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "贵州省"
+  },
+  {
+    "level": "省",
+    "code": "530000",
+    "name": "云南省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "云南省"
+  },
+  {
+    "level": "省",
+    "code": "540000",
+    "name": "西藏自治区",
+    "type": "自治区",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "西藏自治区"
+  },
+  {
+    "level": "省",
+    "code": "610000",
+    "name": "陕西省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "陕西省"
+  },
+  {
+    "level": "省",
+    "code": "620000",
+    "name": "甘肃省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "甘肃省"
+  },
+  {
+    "level": "省",
+    "code": "630000",
+    "name": "青海省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "青海省"
+  },
+  {
+    "level": "省",
+    "code": "640000",
+    "name": "宁夏回族自治区",
+    "type": "自治区",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "宁夏回族自治区"
+  },
+  {
+    "level": "省",
+    "code": "650000",
+    "name": "新疆维吾尔自治区",
+    "type": "自治区",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "新疆维吾尔自治区"
+  },
+  {
+    "level": "省",
+    "code": "710000",
+    "name": "台湾省",
+    "type": "省",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "台湾省"
+  },
+  {
+    "level": "省",
+    "code": "810000",
+    "name": "香港特别行政区",
+    "type": "特别行政区",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "香港特别行政区"
+  },
+  {
+    "level": "省",
+    "code": "820000",
+    "name": "澳门特别行政区",
+    "type": "特别行政区",
+    "parent_code": "",
+    "parent_name": "中华人民共和国",
+    "full_path": "澳门特别行政区"
+  },
+  {
+    "level": "市",
+    "code": "110100",
+    "name": "北京市",
+    "type": "地级市",
+    "parent_code": "110000",
+    "parent_name": "北京市",
+    "full_path": "北京市/北京市"
+  },
+  {
+    "level": "市",
+    "code": "120100",
+    "name": "天津市",
+    "type": "地级市",
+    "parent_code": "120000",
+    "parent_name": "天津市",
+    "full_path": "天津市/天津市"
+  },
+  {
+    "level": "市",
+    "code": "310100",
+    "name": "上海市",
+    "type": "地级市",
+    "parent_code": "310000",
+    "parent_name": "上海市",
+    "full_path": "上海市/上海市"
+  },
+  {
+    "level": "市",
+    "code": "500100",
+    "name": "重庆市",
+    "type": "地级市",
+    "parent_code": "500000",
+    "parent_name": "重庆市",
+    "full_path": "重庆市/重庆市"
+  },
+  {
+    "level": "市",
+    "code": "130100",
+    "name": "石家庄市",
+    "type": "地级市",
+    "parent_code": "130000",
+    "parent_name": "河北省",
+    "full_path": "河北省/石家庄市"
+  },
+  {
+    "level": "市",
+    "code": "130200",
+    "name": "唐山市",
+    "type": "地级市",
+    "parent_code": "130000",
+    "parent_name": "河北省",
+    "full_path": "河北省/唐山市"
+  },
+  {
+    "level": "市",
+    "code": "130300",
+    "name": "秦皇岛市",
+    "type": "地级市",
+    "parent_code": "130000",
+    "parent_name": "河北省",
+    "full_path": "河北省/秦皇岛市"
+  },
+  {
+    "level": "市",
+    "code": "140100",
+    "name": "太原市",
+    "type": "地级市",
+    "parent_code": "140000",
+    "parent_name": "山西省",
+    "full_path": "山西省/太原市"
+  },
+  {
+    "level": "市",
+    "code": "140200",
+    "name": "大同市",
+    "type": "地级市",
+    "parent_code": "140000",
+    "parent_name": "山西省",
+    "full_path": "山西省/大同市"
+  },
+  {
+    "level": "市",
+    "code": "210100",
+    "name": "沈阳市",
+    "type": "地级市",
+    "parent_code": "210000",
+    "parent_name": "辽宁省",
+    "full_path": "辽宁省/沈阳市"
+  },
+  {
+    "level": "市",
+    "code": "210200",
+    "name": "大连市",
+    "type": "地级市",
+    "parent_code": "210000",
+    "parent_name": "辽宁省",
+    "full_path": "辽宁省/大连市"
+  },
+  {
+    "level": "市",
+    "code": "320100",
+    "name": "南京市",
+    "type": "地级市",
+    "parent_code": "320000",
+    "parent_name": "江苏省",
+    "full_path": "江苏省/南京市"
+  },
+  {
+    "level": "市",
+    "code": "320200",
+    "name": "无锡市",
+    "type": "地级市",
+    "parent_code": "320000",
+    "parent_name": "江苏省",
+    "full_path": "江苏省/无锡市"
+  },
+  {
+    "level": "市",
+    "code": "320500",
+    "name": "苏州市",
+    "type": "地级市",
+    "parent_code": "320000",
+    "parent_name": "江苏省",
+    "full_path": "江苏省/苏州市"
+  },
+  {
+    "level": "市",
+    "code": "330100",
+    "name": "杭州市",
+    "type": "地级市",
+    "parent_code": "330000",
+    "parent_name": "浙江省",
+    "full_path": "浙江省/杭州市"
+  },
+  {
+    "level": "市",
+    "code": "330200",
+    "name": "宁波市",
+    "type": "地级市",
+    "parent_code": "330000",
+    "parent_name": "浙江省",
+    "full_path": "浙江省/宁波市"
+  },
+  {
+    "level": "市",
+    "code": "440100",
+    "name": "广州市",
+    "type": "地级市",
+    "parent_code": "440000",
+    "parent_name": "广东省",
+    "full_path": "广东省/广州市"
+  },
+  {
+    "level": "市",
+    "code": "440300",
+    "name": "深圳市",
+    "type": "地级市",
+    "parent_code": "440000",
+    "parent_name": "广东省",
+    "full_path": "广东省/深圳市"
+  },
+  {
+    "level": "市",
+    "code": "440400",
+    "name": "珠海市",
+    "type": "地级市",
+    "parent_code": "440000",
+    "parent_name": "广东省",
+    "full_path": "广东省/珠海市"
+  },
+  {
+    "level": "市",
+    "code": "440600",
+    "name": "佛山市",
+    "type": "地级市",
+    "parent_code": "440000",
+    "parent_name": "广东省",
+    "full_path": "广东省/佛山市"
+  },
+  {
+    "level": "市",
+    "code": "441900",
+    "name": "东莞市",
+    "type": "地级市",
+    "parent_code": "440000",
+    "parent_name": "广东省",
+    "full_path": "广东省/东莞市"
+  },
+  {
+    "level": "市",
+    "code": "510100",
+    "name": "成都市",
+    "type": "地级市",
+    "parent_code": "510000",
+    "parent_name": "四川省",
+    "full_path": "四川省/成都市"
+  },
+  {
+    "level": "市",
+    "code": "370100",
+    "name": "济南市",
+    "type": "地级市",
+    "parent_code": "370000",
+    "parent_name": "山东省",
+    "full_path": "山东省/济南市"
+  },
+  {
+    "level": "市",
+    "code": "370200",
+    "name": "青岛市",
+    "type": "地级市",
+    "parent_code": "370000",
+    "parent_name": "山东省",
+    "full_path": "山东省/青岛市"
+  },
+  {
+    "level": "市",
+    "code": "410100",
+    "name": "郑州市",
+    "type": "地级市",
+    "parent_code": "410000",
+    "parent_name": "河南省",
+    "full_path": "河南省/郑州市"
+  },
+  {
+    "level": "区县",
+    "code": "110101",
+    "name": "东城区",
+    "type": "市辖区",
+    "parent_code": "110100",
+    "parent_name": "北京市",
+    "full_path": "北京市/北京市/东城区"
+  },
+  {
+    "level": "区县",
+    "code": "110102",
+    "name": "西城区",
+    "type": "市辖区",
+    "parent_code": "110100",
+    "parent_name": "北京市",
+    "full_path": "北京市/北京市/西城区"
+  },
+  {
+    "level": "区县",
+    "code": "110105",
+    "name": "朝阳区",
+    "type": "市辖区",
+    "parent_code": "110100",
+    "parent_name": "北京市",
+    "full_path": "北京市/北京市/朝阳区"
+  },
+  {
+    "level": "区县",
+    "code": "110106",
+    "name": "丰台区",
+    "type": "市辖区",
+    "parent_code": "110100",
+    "parent_name": "北京市",
+    "full_path": "北京市/北京市/丰台区"
+  },
+  {
+    "level": "区县",
+    "code": "110108",
+    "name": "海淀区",
+    "type": "市辖区",
+    "parent_code": "110100",
+    "parent_name": "北京市",
+    "full_path": "北京市/北京市/海淀区"
+  },
+  {
+    "level": "区县",
+    "code": "310101",
+    "name": "黄浦区",
+    "type": "市辖区",
+    "parent_code": "310100",
+    "parent_name": "上海市",
+    "full_path": "上海市/上海市/黄浦区"
+  },
+  {
+    "level": "区县",
+    "code": "310104",
+    "name": "徐汇区",
+    "type": "市辖区",
+    "parent_code": "310100",
+    "parent_name": "上海市",
+    "full_path": "上海市/上海市/徐汇区"
+  },
+  {
+    "level": "区县",
+    "code": "310105",
+    "name": "长宁区",
+    "type": "市辖区",
+    "parent_code": "310100",
+    "parent_name": "上海市",
+    "full_path": "上海市/上海市/长宁区"
+  },
+  {
+    "level": "区县",
+    "code": "310115",
+    "name": "浦东新区",
+    "type": "市辖区",
+    "parent_code": "310100",
+    "parent_name": "上海市",
+    "full_path": "上海市/上海市/浦东新区"
+  },
+  {
+    "level": "区县",
+    "code": "440103",
+    "name": "荔湾区",
+    "type": "市辖区",
+    "parent_code": "440100",
+    "parent_name": "广州市",
+    "full_path": "广东省/广州市/荔湾区"
+  },
+  {
+    "level": "区县",
+    "code": "440104",
+    "name": "越秀区",
+    "type": "市辖区",
+    "parent_code": "440100",
+    "parent_name": "广州市",
+    "full_path": "广东省/广州市/越秀区"
+  },
+  {
+    "level": "区县",
+    "code": "440106",
+    "name": "天河区",
+    "type": "市辖区",
+    "parent_code": "440100",
+    "parent_name": "广州市",
+    "full_path": "广东省/广州市/天河区"
+  },
+  {
+    "level": "区县",
+    "code": "440303",
+    "name": "罗湖区",
+    "type": "市辖区",
+    "parent_code": "440300",
+    "parent_name": "深圳市",
+    "full_path": "广东省/深圳市/罗湖区"
+  },
+  {
+    "level": "区县",
+    "code": "440304",
+    "name": "福田区",
+    "type": "市辖区",
+    "parent_code": "440300",
+    "parent_name": "深圳市",
+    "full_path": "广东省/深圳市/福田区"
+  },
+  {
+    "level": "区县",
+    "code": "440305",
+    "name": "南山区",
+    "type": "市辖区",
+    "parent_code": "440300",
+    "parent_name": "深圳市",
+    "full_path": "广东省/深圳市/南山区"
+  },
+  {
+    "level": "区县",
+    "code": "510104",
+    "name": "锦江区",
+    "type": "市辖区",
+    "parent_code": "510100",
+    "parent_name": "成都市",
+    "full_path": "四川省/成都市/锦江区"
+  },
+  {
+    "level": "区县",
+    "code": "510105",
+    "name": "青羊区",
+    "type": "市辖区",
+    "parent_code": "510100",
+    "parent_name": "成都市",
+    "full_path": "四川省/成都市/青羊区"
+  },
+  {
+    "level": "区县",
+    "code": "330102",
+    "name": "上城区",
+    "type": "市辖区",
+    "parent_code": "330100",
+    "parent_name": "杭州市",
+    "full_path": "浙江省/杭州市/上城区"
+  },
+  {
+    "level": "区县",
+    "code": "330106",
+    "name": "西湖区",
+    "type": "市辖区",
+    "parent_code": "330100",
+    "parent_name": "杭州市",
+    "full_path": "浙江省/杭州市/西湖区"
+  },
+  {
+    "level": "区县",
+    "code": "320102",
+    "name": "玄武区",
+    "type": "市辖区",
+    "parent_code": "320100",
+    "parent_name": "南京市",
+    "full_path": "江苏省/南京市/玄武区"
+  },
+  {
+    "level": "区县",
+    "code": "320106",
+    "name": "鼓楼区",
+    "type": "市辖区",
+    "parent_code": "320100",
+    "parent_name": "南京市",
+    "full_path": "江苏省/南京市/鼓楼区"
+  }
+]
