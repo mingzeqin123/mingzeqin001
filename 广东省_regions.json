@@ -1,0 +1,444 @@
+{
+  "province": {
+    "code": "440000",
+    "name": "广东省",
+    "level": "province",
+    "parent_code": ""
+  },
+  "cities": [
+    {
+      "code": "440100",
+      "name": "广州市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "440200",
+      "name": "韶关市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "440300",
+      "name": "深圳市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "440400",
+      "name": "珠海市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "440500",
+      "name": "汕头市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "440600",
+      "name": "佛山市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "440700",
+      "name": "江门市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "440800",
+      "name": "湛江市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "440900",
+      "name": "茂名市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "441200",
+      "name": "肇庆市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "441300",
+      "name": "惠州市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "441400",
+      "name": "梅州市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "441500",
+      "name": "汕尾市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "441600",
+      "name": "河源市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "441700",
+      "name": "阳江市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "441800",
+      "name": "清远市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "441900",
+      "name": "东莞市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "442000",
+      "name": "中山市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "445100",
+      "name": "潮州市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "445200",
+      "name": "揭阳市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "445300",
+      "name": "云浮市",
+      "level": "city",
+      "parent_code": "440000"
+    }
+  ],
+  "counties": [
+    {
+      "code": "440103",
+      "name": "荔湾区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440104",
+      "name": "越秀区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440105",
+      "name": "海珠区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440106",
+      "name": "天河区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440111",
+      "name": "白云区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440112",
+      "name": "黄埔区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440113",
+      "name": "番禺区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440114",
+      "name": "花都区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440115",
+      "name": "南沙区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440117",
+      "name": "从化区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440118",
+      "name": "增城区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440201",
+      "name": "韶关市区县1",
+      "level": "county",
+      "parent_code": "440200"
+    },
+    {
+      "code": "440202",
+      "name": "韶关市区县2",
+      "level": "county",
+      "parent_code": "440200"
+    },
+    {
+      "code": "440301",
+      "name": "深圳市区县1",
+      "level": "county",
+      "parent_code": "440300"
+    },
+    {
+      "code": "440302",
+      "name": "深圳市区县2",
+      "level": "county",
+      "parent_code": "440300"
+    },
+    {
+      "code": "440401",
+      "name": "珠海市区县1",
+      "level": "county",
+      "parent_code": "440400"
+    },
+    {
+      "code": "440402",
+      "name": "珠海市区县2",
+      "level": "county",
+      "parent_code": "440400"
+    },
+    {
+      "code": "440501",
+      "name": "汕头市区县1",
+      "level": "county",
+      "parent_code": "440500"
+    },
+    {
+      "code": "440502",
+      "name": "汕头市区县2",
+      "level": "county",
+      "parent_code": "440500"
+    },
+    {
+      "code": "440601",
+      "name": "佛山市区县1",
+      "level": "county",
+      "parent_code": "440600"
+    },
+    {
+      "code": "440602",
+      "name": "佛山市区县2",
+      "level": "county",
+      "parent_code": "440600"
+    },
+    {
+      "code": "440701",
+      "name": "江门市区县1",
+      "level": "county",
+      "parent_code": "440700"
+    },
+    {
+      "code": "440702",
+      "name": "江门市区县2",
+      "level": "county",
+      "parent_code": "440700"
+    },
+    {
+      "code": "440801",
+      "name": "湛江市区县1",
+      "level": "county",
+      "parent_code": "440800"
+    },
+    {
+      "code": "440802",
+      "name": "湛江市区县2",
+      "level": "county",
+      "parent_code": "440800"
+    },
+    {
+      "code": "440901",
+      "name": "茂名市区县1",
+      "level": "county",
+      "parent_code": "440900"
+    },
+    {
+      "code": "440902",
+      "name": "茂名市区县2",
+      "level": "county",
+      "parent_code": "440900"
+    },
+    {
+      "code": "441201",
+      "name": "肇庆市区县1",
+      "level": "county",
+      "parent_code": "441200"
+    },
+    {
+      "code": "441202",
+      "name": "肇庆市区县2",
+      "level": "county",
+      "parent_code": "441200"
+    },
+    {
+      "code": "441301",
+      "name": "惠州市区县1",
+      "level": "county",
+      "parent_code": "441300"
+    },
+    {
+      "code": "441302",
+      "name": "惠州市区县2",
+      "level": "county",
+      "parent_code": "441300"
+    },
+    {
+      "code": "441401",
+      "name": "梅州市区县1",
+      "level": "county",
+      "parent_code": "441400"
+    },
+    {
+      "code": "441402",
+      "name": "梅州市区县2",
+      "level": "county",
+      "parent_code": "441400"
+    },
+    {
+      "code": "441501",
+      "name": "汕尾市区县1",
+      "level": "county",
+      "parent_code": "441500"
+    },
+    {
+      "code": "441502",
+      "name": "汕尾市区县2",
+      "level": "county",
+      "parent_code": "441500"
+    },
+    {
+      "code": "441601",
+      "name": "河源市区县1",
+      "level": "county",
+      "parent_code": "441600"
+    },
+    {
+      "code": "441602",
+      "name": "河源市区县2",
+      "level": "county",
+      "parent_code": "441600"
+    },
+    {
+      "code": "441701",
+      "name": "阳江市区县1",
+      "level": "county",
+      "parent_code": "441700"
+    },
+    {
+      "code": "441702",
+      "name": "阳江市区县2",
+      "level": "county",
+      "parent_code": "441700"
+    },
+    {
+      "code": "441801",
+      "name": "清远市区县1",
+      "level": "county",
+      "parent_code": "441800"
+    },
+    {
+      "code": "441802",
+      "name": "清远市区县2",
+      "level": "county",
+      "parent_code": "441800"
+    },
+    {
+      "code": "441901",
+      "name": "东莞市区县1",
+      "level": "county",
+      "parent_code": "441900"
+    },
+    {
+      "code": "441902",
+      "name": "东莞市区县2",
+      "level": "county",
+      "parent_code": "441900"
+    },
+    {
+      "code": "442001",
+      "name": "中山市区县1",
+      "level": "county",
+      "parent_code": "442000"
+    },
+    {
+      "code": "442002",
+      "name": "中山市区县2",
+      "level": "county",
+      "parent_code": "442000"
+    },
+    {
+      "code": "445101",
+      "name": "潮州市区县1",
+      "level": "county",
+      "parent_code": "445100"
+    },
+    {
+      "code": "445102",
+      "name": "潮州市区县2",
+      "level": "county",
+      "parent_code": "445100"
+    },
+    {
+      "code": "445201",
+      "name": "揭阳市区县1",
+      "level": "county",
+      "parent_code": "445200"
+    },
+    {
+      "code": "445202",
+      "name": "揭阳市区县2",
+      "level": "county",
+      "parent_code": "445200"
+    },
+    {
+      "code": "445301",
+      "name": "云浮市区县1",
+      "level": "county",
+      "parent_code": "445300"
+    },
+    {
+      "code": "445302",
+      "name": "云浮市区县2",
+      "level": "county",
+      "parent_code": "445300"
+    }
+  ]
+}
