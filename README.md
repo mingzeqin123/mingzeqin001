@@ -1,177 +1,153 @@
-# 微信小程序跳一跳游戏
+# MongoDB Java 聚合功能演示项目
 
-一个基于微信小程序平台开发的3D跳一跳小游戏，使用Three.js渲染引擎实现3D效果。
+这是一个使用Java连接MongoDB并实现各种聚合功能的演示项目。
 
-## 🎮 游戏特色
-
-- **3D视觉效果**：使用Three.js渲染引擎，呈现精美的3D场景
-- **物理引擎**：真实的跳跃物理模拟和碰撞检测
-- **多样方块**：普通、小型、高型、特殊等多种方块类型
-- **蓄力系统**：长按蓄力，控制跳跃距离和高度
-- **分数系统**：完美落地获得额外分数，挑战最高纪录
-- **视觉特效**：粒子效果、动画过渡、阴影系统
-- **音效支持**：跳跃、落地、完美、游戏结束等音效
-- **社交分享**：支持微信好友和朋友圈分享
-
-## 🚀 快速开始
-
-### 环境要求
-- 微信开发者工具 1.05.0 或更高版本
-- 小程序基础库 2.9.0 或更高版本
-
-### 安装步骤
-
-1. **克隆项目**
-   ```bash
-   git clone [项目地址]
-   cd jump-jump-game
-   ```
-
-2. **导入项目**
-   - 打开微信开发者工具
-   - 选择"导入项目"
-   - 选择项目目录
-   - 填入AppID（测试可使用测试号）
-
-3. **添加资源文件**
-   - 将Three.js完整库文件放入 `/pages/game/libs/three.min.js`
-   - 添加音效文件到 `/sounds/` 目录
-   - 添加图片资源到 `/images/` 目录
-
-4. **编译运行**
-   - 点击"编译"按钮
-   - 在模拟器或真机上预览
-
-## 📁 项目结构
+## 项目结构
 
 ```
-jump-jump-game/
-├── app.js                 # 小程序入口文件
-├── app.json               # 小程序配置文件
-├── app.wxss              # 全局样式文件
-├── sitemap.json          # 站点地图配置
-├── project.config.json   # 项目配置文件
-├── pages/
-│   └── game/             # 游戏页面
-│       ├── game.js       # 页面逻辑
-│       ├── game.json     # 页面配置
-│       ├── game.wxml     # 页面结构
-│       ├── game.wxss     # 页面样式
-│       ├── gameEngine.js # 游戏引擎核心
-│       ├── player.js     # 玩家角色类
-│       ├── block.js      # 方块类
-│       ├── utils.js      # 工具函数
-│       └── libs/
-│           └── three.min.js # Three.js库
-├── images/               # 图片资源
-│   └── README.md        # 图片说明
-├── sounds/               # 音效资源
-│   └── README.md        # 音效说明
-└── README.md            # 项目说明
+src/main/java/com/example/mongodb/
+├── config/
+│   └── MongoConfig.java              # MongoDB连接配置
+├── model/
+│   ├── User.java                     # 用户数据模型
+│   └── Order.java                    # 订单数据模型
+├── service/
+│   ├── DataInitializationService.java    # 数据初始化服务
+│   ├── UserAggregationService.java       # 用户聚合功能
+│   ├── OrderAggregationService.java      # 订单聚合功能
+│   └── AdvancedAggregationService.java   # 高级聚合功能
+└── MongoDBAggregationDemo.java       # 主演示类
 ```
 
-## 🎯 游戏玩法
+## 功能特性
 
-1. **开始游戏**：点击"开始游戏"按钮
-2. **蓄力跳跃**：长按屏幕蓄力，右侧显示蓄力条
-3. **释放跳跃**：松开手指，角色跳向下一个方块
-4. **获得分数**：
-   - 成功落地：+1分
-   - 良好落地：+3分
-   - 完美落地：+5分（中心位置）
-5. **游戏结束**：跳跃失败掉落时游戏结束
-6. **分享成绩**：可分享到微信好友或朋友圈
+### 1. 基础聚合功能
+- **用户聚合**：
+  - 按城市分组统计用户数量
+  - 按年龄段分组统计
+  - 各国用户统计信息（平均年龄、最大余额等）
+  - 兴趣爱好分布统计
+  - 余额最高的用户排行
+  - 各城市平均余额统计
 
-## 🔧 核心技术
+- **订单聚合**：
+  - 按状态分组统计订单
+  - 按支付方式统计订单
+  - 金额最高的订单排行
+  - 按月统计订单数量和金额
+  - 用户订单统计
+  - 特定商品订单查询
+  - 订单状态分布统计
 
-### 渲染引擎
-- **Three.js**：3D场景渲染
-- **WebGL**：硬件加速渲染
-- **阴影系统**：实时阴影计算
-- **光照系统**：环境光+方向光
+### 2. 高级聚合功能
+- **多表关联查询**：
+  - 用户订单关联统计
+  - 各城市订单统计
+  - 高价值客户识别
+  - 商品受欢迎程度分析
 
-### 物理系统
-- **跳跃轨迹**：抛物线运动模拟
-- **碰撞检测**：圆形碰撞检测算法
-- **重力模拟**：自然下落效果
+- **复杂管道操作**：
+  - 用户行为分析（按年龄段）
+  - 订单时间分布分析
+  - 复杂条件查询
 
-### 动画系统
-- **缓动函数**：平滑的动画过渡
-- **骨骼动画**：角色动作表现
-- **粒子效果**：特殊效果展示
-- **相机跟随**：平滑的视角切换
+## 环境要求
 
-## 🎨 自定义配置
+- Java 11+
+- Maven 3.6+
+- MongoDB 4.0+
 
-### 游戏参数调整
-在 `gameEngine.js` 中可以调整：
-- `maxChargingTime`：最大蓄力时间
-- 跳跃距离和高度计算公式
-- 方块生成间距和角度
+## 运行方式
 
-### 视觉效果
-在各个类文件中可以调整：
-- 方块颜色和材质
-- 光照强度和位置
-- 动画持续时间和缓动函数
+### 1. 确保MongoDB服务运行
+```bash
+# 启动MongoDB服务
+mongod --dbpath /path/to/your/db
+```
 
-### 音效配置
-在 `utils.js` 的 `AudioManager` 类中：
-- 添加新的音效类型
-- 调整音量和播放逻辑
+### 2. 编译和运行项目
+```bash
+# 编译项目
+mvn clean compile
 
-## 📱 兼容性
+# 运行演示程序
+mvn exec:java
 
-- **iOS**：iOS 10.0+
-- **Android**：Android 5.0+
-- **微信版本**：7.0.0+
-- **小程序基础库**：2.9.0+
+# 或者直接运行
+mvn clean package
+java -cp target/classes:target/dependency/* com.example.mongodb.MongoDBAggregationDemo
+```
 
-## 🔍 性能优化
+## 聚合操作示例
 
-1. **渲染优化**
-   - 对象池管理，减少GC
-   - 视锥剔除，只渲染可见对象
-   - LOD系统，距离越远细节越少
+### 基础分组统计
+```java
+// 按城市分组统计用户数量
+List<Bson> pipeline = Arrays.asList(
+    Aggregates.group("$city", Accumulators.sum("count", 1)),
+    Aggregates.sort(Sorts.descending("count"))
+);
+```
 
-2. **内存管理**
-   - 及时销毁不需要的对象
-   - 纹理和几何体复用
-   - 音效资源预加载
+### 多表关联查询
+```java
+// 用户订单关联统计
+List<Bson> pipeline = Arrays.asList(
+    Aggregates.lookup("users", "userId", "_id", "userInfo"),
+    Aggregates.unwind("$userInfo"),
+    Aggregates.group("$userInfo.name", 
+        Accumulators.sum("orderCount", 1),
+        Accumulators.sum("totalSpent", "$totalAmount")
+    )
+);
+```
 
-3. **帧率优化**
-   - 固定时间步长更新
-   - 动画插值平滑
-   - 避免在渲染循环中创建对象
+### 复杂条件查询
+```java
+// 添加年龄段字段
+Aggregates.addFields(new Document("ageGroup", 
+    new Document("$switch", new Document("branches", Arrays.asList(
+        new Document("case", new Document("$lt", Arrays.asList("$age", 25))).append("then", "18-24"),
+        new Document("case", new Document("$lt", Arrays.asList("$age", 35))).append("then", "25-34")
+    )).append("default", "35+"))),
+```
 
-## 🐛 已知问题
+## 数据模型
 
-1. 在部分低端Android设备上可能出现卡顿
-2. Three.js库文件较大，首次加载时间较长
-3. WebGL兼容性问题，部分老设备不支持
+### 用户模型 (User)
+- id: ObjectId
+- name: String
+- email: String
+- age: Integer
+- city: String
+- country: String
+- registrationDate: LocalDateTime
+- interests: List<String>
+- balance: Double
 
-## 🔄 更新日志
+### 订单模型 (Order)
+- id: ObjectId
+- userId: ObjectId (关联用户)
+- orderNumber: String
+- totalAmount: Double
+- status: String
+- orderDate: LocalDateTime
+- items: List<OrderItem>
+- shippingAddress: String
+- paymentMethod: String
 
-### v1.0.0 (2024-01-15)
-- 基础游戏功能实现
-- 3D渲染和物理引擎
-- 完整的游戏流程
-- 分数系统和社交分享
+## 注意事项
 
-## 📄 许可证
+1. 确保MongoDB服务正在运行
+2. 项目会自动创建示例数据，包含100个用户和500个订单
+3. 所有聚合操作都会在控制台输出结果
+4. 项目使用MongoDB Java Driver 4.11.1版本
 
-本项目采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
+## 扩展功能
 
-## 🤝 贡献
-
-欢迎提交 Issue 和 Pull Request 来改进这个项目！
-
-## 📞 联系方式
-
-如有问题或建议，请通过以下方式联系：
-- GitHub Issues
-- 邮箱：[your-email@example.com]
-
----
-
-⭐ 如果这个项目对你有帮助，请给个星星支持一下！
+可以根据需要添加更多聚合功能：
+- 时间序列分析
+- 地理位置聚合
+- 文本搜索聚合
+- 图形数据分析
+- 实时数据聚合
