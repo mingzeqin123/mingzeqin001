@@ -1,177 +1,161 @@
-# 微信小程序跳一跳游戏
+# GitHub 仓库信息爬虫
 
-一个基于微信小程序平台开发的3D跳一跳小游戏，使用Three.js渲染引擎实现3D效果。
+一个功能完整的GitHub仓库信息爬虫，可以获取指定仓库的详细信息、统计数据、贡献者信息和发布版本等。
 
-## 🎮 游戏特色
+## 功能特性
 
-- **3D视觉效果**：使用Three.js渲染引擎，呈现精美的3D场景
-- **物理引擎**：真实的跳跃物理模拟和碰撞检测
-- **多样方块**：普通、小型、高型、特殊等多种方块类型
-- **蓄力系统**：长按蓄力，控制跳跃距离和高度
-- **分数系统**：完美落地获得额外分数，挑战最高纪录
-- **视觉特效**：粒子效果、动画过渡、阴影系统
-- **音效支持**：跳跃、落地、完美、游戏结束等音效
-- **社交分享**：支持微信好友和朋友圈分享
+- ✅ 获取仓库基本信息（名称、描述、URL等）
+- ✅ 获取统计数据（Stars、Forks、Watchers、Issues等）
+- ✅ 获取编程语言统计
+- ✅ 获取贡献者信息
+- ✅ 获取发布版本信息
+- ✅ 支持JSON和CSV格式输出
+- ✅ 支持GitHub Token避免频率限制
+- ✅ 命令行界面友好
 
-## 🚀 快速开始
+## 安装依赖
 
-### 环境要求
-- 微信开发者工具 1.05.0 或更高版本
-- 小程序基础库 2.9.0 或更高版本
-
-### 安装步骤
-
-1. **克隆项目**
-   ```bash
-   git clone [项目地址]
-   cd jump-jump-game
-   ```
-
-2. **导入项目**
-   - 打开微信开发者工具
-   - 选择"导入项目"
-   - 选择项目目录
-   - 填入AppID（测试可使用测试号）
-
-3. **添加资源文件**
-   - 将Three.js完整库文件放入 `/pages/game/libs/three.min.js`
-   - 添加音效文件到 `/sounds/` 目录
-   - 添加图片资源到 `/images/` 目录
-
-4. **编译运行**
-   - 点击"编译"按钮
-   - 在模拟器或真机上预览
-
-## 📁 项目结构
-
-```
-jump-jump-game/
-├── app.js                 # 小程序入口文件
-├── app.json               # 小程序配置文件
-├── app.wxss              # 全局样式文件
-├── sitemap.json          # 站点地图配置
-├── project.config.json   # 项目配置文件
-├── pages/
-│   └── game/             # 游戏页面
-│       ├── game.js       # 页面逻辑
-│       ├── game.json     # 页面配置
-│       ├── game.wxml     # 页面结构
-│       ├── game.wxss     # 页面样式
-│       ├── gameEngine.js # 游戏引擎核心
-│       ├── player.js     # 玩家角色类
-│       ├── block.js      # 方块类
-│       ├── utils.js      # 工具函数
-│       └── libs/
-│           └── three.min.js # Three.js库
-├── images/               # 图片资源
-│   └── README.md        # 图片说明
-├── sounds/               # 音效资源
-│   └── README.md        # 音效说明
-└── README.md            # 项目说明
+```bash
+pip install -r requirements.txt
 ```
 
-## 🎯 游戏玩法
+## 使用方法
 
-1. **开始游戏**：点击"开始游戏"按钮
-2. **蓄力跳跃**：长按屏幕蓄力，右侧显示蓄力条
-3. **释放跳跃**：松开手指，角色跳向下一个方块
-4. **获得分数**：
-   - 成功落地：+1分
-   - 良好落地：+3分
-   - 完美落地：+5分（中心位置）
-5. **游戏结束**：跳跃失败掉落时游戏结束
-6. **分享成绩**：可分享到微信好友或朋友圈
+### 基本用法
 
-## 🔧 核心技术
+```bash
+# 爬取指定仓库的基本信息
+python github_scraper.py microsoft vscode
 
-### 渲染引擎
-- **Three.js**：3D场景渲染
-- **WebGL**：硬件加速渲染
-- **阴影系统**：实时阴影计算
-- **光照系统**：环境光+方向光
+# 指定输出目录
+python github_scraper.py microsoft vscode --output-dir ./data
 
-### 物理系统
-- **跳跃轨迹**：抛物线运动模拟
-- **碰撞检测**：圆形碰撞检测算法
-- **重力模拟**：自然下落效果
+# 只输出JSON格式
+python github_scraper.py microsoft vscode --format json
 
-### 动画系统
-- **缓动函数**：平滑的动画过渡
-- **骨骼动画**：角色动作表现
-- **粒子效果**：特殊效果展示
-- **相机跟随**：平滑的视角切换
+# 只输出CSV格式
+python github_scraper.py microsoft vscode --format csv
+```
 
-## 🎨 自定义配置
+### 高级用法
 
-### 游戏参数调整
-在 `gameEngine.js` 中可以调整：
-- `maxChargingTime`：最大蓄力时间
-- 跳跃距离和高度计算公式
-- 方块生成间距和角度
+```bash
+# 使用GitHub Token（推荐，避免频率限制）
+python github_scraper.py microsoft vscode --token YOUR_GITHUB_TOKEN
 
-### 视觉效果
-在各个类文件中可以调整：
-- 方块颜色和材质
-- 光照强度和位置
-- 动画持续时间和缓动函数
+# 不获取贡献者信息（加快速度）
+python github_scraper.py microsoft vscode --no-contributors
 
-### 音效配置
-在 `utils.js` 的 `AudioManager` 类中：
-- 添加新的音效类型
-- 调整音量和播放逻辑
+# 不获取发布版本信息
+python github_scraper.py microsoft vscode --no-releases
 
-## 📱 兼容性
+# 完整命令示例
+python github_scraper.py microsoft vscode --token YOUR_TOKEN --output-dir ./results --format both --no-contributors
+```
 
-- **iOS**：iOS 10.0+
-- **Android**：Android 5.0+
-- **微信版本**：7.0.0+
-- **小程序基础库**：2.9.0+
+### 参数说明
 
-## 🔍 性能优化
+- `owner`: 仓库所有者用户名或组织名（必需）
+- `repo`: 仓库名称（必需）
+- `--token`: GitHub Personal Access Token（可选，推荐使用）
+- `--no-contributors`: 不获取贡献者信息
+- `--no-releases`: 不获取发布版本信息
+- `--output-dir`: 输出目录（默认：./output）
+- `--format`: 输出格式，可选 json/csv/both（默认：both）
 
-1. **渲染优化**
-   - 对象池管理，减少GC
-   - 视锥剔除，只渲染可见对象
-   - LOD系统，距离越远细节越少
+## 获取GitHub Token
 
-2. **内存管理**
-   - 及时销毁不需要的对象
-   - 纹理和几何体复用
-   - 音效资源预加载
+为了避免API频率限制，建议使用GitHub Personal Access Token：
 
-3. **帧率优化**
-   - 固定时间步长更新
-   - 动画插值平滑
-   - 避免在渲染循环中创建对象
+1. 访问 [GitHub Settings > Developer settings > Personal access tokens](https://github.com/settings/tokens)
+2. 点击 "Generate new token"
+3. 选择适当的权限（对于公开仓库，只需要public_repo权限）
+4. 复制生成的token
 
-## 🐛 已知问题
+## 输出文件
 
-1. 在部分低端Android设备上可能出现卡顿
-2. Three.js库文件较大，首次加载时间较长
-3. WebGL兼容性问题，部分老设备不支持
+爬虫会生成以下文件：
 
-## 🔄 更新日志
+### JSON文件
+包含完整的仓库信息，包括：
+- 仓库基本信息
+- 统计数据
+- 编程语言分布
+- 贡献者列表
+- 发布版本信息
 
-### v1.0.0 (2024-01-15)
-- 基础游戏功能实现
-- 3D渲染和物理引擎
-- 完整的游戏流程
-- 分数系统和社交分享
+### CSV文件
+包含仓库的核心统计数据，适合数据分析：
+- 仓库名称、描述
+- Stars、Forks、Watchers数量
+- 主要编程语言
+- 许可证信息
+- 创建和更新时间
 
-## 📄 许可证
+## 示例输出
 
-本项目采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
+### 命令行输出示例
 
-## 🤝 贡献
+```
+开始爬取仓库: microsoft/vscode
+获取贡献者信息...
+获取发布版本信息...
+仓库 microsoft/vscode 爬取完成!
+数据已保存到: ./output/microsoft_vscode_20231201_143022.json
+CSV数据已保存到: ./output/microsoft_vscode_20231201_143022.csv
 
-欢迎提交 Issue 和 Pull Request 来改进这个项目！
+=== 仓库基本信息 ===
+仓库名: microsoft/vscode
+描述: Visual Studio Code
+⭐ Stars: 150000
+🍴 Forks: 26000
+👀 Watchers: 15000
+🐛 Issues: 8000
+💻 主要语言: TypeScript
+📄 许可证: MIT
+📅 创建时间: 2015-04-18T18:40:15Z
+🔄 更新时间: 2023-12-01T14:30:22Z
 
-## 📞 联系方式
+=== 编程语言统计 ===
+TypeScript: 85.2%
+JavaScript: 8.1%
+CSS: 3.2%
+HTML: 2.1%
+Other: 1.4%
 
-如有问题或建议，请通过以下方式联系：
-- GitHub Issues
-- 邮箱：[your-email@example.com]
+=== 主要贡献者 ===
+1. username1: 1500 次提交
+2. username2: 1200 次提交
+3. username3: 900 次提交
+...
 
----
+=== 最新发布版本 ===
+1.89.0 - Visual Studio Code 1.89.0 ✅ 正式版
+1.88.1 - Visual Studio Code 1.88.1 ✅ 正式版
+...
+```
 
-⭐ 如果这个项目对你有帮助，请给个星星支持一下！
+## 注意事项
+
+1. **API频率限制**: 不使用Token时，GitHub API有频率限制（每小时60次请求）
+2. **请求间隔**: 程序会自动在请求间添加延迟，避免触发限制
+3. **错误处理**: 程序包含完善的错误处理机制
+4. **数据完整性**: 如果某个API调用失败，程序会继续获取其他可用信息
+
+## 常见问题
+
+### Q: 为什么需要GitHub Token？
+A: GitHub API对未认证请求有严格的频率限制（每小时60次）。使用Token可以将限制提高到每小时5000次。
+
+### Q: 爬取速度很慢怎么办？
+A: 可以使用 `--no-contributors` 和 `--no-releases` 参数跳过非必要信息，或者使用GitHub Token提高请求频率。
+
+### Q: 支持私有仓库吗？
+A: 支持，但需要提供有相应权限的GitHub Token。
+
+### Q: 输出文件在哪里？
+A: 默认在 `./output` 目录下，可以通过 `--output-dir` 参数自定义。
+
+## 许可证
+
+MIT License

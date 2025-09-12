@@ -1,0 +1,46 @@
+{
+  "repository": {
+    "name": "vue",
+    "full_name": "vuejs/vue",
+    "description": "This is the repo for Vue 2. For Vue 3, go to https://github.com/vuejs/core",
+    "html_url": "https://github.com/vuejs/vue",
+    "clone_url": "https://github.com/vuejs/vue.git",
+    "ssh_url": "git@github.com:vuejs/vue.git",
+    "homepage": "http://v2.vuejs.org",
+    "topics": [
+      "framework",
+      "frontend",
+      "javascript",
+      "vue"
+    ],
+    "default_branch": "main",
+    "private": false,
+    "fork": false,
+    "archived": false
+  },
+  "owner": {
+    "login": "vuejs",
+    "type": "Organization",
+    "avatar_url": "https://avatars.githubusercontent.com/u/6128107?v=4"
+  },
+  "statistics": {
+    "stars": 209396,
+    "forks": 33762,
+    "watchers": 209396,
+    "open_issues": 607,
+    "size": 32152,
+    "language": "TypeScript",
+    "created_at": "2013-07-29T03:24:51Z",
+    "updated_at": "2025-09-12T03:00:29Z",
+    "pushed_at": "2024-10-10T07:24:15Z",
+    "license": "MIT License"
+  },
+  "languages": {
+    "TypeScript": 1852998,
+    "JavaScript": 34702,
+    "HTML": 17826,
+    "CSS": 11301,
+    "Shell": 673
+  },
+  "scraped_at": "2025-09-12T03:17:11.299750"
+}
