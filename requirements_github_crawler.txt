@@ -1,0 +1,3 @@
+# GitHub仓库爬虫依赖包
+requests>=2.28.0
+urllib3>=1.26.0

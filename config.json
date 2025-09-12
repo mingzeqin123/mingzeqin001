@@ -1,0 +1,23 @@
+{
+  "github_api": {
+    "base_url": "https://api.github.com",
+    "rate_limit": {
+      "requests_per_hour_without_token": 60,
+      "requests_per_hour_with_token": 5000
+    },
+    "timeout": 30
+  },
+  "crawler_settings": {
+    "request_delay": 1,
+    "max_retries": 3,
+    "contributors_limit": 10,
+    "releases_limit": 5,
+    "user_agent": "GitHub-Repository-Crawler/1.0"
+  },
+  "output": {
+    "default_format": "both",
+    "timestamp_format": "%Y%m%d_%H%M%S",
+    "csv_encoding": "utf-8",
+    "json_indent": 2
+  }
+}
