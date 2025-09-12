@@ -1,0 +1,2294 @@
+{
+  "provinces": [
+    {
+      "code": "110000",
+      "name": "北京市",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "120000",
+      "name": "天津市",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "130000",
+      "name": "河北省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "140000",
+      "name": "山西省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "150000",
+      "name": "内蒙古自治区",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "210000",
+      "name": "辽宁省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "220000",
+      "name": "吉林省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "230000",
+      "name": "黑龙江省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "310000",
+      "name": "上海市",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "320000",
+      "name": "江苏省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "330000",
+      "name": "浙江省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "340000",
+      "name": "安徽省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "350000",
+      "name": "福建省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "360000",
+      "name": "江西省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "370000",
+      "name": "山东省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "410000",
+      "name": "河南省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "420000",
+      "name": "湖北省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "430000",
+      "name": "湖南省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "440000",
+      "name": "广东省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "450000",
+      "name": "广西壮族自治区",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "460000",
+      "name": "海南省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "500000",
+      "name": "重庆市",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "510000",
+      "name": "四川省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "520000",
+      "name": "贵州省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "530000",
+      "name": "云南省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "540000",
+      "name": "西藏自治区",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "610000",
+      "name": "陕西省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "620000",
+      "name": "甘肃省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "630000",
+      "name": "青海省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "640000",
+      "name": "宁夏回族自治区",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "650000",
+      "name": "新疆维吾尔自治区",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "710000",
+      "name": "台湾省",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "810000",
+      "name": "香港特别行政区",
+      "level": "province",
+      "parent_code": ""
+    },
+    {
+      "code": "820000",
+      "name": "澳门特别行政区",
+      "level": "province",
+      "parent_code": ""
+    }
+  ],
+  "cities": [
+    {
+      "code": "110100",
+      "name": "北京市",
+      "level": "city",
+      "parent_code": "110000"
+    },
+    {
+      "code": "120100",
+      "name": "天津市",
+      "level": "city",
+      "parent_code": "120000"
+    },
+    {
+      "code": "130100",
+      "name": "石家庄市",
+      "level": "city",
+      "parent_code": "130000"
+    },
+    {
+      "code": "130200",
+      "name": "唐山市",
+      "level": "city",
+      "parent_code": "130000"
+    },
+    {
+      "code": "130300",
+      "name": "秦皇岛市",
+      "level": "city",
+      "parent_code": "130000"
+    },
+    {
+      "code": "130400",
+      "name": "邯郸市",
+      "level": "city",
+      "parent_code": "130000"
+    },
+    {
+      "code": "130500",
+      "name": "邢台市",
+      "level": "city",
+      "parent_code": "130000"
+    },
+    {
+      "code": "130600",
+      "name": "保定市",
+      "level": "city",
+      "parent_code": "130000"
+    },
+    {
+      "code": "130700",
+      "name": "张家口市",
+      "level": "city",
+      "parent_code": "130000"
+    },
+    {
+      "code": "130800",
+      "name": "承德市",
+      "level": "city",
+      "parent_code": "130000"
+    },
+    {
+      "code": "130900",
+      "name": "沧州市",
+      "level": "city",
+      "parent_code": "130000"
+    },
+    {
+      "code": "131000",
+      "name": "廊坊市",
+      "level": "city",
+      "parent_code": "130000"
+    },
+    {
+      "code": "131100",
+      "name": "衡水市",
+      "level": "city",
+      "parent_code": "130000"
+    },
+    {
+      "code": "140100",
+      "name": "山西省省会城市",
+      "level": "city",
+      "parent_code": "140000"
+    },
+    {
+      "code": "140200",
+      "name": "山西省重要城市",
+      "level": "city",
+      "parent_code": "140000"
+    },
+    {
+      "code": "150100",
+      "name": "内蒙古自治区省会城市",
+      "level": "city",
+      "parent_code": "150000"
+    },
+    {
+      "code": "150200",
+      "name": "内蒙古自治区重要城市",
+      "level": "city",
+      "parent_code": "150000"
+    },
+    {
+      "code": "210100",
+      "name": "辽宁省省会城市",
+      "level": "city",
+      "parent_code": "210000"
+    },
+    {
+      "code": "210200",
+      "name": "辽宁省重要城市",
+      "level": "city",
+      "parent_code": "210000"
+    },
+    {
+      "code": "220100",
+      "name": "吉林省省会城市",
+      "level": "city",
+      "parent_code": "220000"
+    },
+    {
+      "code": "220200",
+      "name": "吉林省重要城市",
+      "level": "city",
+      "parent_code": "220000"
+    },
+    {
+      "code": "230100",
+      "name": "黑龙江省省会城市",
+      "level": "city",
+      "parent_code": "230000"
+    },
+    {
+      "code": "230200",
+      "name": "黑龙江省重要城市",
+      "level": "city",
+      "parent_code": "230000"
+    },
+    {
+      "code": "310100",
+      "name": "上海市省会城市",
+      "level": "city",
+      "parent_code": "310000"
+    },
+    {
+      "code": "310200",
+      "name": "上海市重要城市",
+      "level": "city",
+      "parent_code": "310000"
+    },
+    {
+      "code": "320100",
+      "name": "南京市",
+      "level": "city",
+      "parent_code": "320000"
+    },
+    {
+      "code": "320200",
+      "name": "无锡市",
+      "level": "city",
+      "parent_code": "320000"
+    },
+    {
+      "code": "320300",
+      "name": "徐州市",
+      "level": "city",
+      "parent_code": "320000"
+    },
+    {
+      "code": "320400",
+      "name": "常州市",
+      "level": "city",
+      "parent_code": "320000"
+    },
+    {
+      "code": "320500",
+      "name": "苏州市",
+      "level": "city",
+      "parent_code": "320000"
+    },
+    {
+      "code": "320600",
+      "name": "南通市",
+      "level": "city",
+      "parent_code": "320000"
+    },
+    {
+      "code": "320700",
+      "name": "连云港市",
+      "level": "city",
+      "parent_code": "320000"
+    },
+    {
+      "code": "320800",
+      "name": "淮安市",
+      "level": "city",
+      "parent_code": "320000"
+    },
+    {
+      "code": "320900",
+      "name": "盐城市",
+      "level": "city",
+      "parent_code": "320000"
+    },
+    {
+      "code": "321000",
+      "name": "扬州市",
+      "level": "city",
+      "parent_code": "320000"
+    },
+    {
+      "code": "321100",
+      "name": "镇江市",
+      "level": "city",
+      "parent_code": "320000"
+    },
+    {
+      "code": "321200",
+      "name": "泰州市",
+      "level": "city",
+      "parent_code": "320000"
+    },
+    {
+      "code": "321300",
+      "name": "宿迁市",
+      "level": "city",
+      "parent_code": "320000"
+    },
+    {
+      "code": "330100",
+      "name": "浙江省省会城市",
+      "level": "city",
+      "parent_code": "330000"
+    },
+    {
+      "code": "330200",
+      "name": "浙江省重要城市",
+      "level": "city",
+      "parent_code": "330000"
+    },
+    {
+      "code": "340100",
+      "name": "安徽省省会城市",
+      "level": "city",
+      "parent_code": "340000"
+    },
+    {
+      "code": "340200",
+      "name": "安徽省重要城市",
+      "level": "city",
+      "parent_code": "340000"
+    },
+    {
+      "code": "350100",
+      "name": "福建省省会城市",
+      "level": "city",
+      "parent_code": "350000"
+    },
+    {
+      "code": "350200",
+      "name": "福建省重要城市",
+      "level": "city",
+      "parent_code": "350000"
+    },
+    {
+      "code": "360100",
+      "name": "江西省省会城市",
+      "level": "city",
+      "parent_code": "360000"
+    },
+    {
+      "code": "360200",
+      "name": "江西省重要城市",
+      "level": "city",
+      "parent_code": "360000"
+    },
+    {
+      "code": "370100",
+      "name": "山东省省会城市",
+      "level": "city",
+      "parent_code": "370000"
+    },
+    {
+      "code": "370200",
+      "name": "山东省重要城市",
+      "level": "city",
+      "parent_code": "370000"
+    },
+    {
+      "code": "410100",
+      "name": "河南省省会城市",
+      "level": "city",
+      "parent_code": "410000"
+    },
+    {
+      "code": "410200",
+      "name": "河南省重要城市",
+      "level": "city",
+      "parent_code": "410000"
+    },
+    {
+      "code": "420100",
+      "name": "湖北省省会城市",
+      "level": "city",
+      "parent_code": "420000"
+    },
+    {
+      "code": "420200",
+      "name": "湖北省重要城市",
+      "level": "city",
+      "parent_code": "420000"
+    },
+    {
+      "code": "430100",
+      "name": "湖南省省会城市",
+      "level": "city",
+      "parent_code": "430000"
+    },
+    {
+      "code": "430200",
+      "name": "湖南省重要城市",
+      "level": "city",
+      "parent_code": "430000"
+    },
+    {
+      "code": "440100",
+      "name": "广州市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "440200",
+      "name": "韶关市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "440300",
+      "name": "深圳市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "440400",
+      "name": "珠海市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "440500",
+      "name": "汕头市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "440600",
+      "name": "佛山市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "440700",
+      "name": "江门市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "440800",
+      "name": "湛江市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "440900",
+      "name": "茂名市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "441200",
+      "name": "肇庆市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "441300",
+      "name": "惠州市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "441400",
+      "name": "梅州市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "441500",
+      "name": "汕尾市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "441600",
+      "name": "河源市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "441700",
+      "name": "阳江市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "441800",
+      "name": "清远市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "441900",
+      "name": "东莞市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "442000",
+      "name": "中山市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "445100",
+      "name": "潮州市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "445200",
+      "name": "揭阳市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "445300",
+      "name": "云浮市",
+      "level": "city",
+      "parent_code": "440000"
+    },
+    {
+      "code": "450100",
+      "name": "广西壮族自治区省会城市",
+      "level": "city",
+      "parent_code": "450000"
+    },
+    {
+      "code": "450200",
+      "name": "广西壮族自治区重要城市",
+      "level": "city",
+      "parent_code": "450000"
+    },
+    {
+      "code": "460100",
+      "name": "海南省省会城市",
+      "level": "city",
+      "parent_code": "460000"
+    },
+    {
+      "code": "460200",
+      "name": "海南省重要城市",
+      "level": "city",
+      "parent_code": "460000"
+    },
+    {
+      "code": "500100",
+      "name": "重庆市省会城市",
+      "level": "city",
+      "parent_code": "500000"
+    },
+    {
+      "code": "500200",
+      "name": "重庆市重要城市",
+      "level": "city",
+      "parent_code": "500000"
+    },
+    {
+      "code": "510100",
+      "name": "四川省省会城市",
+      "level": "city",
+      "parent_code": "510000"
+    },
+    {
+      "code": "510200",
+      "name": "四川省重要城市",
+      "level": "city",
+      "parent_code": "510000"
+    },
+    {
+      "code": "520100",
+      "name": "贵州省省会城市",
+      "level": "city",
+      "parent_code": "520000"
+    },
+    {
+      "code": "520200",
+      "name": "贵州省重要城市",
+      "level": "city",
+      "parent_code": "520000"
+    },
+    {
+      "code": "530100",
+      "name": "云南省省会城市",
+      "level": "city",
+      "parent_code": "530000"
+    },
+    {
+      "code": "530200",
+      "name": "云南省重要城市",
+      "level": "city",
+      "parent_code": "530000"
+    },
+    {
+      "code": "540100",
+      "name": "西藏自治区省会城市",
+      "level": "city",
+      "parent_code": "540000"
+    },
+    {
+      "code": "540200",
+      "name": "西藏自治区重要城市",
+      "level": "city",
+      "parent_code": "540000"
+    },
+    {
+      "code": "610100",
+      "name": "陕西省省会城市",
+      "level": "city",
+      "parent_code": "610000"
+    },
+    {
+      "code": "610200",
+      "name": "陕西省重要城市",
+      "level": "city",
+      "parent_code": "610000"
+    },
+    {
+      "code": "620100",
+      "name": "甘肃省省会城市",
+      "level": "city",
+      "parent_code": "620000"
+    },
+    {
+      "code": "620200",
+      "name": "甘肃省重要城市",
+      "level": "city",
+      "parent_code": "620000"
+    },
+    {
+      "code": "630100",
+      "name": "青海省省会城市",
+      "level": "city",
+      "parent_code": "630000"
+    },
+    {
+      "code": "630200",
+      "name": "青海省重要城市",
+      "level": "city",
+      "parent_code": "630000"
+    },
+    {
+      "code": "640100",
+      "name": "宁夏回族自治区省会城市",
+      "level": "city",
+      "parent_code": "640000"
+    },
+    {
+      "code": "640200",
+      "name": "宁夏回族自治区重要城市",
+      "level": "city",
+      "parent_code": "640000"
+    },
+    {
+      "code": "650100",
+      "name": "新疆维吾尔自治区省会城市",
+      "level": "city",
+      "parent_code": "650000"
+    },
+    {
+      "code": "650200",
+      "name": "新疆维吾尔自治区重要城市",
+      "level": "city",
+      "parent_code": "650000"
+    },
+    {
+      "code": "710100",
+      "name": "台湾省省会城市",
+      "level": "city",
+      "parent_code": "710000"
+    },
+    {
+      "code": "710200",
+      "name": "台湾省重要城市",
+      "level": "city",
+      "parent_code": "710000"
+    },
+    {
+      "code": "810100",
+      "name": "香港特别行政区省会城市",
+      "level": "city",
+      "parent_code": "810000"
+    },
+    {
+      "code": "810200",
+      "name": "香港特别行政区重要城市",
+      "level": "city",
+      "parent_code": "810000"
+    },
+    {
+      "code": "820100",
+      "name": "澳门特别行政区省会城市",
+      "level": "city",
+      "parent_code": "820000"
+    },
+    {
+      "code": "820200",
+      "name": "澳门特别行政区重要城市",
+      "level": "city",
+      "parent_code": "820000"
+    }
+  ],
+  "counties": [
+    {
+      "code": "110101",
+      "name": "东城区",
+      "level": "county",
+      "parent_code": "110100"
+    },
+    {
+      "code": "110102",
+      "name": "西城区",
+      "level": "county",
+      "parent_code": "110100"
+    },
+    {
+      "code": "110105",
+      "name": "朝阳区",
+      "level": "county",
+      "parent_code": "110100"
+    },
+    {
+      "code": "110106",
+      "name": "丰台区",
+      "level": "county",
+      "parent_code": "110100"
+    },
+    {
+      "code": "110107",
+      "name": "石景山区",
+      "level": "county",
+      "parent_code": "110100"
+    },
+    {
+      "code": "110108",
+      "name": "海淀区",
+      "level": "county",
+      "parent_code": "110100"
+    },
+    {
+      "code": "110109",
+      "name": "门头沟区",
+      "level": "county",
+      "parent_code": "110100"
+    },
+    {
+      "code": "110111",
+      "name": "房山区",
+      "level": "county",
+      "parent_code": "110100"
+    },
+    {
+      "code": "110112",
+      "name": "通州区",
+      "level": "county",
+      "parent_code": "110100"
+    },
+    {
+      "code": "110113",
+      "name": "顺义区",
+      "level": "county",
+      "parent_code": "110100"
+    },
+    {
+      "code": "110114",
+      "name": "昌平区",
+      "level": "county",
+      "parent_code": "110100"
+    },
+    {
+      "code": "110115",
+      "name": "大兴区",
+      "level": "county",
+      "parent_code": "110100"
+    },
+    {
+      "code": "110116",
+      "name": "怀柔区",
+      "level": "county",
+      "parent_code": "110100"
+    },
+    {
+      "code": "110117",
+      "name": "平谷区",
+      "level": "county",
+      "parent_code": "110100"
+    },
+    {
+      "code": "110118",
+      "name": "密云区",
+      "level": "county",
+      "parent_code": "110100"
+    },
+    {
+      "code": "110119",
+      "name": "延庆区",
+      "level": "county",
+      "parent_code": "110100"
+    },
+    {
+      "code": "120101",
+      "name": "天津市区县1",
+      "level": "county",
+      "parent_code": "120100"
+    },
+    {
+      "code": "120102",
+      "name": "天津市区县2",
+      "level": "county",
+      "parent_code": "120100"
+    },
+    {
+      "code": "130101",
+      "name": "石家庄市区县1",
+      "level": "county",
+      "parent_code": "130100"
+    },
+    {
+      "code": "130102",
+      "name": "石家庄市区县2",
+      "level": "county",
+      "parent_code": "130100"
+    },
+    {
+      "code": "130201",
+      "name": "唐山市区县1",
+      "level": "county",
+      "parent_code": "130200"
+    },
+    {
+      "code": "130202",
+      "name": "唐山市区县2",
+      "level": "county",
+      "parent_code": "130200"
+    },
+    {
+      "code": "130301",
+      "name": "秦皇岛市区县1",
+      "level": "county",
+      "parent_code": "130300"
+    },
+    {
+      "code": "130302",
+      "name": "秦皇岛市区县2",
+      "level": "county",
+      "parent_code": "130300"
+    },
+    {
+      "code": "130401",
+      "name": "邯郸市区县1",
+      "level": "county",
+      "parent_code": "130400"
+    },
+    {
+      "code": "130402",
+      "name": "邯郸市区县2",
+      "level": "county",
+      "parent_code": "130400"
+    },
+    {
+      "code": "130501",
+      "name": "邢台市区县1",
+      "level": "county",
+      "parent_code": "130500"
+    },
+    {
+      "code": "130502",
+      "name": "邢台市区县2",
+      "level": "county",
+      "parent_code": "130500"
+    },
+    {
+      "code": "130601",
+      "name": "保定市区县1",
+      "level": "county",
+      "parent_code": "130600"
+    },
+    {
+      "code": "130602",
+      "name": "保定市区县2",
+      "level": "county",
+      "parent_code": "130600"
+    },
+    {
+      "code": "130701",
+      "name": "张家口市区县1",
+      "level": "county",
+      "parent_code": "130700"
+    },
+    {
+      "code": "130702",
+      "name": "张家口市区县2",
+      "level": "county",
+      "parent_code": "130700"
+    },
+    {
+      "code": "130801",
+      "name": "承德市区县1",
+      "level": "county",
+      "parent_code": "130800"
+    },
+    {
+      "code": "130802",
+      "name": "承德市区县2",
+      "level": "county",
+      "parent_code": "130800"
+    },
+    {
+      "code": "130901",
+      "name": "沧州市区县1",
+      "level": "county",
+      "parent_code": "130900"
+    },
+    {
+      "code": "130902",
+      "name": "沧州市区县2",
+      "level": "county",
+      "parent_code": "130900"
+    },
+    {
+      "code": "131001",
+      "name": "廊坊市区县1",
+      "level": "county",
+      "parent_code": "131000"
+    },
+    {
+      "code": "131002",
+      "name": "廊坊市区县2",
+      "level": "county",
+      "parent_code": "131000"
+    },
+    {
+      "code": "131101",
+      "name": "衡水市区县1",
+      "level": "county",
+      "parent_code": "131100"
+    },
+    {
+      "code": "131102",
+      "name": "衡水市区县2",
+      "level": "county",
+      "parent_code": "131100"
+    },
+    {
+      "code": "140101",
+      "name": "山西省省会城市区县1",
+      "level": "county",
+      "parent_code": "140100"
+    },
+    {
+      "code": "140102",
+      "name": "山西省省会城市区县2",
+      "level": "county",
+      "parent_code": "140100"
+    },
+    {
+      "code": "140201",
+      "name": "山西省重要城市区县1",
+      "level": "county",
+      "parent_code": "140200"
+    },
+    {
+      "code": "140202",
+      "name": "山西省重要城市区县2",
+      "level": "county",
+      "parent_code": "140200"
+    },
+    {
+      "code": "150101",
+      "name": "内蒙古自治区省会城市区县1",
+      "level": "county",
+      "parent_code": "150100"
+    },
+    {
+      "code": "150102",
+      "name": "内蒙古自治区省会城市区县2",
+      "level": "county",
+      "parent_code": "150100"
+    },
+    {
+      "code": "150201",
+      "name": "内蒙古自治区重要城市区县1",
+      "level": "county",
+      "parent_code": "150200"
+    },
+    {
+      "code": "150202",
+      "name": "内蒙古自治区重要城市区县2",
+      "level": "county",
+      "parent_code": "150200"
+    },
+    {
+      "code": "210101",
+      "name": "辽宁省省会城市区县1",
+      "level": "county",
+      "parent_code": "210100"
+    },
+    {
+      "code": "210102",
+      "name": "辽宁省省会城市区县2",
+      "level": "county",
+      "parent_code": "210100"
+    },
+    {
+      "code": "210201",
+      "name": "辽宁省重要城市区县1",
+      "level": "county",
+      "parent_code": "210200"
+    },
+    {
+      "code": "210202",
+      "name": "辽宁省重要城市区县2",
+      "level": "county",
+      "parent_code": "210200"
+    },
+    {
+      "code": "220101",
+      "name": "吉林省省会城市区县1",
+      "level": "county",
+      "parent_code": "220100"
+    },
+    {
+      "code": "220102",
+      "name": "吉林省省会城市区县2",
+      "level": "county",
+      "parent_code": "220100"
+    },
+    {
+      "code": "220201",
+      "name": "吉林省重要城市区县1",
+      "level": "county",
+      "parent_code": "220200"
+    },
+    {
+      "code": "220202",
+      "name": "吉林省重要城市区县2",
+      "level": "county",
+      "parent_code": "220200"
+    },
+    {
+      "code": "230101",
+      "name": "黑龙江省省会城市区县1",
+      "level": "county",
+      "parent_code": "230100"
+    },
+    {
+      "code": "230102",
+      "name": "黑龙江省省会城市区县2",
+      "level": "county",
+      "parent_code": "230100"
+    },
+    {
+      "code": "230201",
+      "name": "黑龙江省重要城市区县1",
+      "level": "county",
+      "parent_code": "230200"
+    },
+    {
+      "code": "230202",
+      "name": "黑龙江省重要城市区县2",
+      "level": "county",
+      "parent_code": "230200"
+    },
+    {
+      "code": "310101",
+      "name": "上海市省会城市区县1",
+      "level": "county",
+      "parent_code": "310100"
+    },
+    {
+      "code": "310102",
+      "name": "上海市省会城市区县2",
+      "level": "county",
+      "parent_code": "310100"
+    },
+    {
+      "code": "310201",
+      "name": "上海市重要城市区县1",
+      "level": "county",
+      "parent_code": "310200"
+    },
+    {
+      "code": "310202",
+      "name": "上海市重要城市区县2",
+      "level": "county",
+      "parent_code": "310200"
+    },
+    {
+      "code": "320102",
+      "name": "玄武区",
+      "level": "county",
+      "parent_code": "320100"
+    },
+    {
+      "code": "320104",
+      "name": "秦淮区",
+      "level": "county",
+      "parent_code": "320100"
+    },
+    {
+      "code": "320105",
+      "name": "建邺区",
+      "level": "county",
+      "parent_code": "320100"
+    },
+    {
+      "code": "320106",
+      "name": "鼓楼区",
+      "level": "county",
+      "parent_code": "320100"
+    },
+    {
+      "code": "320111",
+      "name": "浦口区",
+      "level": "county",
+      "parent_code": "320100"
+    },
+    {
+      "code": "320113",
+      "name": "栖霞区",
+      "level": "county",
+      "parent_code": "320100"
+    },
+    {
+      "code": "320114",
+      "name": "雨花台区",
+      "level": "county",
+      "parent_code": "320100"
+    },
+    {
+      "code": "320115",
+      "name": "江宁区",
+      "level": "county",
+      "parent_code": "320100"
+    },
+    {
+      "code": "320116",
+      "name": "六合区",
+      "level": "county",
+      "parent_code": "320100"
+    },
+    {
+      "code": "320117",
+      "name": "溧水区",
+      "level": "county",
+      "parent_code": "320100"
+    },
+    {
+      "code": "320118",
+      "name": "高淳区",
+      "level": "county",
+      "parent_code": "320100"
+    },
+    {
+      "code": "320201",
+      "name": "无锡市区县1",
+      "level": "county",
+      "parent_code": "320200"
+    },
+    {
+      "code": "320202",
+      "name": "无锡市区县2",
+      "level": "county",
+      "parent_code": "320200"
+    },
+    {
+      "code": "320301",
+      "name": "徐州市区县1",
+      "level": "county",
+      "parent_code": "320300"
+    },
+    {
+      "code": "320302",
+      "name": "徐州市区县2",
+      "level": "county",
+      "parent_code": "320300"
+    },
+    {
+      "code": "320401",
+      "name": "常州市区县1",
+      "level": "county",
+      "parent_code": "320400"
+    },
+    {
+      "code": "320402",
+      "name": "常州市区县2",
+      "level": "county",
+      "parent_code": "320400"
+    },
+    {
+      "code": "320501",
+      "name": "苏州市区县1",
+      "level": "county",
+      "parent_code": "320500"
+    },
+    {
+      "code": "320502",
+      "name": "苏州市区县2",
+      "level": "county",
+      "parent_code": "320500"
+    },
+    {
+      "code": "320601",
+      "name": "南通市区县1",
+      "level": "county",
+      "parent_code": "320600"
+    },
+    {
+      "code": "320602",
+      "name": "南通市区县2",
+      "level": "county",
+      "parent_code": "320600"
+    },
+    {
+      "code": "320701",
+      "name": "连云港市区县1",
+      "level": "county",
+      "parent_code": "320700"
+    },
+    {
+      "code": "320702",
+      "name": "连云港市区县2",
+      "level": "county",
+      "parent_code": "320700"
+    },
+    {
+      "code": "320801",
+      "name": "淮安市区县1",
+      "level": "county",
+      "parent_code": "320800"
+    },
+    {
+      "code": "320802",
+      "name": "淮安市区县2",
+      "level": "county",
+      "parent_code": "320800"
+    },
+    {
+      "code": "320901",
+      "name": "盐城市区县1",
+      "level": "county",
+      "parent_code": "320900"
+    },
+    {
+      "code": "320902",
+      "name": "盐城市区县2",
+      "level": "county",
+      "parent_code": "320900"
+    },
+    {
+      "code": "321001",
+      "name": "扬州市区县1",
+      "level": "county",
+      "parent_code": "321000"
+    },
+    {
+      "code": "321002",
+      "name": "扬州市区县2",
+      "level": "county",
+      "parent_code": "321000"
+    },
+    {
+      "code": "321101",
+      "name": "镇江市区县1",
+      "level": "county",
+      "parent_code": "321100"
+    },
+    {
+      "code": "321102",
+      "name": "镇江市区县2",
+      "level": "county",
+      "parent_code": "321100"
+    },
+    {
+      "code": "321201",
+      "name": "泰州市区县1",
+      "level": "county",
+      "parent_code": "321200"
+    },
+    {
+      "code": "321202",
+      "name": "泰州市区县2",
+      "level": "county",
+      "parent_code": "321200"
+    },
+    {
+      "code": "321301",
+      "name": "宿迁市区县1",
+      "level": "county",
+      "parent_code": "321300"
+    },
+    {
+      "code": "321302",
+      "name": "宿迁市区县2",
+      "level": "county",
+      "parent_code": "321300"
+    },
+    {
+      "code": "330101",
+      "name": "浙江省省会城市区县1",
+      "level": "county",
+      "parent_code": "330100"
+    },
+    {
+      "code": "330102",
+      "name": "浙江省省会城市区县2",
+      "level": "county",
+      "parent_code": "330100"
+    },
+    {
+      "code": "330201",
+      "name": "浙江省重要城市区县1",
+      "level": "county",
+      "parent_code": "330200"
+    },
+    {
+      "code": "330202",
+      "name": "浙江省重要城市区县2",
+      "level": "county",
+      "parent_code": "330200"
+    },
+    {
+      "code": "340101",
+      "name": "安徽省省会城市区县1",
+      "level": "county",
+      "parent_code": "340100"
+    },
+    {
+      "code": "340102",
+      "name": "安徽省省会城市区县2",
+      "level": "county",
+      "parent_code": "340100"
+    },
+    {
+      "code": "340201",
+      "name": "安徽省重要城市区县1",
+      "level": "county",
+      "parent_code": "340200"
+    },
+    {
+      "code": "340202",
+      "name": "安徽省重要城市区县2",
+      "level": "county",
+      "parent_code": "340200"
+    },
+    {
+      "code": "350101",
+      "name": "福建省省会城市区县1",
+      "level": "county",
+      "parent_code": "350100"
+    },
+    {
+      "code": "350102",
+      "name": "福建省省会城市区县2",
+      "level": "county",
+      "parent_code": "350100"
+    },
+    {
+      "code": "350201",
+      "name": "福建省重要城市区县1",
+      "level": "county",
+      "parent_code": "350200"
+    },
+    {
+      "code": "350202",
+      "name": "福建省重要城市区县2",
+      "level": "county",
+      "parent_code": "350200"
+    },
+    {
+      "code": "360101",
+      "name": "江西省省会城市区县1",
+      "level": "county",
+      "parent_code": "360100"
+    },
+    {
+      "code": "360102",
+      "name": "江西省省会城市区县2",
+      "level": "county",
+      "parent_code": "360100"
+    },
+    {
+      "code": "360201",
+      "name": "江西省重要城市区县1",
+      "level": "county",
+      "parent_code": "360200"
+    },
+    {
+      "code": "360202",
+      "name": "江西省重要城市区县2",
+      "level": "county",
+      "parent_code": "360200"
+    },
+    {
+      "code": "370101",
+      "name": "山东省省会城市区县1",
+      "level": "county",
+      "parent_code": "370100"
+    },
+    {
+      "code": "370102",
+      "name": "山东省省会城市区县2",
+      "level": "county",
+      "parent_code": "370100"
+    },
+    {
+      "code": "370201",
+      "name": "山东省重要城市区县1",
+      "level": "county",
+      "parent_code": "370200"
+    },
+    {
+      "code": "370202",
+      "name": "山东省重要城市区县2",
+      "level": "county",
+      "parent_code": "370200"
+    },
+    {
+      "code": "410101",
+      "name": "河南省省会城市区县1",
+      "level": "county",
+      "parent_code": "410100"
+    },
+    {
+      "code": "410102",
+      "name": "河南省省会城市区县2",
+      "level": "county",
+      "parent_code": "410100"
+    },
+    {
+      "code": "410201",
+      "name": "河南省重要城市区县1",
+      "level": "county",
+      "parent_code": "410200"
+    },
+    {
+      "code": "410202",
+      "name": "河南省重要城市区县2",
+      "level": "county",
+      "parent_code": "410200"
+    },
+    {
+      "code": "420101",
+      "name": "湖北省省会城市区县1",
+      "level": "county",
+      "parent_code": "420100"
+    },
+    {
+      "code": "420102",
+      "name": "湖北省省会城市区县2",
+      "level": "county",
+      "parent_code": "420100"
+    },
+    {
+      "code": "420201",
+      "name": "湖北省重要城市区县1",
+      "level": "county",
+      "parent_code": "420200"
+    },
+    {
+      "code": "420202",
+      "name": "湖北省重要城市区县2",
+      "level": "county",
+      "parent_code": "420200"
+    },
+    {
+      "code": "430101",
+      "name": "湖南省省会城市区县1",
+      "level": "county",
+      "parent_code": "430100"
+    },
+    {
+      "code": "430102",
+      "name": "湖南省省会城市区县2",
+      "level": "county",
+      "parent_code": "430100"
+    },
+    {
+      "code": "430201",
+      "name": "湖南省重要城市区县1",
+      "level": "county",
+      "parent_code": "430200"
+    },
+    {
+      "code": "430202",
+      "name": "湖南省重要城市区县2",
+      "level": "county",
+      "parent_code": "430200"
+    },
+    {
+      "code": "440103",
+      "name": "荔湾区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440104",
+      "name": "越秀区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440105",
+      "name": "海珠区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440106",
+      "name": "天河区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440111",
+      "name": "白云区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440112",
+      "name": "黄埔区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440113",
+      "name": "番禺区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440114",
+      "name": "花都区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440115",
+      "name": "南沙区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440117",
+      "name": "从化区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440118",
+      "name": "增城区",
+      "level": "county",
+      "parent_code": "440100"
+    },
+    {
+      "code": "440201",
+      "name": "韶关市区县1",
+      "level": "county",
+      "parent_code": "440200"
+    },
+    {
+      "code": "440202",
+      "name": "韶关市区县2",
+      "level": "county",
+      "parent_code": "440200"
+    },
+    {
+      "code": "440301",
+      "name": "深圳市区县1",
+      "level": "county",
+      "parent_code": "440300"
+    },
+    {
+      "code": "440302",
+      "name": "深圳市区县2",
+      "level": "county",
+      "parent_code": "440300"
+    },
+    {
+      "code": "440401",
+      "name": "珠海市区县1",
+      "level": "county",
+      "parent_code": "440400"
+    },
+    {
+      "code": "440402",
+      "name": "珠海市区县2",
+      "level": "county",
+      "parent_code": "440400"
+    },
+    {
+      "code": "440501",
+      "name": "汕头市区县1",
+      "level": "county",
+      "parent_code": "440500"
+    },
+    {
+      "code": "440502",
+      "name": "汕头市区县2",
+      "level": "county",
+      "parent_code": "440500"
+    },
+    {
+      "code": "440601",
+      "name": "佛山市区县1",
+      "level": "county",
+      "parent_code": "440600"
+    },
+    {
+      "code": "440602",
+      "name": "佛山市区县2",
+      "level": "county",
+      "parent_code": "440600"
+    },
+    {
+      "code": "440701",
+      "name": "江门市区县1",
+      "level": "county",
+      "parent_code": "440700"
+    },
+    {
+      "code": "440702",
+      "name": "江门市区县2",
+      "level": "county",
+      "parent_code": "440700"
+    },
+    {
+      "code": "440801",
+      "name": "湛江市区县1",
+      "level": "county",
+      "parent_code": "440800"
+    },
+    {
+      "code": "440802",
+      "name": "湛江市区县2",
+      "level": "county",
+      "parent_code": "440800"
+    },
+    {
+      "code": "440901",
+      "name": "茂名市区县1",
+      "level": "county",
+      "parent_code": "440900"
+    },
+    {
+      "code": "440902",
+      "name": "茂名市区县2",
+      "level": "county",
+      "parent_code": "440900"
+    },
+    {
+      "code": "441201",
+      "name": "肇庆市区县1",
+      "level": "county",
+      "parent_code": "441200"
+    },
+    {
+      "code": "441202",
+      "name": "肇庆市区县2",
+      "level": "county",
+      "parent_code": "441200"
+    },
+    {
+      "code": "441301",
+      "name": "惠州市区县1",
+      "level": "county",
+      "parent_code": "441300"
+    },
+    {
+      "code": "441302",
+      "name": "惠州市区县2",
+      "level": "county",
+      "parent_code": "441300"
+    },
+    {
+      "code": "441401",
+      "name": "梅州市区县1",
+      "level": "county",
+      "parent_code": "441400"
+    },
+    {
+      "code": "441402",
+      "name": "梅州市区县2",
+      "level": "county",
+      "parent_code": "441400"
+    },
+    {
+      "code": "441501",
+      "name": "汕尾市区县1",
+      "level": "county",
+      "parent_code": "441500"
+    },
+    {
+      "code": "441502",
+      "name": "汕尾市区县2",
+      "level": "county",
+      "parent_code": "441500"
+    },
+    {
+      "code": "441601",
+      "name": "河源市区县1",
+      "level": "county",
+      "parent_code": "441600"
+    },
+    {
+      "code": "441602",
+      "name": "河源市区县2",
+      "level": "county",
+      "parent_code": "441600"
+    },
+    {
+      "code": "441701",
+      "name": "阳江市区县1",
+      "level": "county",
+      "parent_code": "441700"
+    },
+    {
+      "code": "441702",
+      "name": "阳江市区县2",
+      "level": "county",
+      "parent_code": "441700"
+    },
+    {
+      "code": "441801",
+      "name": "清远市区县1",
+      "level": "county",
+      "parent_code": "441800"
+    },
+    {
+      "code": "441802",
+      "name": "清远市区县2",
+      "level": "county",
+      "parent_code": "441800"
+    },
+    {
+      "code": "441901",
+      "name": "东莞市区县1",
+      "level": "county",
+      "parent_code": "441900"
+    },
+    {
+      "code": "441902",
+      "name": "东莞市区县2",
+      "level": "county",
+      "parent_code": "441900"
+    },
+    {
+      "code": "442001",
+      "name": "中山市区县1",
+      "level": "county",
+      "parent_code": "442000"
+    },
+    {
+      "code": "442002",
+      "name": "中山市区县2",
+      "level": "county",
+      "parent_code": "442000"
+    },
+    {
+      "code": "445101",
+      "name": "潮州市区县1",
+      "level": "county",
+      "parent_code": "445100"
+    },
+    {
+      "code": "445102",
+      "name": "潮州市区县2",
+      "level": "county",
+      "parent_code": "445100"
+    },
+    {
+      "code": "445201",
+      "name": "揭阳市区县1",
+      "level": "county",
+      "parent_code": "445200"
+    },
+    {
+      "code": "445202",
+      "name": "揭阳市区县2",
+      "level": "county",
+      "parent_code": "445200"
+    },
+    {
+      "code": "445301",
+      "name": "云浮市区县1",
+      "level": "county",
+      "parent_code": "445300"
+    },
+    {
+      "code": "445302",
+      "name": "云浮市区县2",
+      "level": "county",
+      "parent_code": "445300"
+    },
+    {
+      "code": "450101",
+      "name": "广西壮族自治区省会城市区县1",
+      "level": "county",
+      "parent_code": "450100"
+    },
+    {
+      "code": "450102",
+      "name": "广西壮族自治区省会城市区县2",
+      "level": "county",
+      "parent_code": "450100"
+    },
+    {
+      "code": "450201",
+      "name": "广西壮族自治区重要城市区县1",
+      "level": "county",
+      "parent_code": "450200"
+    },
+    {
+      "code": "450202",
+      "name": "广西壮族自治区重要城市区县2",
+      "level": "county",
+      "parent_code": "450200"
+    },
+    {
+      "code": "460101",
+      "name": "海南省省会城市区县1",
+      "level": "county",
+      "parent_code": "460100"
+    },
+    {
+      "code": "460102",
+      "name": "海南省省会城市区县2",
+      "level": "county",
+      "parent_code": "460100"
+    },
+    {
+      "code": "460201",
+      "name": "海南省重要城市区县1",
+      "level": "county",
+      "parent_code": "460200"
+    },
+    {
+      "code": "460202",
+      "name": "海南省重要城市区县2",
+      "level": "county",
+      "parent_code": "460200"
+    },
+    {
+      "code": "500101",
+      "name": "重庆市省会城市区县1",
+      "level": "county",
+      "parent_code": "500100"
+    },
+    {
+      "code": "500102",
+      "name": "重庆市省会城市区县2",
+      "level": "county",
+      "parent_code": "500100"
+    },
+    {
+      "code": "500201",
+      "name": "重庆市重要城市区县1",
+      "level": "county",
+      "parent_code": "500200"
+    },
+    {
+      "code": "500202",
+      "name": "重庆市重要城市区县2",
+      "level": "county",
+      "parent_code": "500200"
+    },
+    {
+      "code": "510101",
+      "name": "四川省省会城市区县1",
+      "level": "county",
+      "parent_code": "510100"
+    },
+    {
+      "code": "510102",
+      "name": "四川省省会城市区县2",
+      "level": "county",
+      "parent_code": "510100"
+    },
+    {
+      "code": "510201",
+      "name": "四川省重要城市区县1",
+      "level": "county",
+      "parent_code": "510200"
+    },
+    {
+      "code": "510202",
+      "name": "四川省重要城市区县2",
+      "level": "county",
+      "parent_code": "510200"
+    },
+    {
+      "code": "520101",
+      "name": "贵州省省会城市区县1",
+      "level": "county",
+      "parent_code": "520100"
+    },
+    {
+      "code": "520102",
+      "name": "贵州省省会城市区县2",
+      "level": "county",
+      "parent_code": "520100"
+    },
+    {
+      "code": "520201",
+      "name": "贵州省重要城市区县1",
+      "level": "county",
+      "parent_code": "520200"
+    },
+    {
+      "code": "520202",
+      "name": "贵州省重要城市区县2",
+      "level": "county",
+      "parent_code": "520200"
+    },
+    {
+      "code": "530101",
+      "name": "云南省省会城市区县1",
+      "level": "county",
+      "parent_code": "530100"
+    },
+    {
+      "code": "530102",
+      "name": "云南省省会城市区县2",
+      "level": "county",
+      "parent_code": "530100"
+    },
+    {
+      "code": "530201",
+      "name": "云南省重要城市区县1",
+      "level": "county",
+      "parent_code": "530200"
+    },
+    {
+      "code": "530202",
+      "name": "云南省重要城市区县2",
+      "level": "county",
+      "parent_code": "530200"
+    },
+    {
+      "code": "540101",
+      "name": "西藏自治区省会城市区县1",
+      "level": "county",
+      "parent_code": "540100"
+    },
+    {
+      "code": "540102",
+      "name": "西藏自治区省会城市区县2",
+      "level": "county",
+      "parent_code": "540100"
+    },
+    {
+      "code": "540201",
+      "name": "西藏自治区重要城市区县1",
+      "level": "county",
+      "parent_code": "540200"
+    },
+    {
+      "code": "540202",
+      "name": "西藏自治区重要城市区县2",
+      "level": "county",
+      "parent_code": "540200"
+    },
+    {
+      "code": "610101",
+      "name": "陕西省省会城市区县1",
+      "level": "county",
+      "parent_code": "610100"
+    },
+    {
+      "code": "610102",
+      "name": "陕西省省会城市区县2",
+      "level": "county",
+      "parent_code": "610100"
+    },
+    {
+      "code": "610201",
+      "name": "陕西省重要城市区县1",
+      "level": "county",
+      "parent_code": "610200"
+    },
+    {
+      "code": "610202",
+      "name": "陕西省重要城市区县2",
+      "level": "county",
+      "parent_code": "610200"
+    },
+    {
+      "code": "620101",
+      "name": "甘肃省省会城市区县1",
+      "level": "county",
+      "parent_code": "620100"
+    },
+    {
+      "code": "620102",
+      "name": "甘肃省省会城市区县2",
+      "level": "county",
+      "parent_code": "620100"
+    },
+    {
+      "code": "620201",
+      "name": "甘肃省重要城市区县1",
+      "level": "county",
+      "parent_code": "620200"
+    },
+    {
+      "code": "620202",
+      "name": "甘肃省重要城市区县2",
+      "level": "county",
+      "parent_code": "620200"
+    },
+    {
+      "code": "630101",
+      "name": "青海省省会城市区县1",
+      "level": "county",
+      "parent_code": "630100"
+    },
+    {
+      "code": "630102",
+      "name": "青海省省会城市区县2",
+      "level": "county",
+      "parent_code": "630100"
+    },
+    {
+      "code": "630201",
+      "name": "青海省重要城市区县1",
+      "level": "county",
+      "parent_code": "630200"
+    },
+    {
+      "code": "630202",
+      "name": "青海省重要城市区县2",
+      "level": "county",
+      "parent_code": "630200"
+    },
+    {
+      "code": "640101",
+      "name": "宁夏回族自治区省会城市区县1",
+      "level": "county",
+      "parent_code": "640100"
+    },
+    {
+      "code": "640102",
+      "name": "宁夏回族自治区省会城市区县2",
+      "level": "county",
+      "parent_code": "640100"
+    },
+    {
+      "code": "640201",
+      "name": "宁夏回族自治区重要城市区县1",
+      "level": "county",
+      "parent_code": "640200"
+    },
+    {
+      "code": "640202",
+      "name": "宁夏回族自治区重要城市区县2",
+      "level": "county",
+      "parent_code": "640200"
+    },
+    {
+      "code": "650101",
+      "name": "新疆维吾尔自治区省会城市区县1",
+      "level": "county",
+      "parent_code": "650100"
+    },
+    {
+      "code": "650102",
+      "name": "新疆维吾尔自治区省会城市区县2",
+      "level": "county",
+      "parent_code": "650100"
+    },
+    {
+      "code": "650201",
+      "name": "新疆维吾尔自治区重要城市区县1",
+      "level": "county",
+      "parent_code": "650200"
+    },
+    {
+      "code": "650202",
+      "name": "新疆维吾尔自治区重要城市区县2",
+      "level": "county",
+      "parent_code": "650200"
+    },
+    {
+      "code": "710101",
+      "name": "台湾省省会城市区县1",
+      "level": "county",
+      "parent_code": "710100"
+    },
+    {
+      "code": "710102",
+      "name": "台湾省省会城市区县2",
+      "level": "county",
+      "parent_code": "710100"
+    },
+    {
+      "code": "710201",
+      "name": "台湾省重要城市区县1",
+      "level": "county",
+      "parent_code": "710200"
+    },
+    {
+      "code": "710202",
+      "name": "台湾省重要城市区县2",
+      "level": "county",
+      "parent_code": "710200"
+    },
+    {
+      "code": "810101",
+      "name": "香港特别行政区省会城市区县1",
+      "level": "county",
+      "parent_code": "810100"
+    },
+    {
+      "code": "810102",
+      "name": "香港特别行政区省会城市区县2",
+      "level": "county",
+      "parent_code": "810100"
+    },
+    {
+      "code": "810201",
+      "name": "香港特别行政区重要城市区县1",
+      "level": "county",
+      "parent_code": "810200"
+    },
+    {
+      "code": "810202",
+      "name": "香港特别行政区重要城市区县2",
+      "level": "county",
+      "parent_code": "810200"
+    },
+    {
+      "code": "820101",
+      "name": "澳门特别行政区省会城市区县1",
+      "level": "county",
+      "parent_code": "820100"
+    },
+    {
+      "code": "820102",
+      "name": "澳门特别行政区省会城市区县2",
+      "level": "county",
+      "parent_code": "820100"
+    },
+    {
+      "code": "820201",
+      "name": "澳门特别行政区重要城市区县1",
+      "level": "county",
+      "parent_code": "820200"
+    },
+    {
+      "code": "820202",
+      "name": "澳门特别行政区重要城市区县2",
+      "level": "county",
+      "parent_code": "820200"
+    }
+  ]
+}
