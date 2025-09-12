@@ -1,0 +1,59 @@
+{
+  "repository": {
+    "name": "linux",
+    "full_name": "torvalds/linux",
+    "description": "Linux kernel source tree",
+    "html_url": "https://github.com/torvalds/linux",
+    "clone_url": "https://github.com/torvalds/linux.git",
+    "ssh_url": "git@github.com:torvalds/linux.git",
+    "homepage": "",
+    "topics": [],
+    "default_branch": "master",
+    "private": false,
+    "fork": false,
+    "archived": false
+  },
+  "owner": {
+    "login": "torvalds",
+    "type": "User",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1024025?v=4"
+  },
+  "statistics": {
+    "stars": 201818,
+    "forks": 57673,
+    "watchers": 201818,
+    "open_issues": 503,
+    "size": 5660641,
+    "language": "C",
+    "created_at": "2011-09-04T22:48:12Z",
+    "updated_at": "2025-09-12T03:11:39Z",
+    "pushed_at": "2025-09-11T23:49:17Z",
+    "license": "Other"
+  },
+  "languages": {
+    "C": 1359818771,
+    "Assembly": 9649413,
+    "Shell": 5420567,
+    "Python": 3489069,
+    "Makefile": 2774799,
+    "Rust": 1612734,
+    "Perl": 1229222,
+    "Roff": 205712,
+    "C++": 180689,
+    "SmPL": 167429,
+    "Yacc": 128483,
+    "Awk": 72507,
+    "Lex": 71137,
+    "Jinja": 30246,
+    "UnrealScript": 16878,
+    "Gherkin": 10512,
+    "Linker Script": 9986,
+    "M4": 3329,
+    "Clojure": 2537,
+    "MATLAB": 2482,
+    "sed": 2433,
+    "XS": 1239,
+    "RPC": 962
+  },
+  "scraped_at": "2025-09-12T03:17:06.963935"
+}
