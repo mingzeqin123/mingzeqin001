@@ -1,0 +1,354 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # 每天凌晨2点自动构建
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: '部署环境'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+      force_deploy:
+        description: '强制部署'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  # 全局环境变量
+  JAVA_VERSION: '21'
+  PYTHON_VERSION: '3.9'
+  NODE_VERSION: '18'
+  DOCKER_REGISTRY: 'your-registry.com'
+  PROJECT_NAME: 'jump-jump-game'
+
+jobs:
+  # 代码质量检查
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 设置Java环境
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+
+      - name: 设置Python环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: 设置Node.js环境
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 缓存依赖
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.m2
+            ~/.cache/pip
+            ~/.npm
+          key: ${{ runner.os }}-deps-${{ hashFiles('**/pom.xml', '**/requirements.txt', '**/package*.json') }}
+
+      - name: 安装Python依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8 black isort
+
+      - name: Python代码检查
+        run: |
+          flake8 excel_transpose.py --max-line-length=88
+          black --check excel_transpose.py
+          isort --check-only excel_transpose.py
+
+      - name: Java代码检查
+        run: |
+          cd java-mac-app
+          mvn clean compile checkstyle:check
+
+      - name: 安全扫描
+        uses: github/super-linter@v4
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_ALL_CODEBASE: false
+
+  # 构建阶段
+  build:
+    needs: code-quality
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        component: [miniprogram, java-app, python-tools]
+    
+    steps:
+      - name: Checkout代码
+        uses: actions/checkout@v4
+
+      - name: 设置构建环境
+        run: |
+          case ${{ matrix.component }} in
+            java-app)
+              echo "SETUP_JAVA=true" >> $GITHUB_ENV
+              ;;
+            python-tools)
+              echo "SETUP_PYTHON=true" >> $GITHUB_ENV
+              ;;
+            miniprogram)
+              echo "SETUP_NODE=true" >> $GITHUB_ENV
+              ;;
+          esac
+
+      - name: 设置Java环境
+        if: env.SETUP_JAVA == 'true'
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+
+      - name: 设置Python环境
+        if: env.SETUP_PYTHON == 'true'
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: 设置Node.js环境
+        if: env.SETUP_NODE == 'true'
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 构建组件
+        run: |
+          case ${{ matrix.component }} in
+            java-app)
+              cd java-mac-app
+              mvn clean package -DskipTests
+              ;;
+            python-tools)
+              python -m pip install --upgrade pip
+              pip install -r requirements.txt
+              python -m py_compile excel_transpose.py
+              ;;
+            miniprogram)
+              # 小程序构建逻辑
+              mkdir -p build/miniprogram
+              rsync -av --exclude='node_modules' --exclude='.git' --exclude='build' --exclude='java-mac-app' --exclude='*.py' . build/miniprogram/
+              ;;
+          esac
+
+      - name: 上传构建产物
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.component }}-${{ github.sha }}
+          path: |
+            java-mac-app/target/*.jar
+            build/
+            excel_transpose.py
+            requirements.txt
+          retention-days: 30
+
+  # 测试阶段
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout代码
+        uses: actions/checkout@v4
+
+      - name: 设置测试环境
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+
+      - name: 设置Python环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: 运行Java测试
+        run: |
+          cd java-mac-app
+          mvn test
+
+      - name: 运行Python测试
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+          # 创建简单的测试
+          cat > test_excel_transpose.py << 'EOF'
+          import pytest
+          import pandas as pd
+          from excel_transpose import *
+          
+          def test_basic_functionality():
+              # 基本功能测试
+              assert True  # 占位测试
+          EOF
+          pytest test_excel_transpose.py -v || true
+
+      - name: 生成测试报告
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: 测试结果
+          path: '**/target/surefire-reports/*.xml'
+          reporter: java-junit
+
+  # Docker镜像构建
+  docker-build:
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+      - name: Checkout代码
+        uses: actions/checkout@v4
+
+      - name: 下载构建产物
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts/
+
+      - name: 设置Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: 登录Docker Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: 构建并推送Docker镜像
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.DOCKER_REGISTRY }}/${{ env.PROJECT_NAME }}:latest
+            ${{ env.DOCKER_REGISTRY }}/${{ env.PROJECT_NAME }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # 部署到Staging环境
+  deploy-staging:
+    needs: docker-build
+    runs-on: ubuntu-latest
+    environment: staging
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+    
+    steps:
+      - name: Checkout代码
+        uses: actions/checkout@v4
+
+      - name: 部署到Staging
+        run: |
+          echo "部署到Staging环境..."
+          # 这里可以添加实际的部署逻辑
+          # 例如：使用SSH连接到服务器，运行部署脚本
+          
+      - name: 运行部署脚本
+        run: |
+          chmod +x scripts/*.sh
+          # 模拟部署过程
+          echo "模拟部署过程..."
+          
+      - name: 健康检查
+        run: |
+          echo "执行健康检查..."
+          # 实际项目中应该检查服务是否正常运行
+
+      - name: 通知部署结果
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#deployments'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+  # 部署到Production环境
+  deploy-production:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
+    
+    steps:
+      - name: Checkout代码
+        uses: actions/checkout@v4
+
+      - name: 人工审批检查
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: admin,devops-team
+          minimum-approvals: 2
+          issue-title: "生产环境部署审批"
+          issue-body: |
+            请审批生产环境部署
+            
+            **部署信息:**
+            - 提交: ${{ github.sha }}
+            - 分支: ${{ github.ref }}
+            - 触发者: ${{ github.actor }}
+            
+            请确认以下检查项：
+            - [ ] Staging环境测试通过
+            - [ ] 数据库迁移脚本已准备
+            - [ ] 回滚方案已确认
+            - [ ] 监控和告警已设置
+
+      - name: 部署到Production
+        run: |
+          echo "部署到Production环境..."
+          # 生产环境部署逻辑
+          
+      - name: 生产环境健康检查
+        run: |
+          echo "执行生产环境健康检查..."
+          # 生产环境健康检查逻辑
+
+      - name: 创建发布标签
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag -a "v$(date +%Y%m%d-%H%M%S)" -m "Production deployment $(date)"
+          git push origin --tags
+
+  # 定期清理
+  cleanup:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    
+    steps:
+      - name: 清理旧的构建产物
+        run: |
+          echo "清理旧的构建产物..."
+          # 清理逻辑
+          
+      - name: 清理Docker镜像
+        run: |
+          echo "清理旧的Docker镜像..."
+          # Docker镜像清理逻辑

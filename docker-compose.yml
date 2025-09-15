@@ -1,0 +1,148 @@
+version: '3.8'
+
+services:
+  # 主应用服务
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: app-service
+    restart: unless-stopped
+    volumes:
+      # 持久化构建产物
+      - ./build:/app/build
+      # 持久化日志
+      - ./logs:/var/log/app
+      # 挂载配置文件
+      - ./config:/app/config:ro
+    environment:
+      - APP_ENV=production
+      - LOG_LEVEL=info
+      - BUILD_SCHEDULE=0 2 * * *  # 每天凌晨2点构建
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Git代码同步服务
+  git-sync:
+    image: alpine/git:latest
+    container_name: git-sync-service
+    restart: unless-stopped
+    volumes:
+      - ./:/workspace
+      - ./logs:/var/log/app
+    environment:
+      - GIT_REPO_URL=${GIT_REPO_URL:-https://github.com/your-repo/project.git}
+      - GIT_BRANCH=${GIT_BRANCH:-main}
+      - SYNC_INTERVAL=${SYNC_INTERVAL:-3600}  # 每小时同步一次
+    command: |
+      sh -c '
+        while true; do
+          echo "[$(date)] 开始同步代码..."
+          cd /workspace
+          git fetch origin
+          git reset --hard origin/$$GIT_BRANCH
+          echo "[$(date)] 代码同步完成"
+          sleep $$SYNC_INTERVAL
+        done
+      '
+    networks:
+      - app-network
+
+  # 构建调度服务
+  build-scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    container_name: build-scheduler
+    restart: unless-stopped
+    volumes:
+      - ./:/workspace
+      - ./build:/app/build
+      - ./logs:/var/log/app
+    environment:
+      - CRON_SCHEDULE=${CRON_SCHEDULE:-0 2 * * *}  # 默认每天凌晨2点
+    command: |
+      sh -c '
+        # 安装cron
+        apt-get update && apt-get install -y cron
+        
+        # 设置cron任务
+        echo "$$CRON_SCHEDULE cd /workspace && /workspace/scripts/build-all.sh >> /var/log/app/build.log 2>&1" | crontab -
+        
+        # 启动cron服务
+        cron -f
+      '
+    networks:
+      - app-network
+
+  # 监控服务
+  monitor:
+    image: prom/prometheus:latest
+    container_name: app-monitor
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - app-network
+
+  # 日志收集服务
+  log-collector:
+    image: fluent/fluent-bit:latest
+    container_name: log-collector
+    restart: unless-stopped
+    volumes:
+      - ./logs:/var/log/app:ro
+      - ./monitoring/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro
+    ports:
+      - "24224:24224"
+    networks:
+      - app-network
+
+  # Web管理界面
+  web-ui:
+    image: nginx:alpine
+    container_name: app-web-ui
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./web:/usr/share/nginx/html:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - app
+      - monitor
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  prometheus-data:
+    driver: local

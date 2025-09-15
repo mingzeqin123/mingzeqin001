@@ -1,0 +1,19 @@
+# 定时构建和部署任务
+# 格式: 分 时 日 月 周 命令
+
+# 每天凌晨2点执行构建
+0 2 * * * appuser cd /app && /app/scripts/build-all.sh >> /var/log/app/build.log 2>&1
+
+# 每天凌晨2:30执行部署
+30 2 * * * appuser cd /app && /app/scripts/deploy.sh >> /var/log/app/deploy.log 2>&1
+
+# 每小时检查服务状态
+0 * * * * appuser /app/scripts/health-check.sh >> /var/log/app/health.log 2>&1
+
+# 每天凌晨4点清理旧日志
+0 4 * * * appuser find /var/log/app -name "*.log" -mtime +7 -delete
+
+# 每周日凌晨3点清理旧构建产物
+0 3 * * 0 appuser find /app/build -name "*.tar.gz" -mtime +30 -delete
+
+# 空行（cron要求）

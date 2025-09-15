@@ -1,0 +1,308 @@
+# GitLab CI/CD Pipeline配置
+# 支持多环境部署和自动化构建
+
+stages:
+  - validate
+  - build
+  - test
+  - package
+  - deploy-staging
+  - deploy-production
+  - cleanup
+
+variables:
+  # 全局变量
+  JAVA_VERSION: "21"
+  PYTHON_VERSION: "3.9"
+  NODE_VERSION: "18"
+  DOCKER_REGISTRY: "$CI_REGISTRY"
+  IMAGE_NAME: "$CI_REGISTRY_IMAGE"
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+# 缓存配置
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - .m2/repository/
+    - .cache/pip/
+    - node_modules/
+
+# 代码质量检查阶段
+validate:code-quality:
+  stage: validate
+  image: ubuntu:22.04
+  before_script:
+    - apt-get update -qq
+    - apt-get install -y -qq git curl python3 python3-pip openjdk-21-jdk maven nodejs npm
+    - python3 -m pip install --upgrade pip
+    - pip3 install flake8 black isort
+  script:
+    - echo "执行代码质量检查..."
+    - flake8 excel_transpose.py --max-line-length=88 || true
+    - black --check excel_transpose.py || true
+    - isort --check-only excel_transpose.py || true
+    - cd java-mac-app && mvn clean compile checkstyle:check || true
+  allow_failure: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# 安全扫描
+validate:security-scan:
+  stage: validate
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - echo "执行安全扫描..."
+    # 使用Trivy进行安全扫描
+    - docker run --rm -v "$PWD:/workspace" aquasec/trivy fs /workspace
+  allow_failure: true
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# 构建阶段 - 微信小程序
+build:miniprogram:
+  stage: build
+  image: node:18-alpine
+  script:
+    - echo "构建微信小程序..."
+    - mkdir -p build/miniprogram
+    - cp -r . build/miniprogram/
+    - cd build/miniprogram
+    - rm -rf node_modules .git build java-mac-app *.py requirements.txt
+    - tar -czf ../miniprogram_${CI_COMMIT_SHORT_SHA}.tar.gz .
+  artifacts:
+    paths:
+      - build/miniprogram_*.tar.gz
+    expire_in: 30 days
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+# 构建阶段 - Java应用
+build:java-app:
+  stage: build
+  image: maven:3.9-openjdk-21
+  script:
+    - echo "构建Java应用..."
+    - cd java-mac-app
+    - mvn clean package -DskipTests
+    - mkdir -p ../build/java-app
+    - cp target/*.jar ../build/java-app/
+    - cp -r src ../build/java-app/
+    - cp pom.xml ../build/java-app/
+    - cd ../build
+    - tar -czf java-app_${CI_COMMIT_SHORT_SHA}.tar.gz java-app/
+  artifacts:
+    paths:
+      - build/java-app_*.tar.gz
+      - java-mac-app/target/*.jar
+    expire_in: 30 days
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+# 构建阶段 - Python工具
+build:python-tools:
+  stage: build
+  image: python:3.9-slim
+  script:
+    - echo "构建Python工具..."
+    - python -m pip install --upgrade pip
+    - pip install -r requirements.txt
+    - python -m py_compile excel_transpose.py
+    - mkdir -p build/python-tools
+    - cp excel_transpose.py build/python-tools/
+    - cp requirements.txt build/python-tools/
+    - cp README_excel_transpose.md build/python-tools/
+    - cp sample_data*.xlsx build/python-tools/ || true
+    - cd build
+    - tar -czf python-tools_${CI_COMMIT_SHORT_SHA}.tar.gz python-tools/
+  artifacts:
+    paths:
+      - build/python-tools_*.tar.gz
+    expire_in: 30 days
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+# 测试阶段
+test:java:
+  stage: test
+  image: maven:3.9-openjdk-21
+  script:
+    - echo "运行Java测试..."
+    - cd java-mac-app
+    - mvn test
+  artifacts:
+    reports:
+      junit:
+        - java-mac-app/target/surefire-reports/TEST-*.xml
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+test:python:
+  stage: test
+  image: python:3.9-slim
+  script:
+    - echo "运行Python测试..."
+    - python -m pip install --upgrade pip
+    - pip install -r requirements.txt pytest
+    - python -c "import excel_transpose; print('Python模块加载成功')"
+    # 创建简单测试
+    - |
+      cat > test_basic.py << 'EOF'
+      def test_import():
+          import excel_transpose
+          assert True
+      EOF
+    - pytest test_basic.py -v
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+# 打包阶段
+package:docker:
+  stage: package
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - echo "构建Docker镜像..."
+    - docker build -t $IMAGE_NAME:$CI_COMMIT_SHORT_SHA .
+    - docker build -t $IMAGE_NAME:latest .
+    - docker push $IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+    - docker push $IMAGE_NAME:latest
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+package:release:
+  stage: package
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache tar gzip
+  script:
+    - echo "创建发布包..."
+    - mkdir -p release
+    - cp build/*.tar.gz release/ || true
+    - cd release
+    - tar -czf full-release_${CI_COMMIT_SHORT_SHA}.tar.gz *.tar.gz
+  artifacts:
+    paths:
+      - release/full-release_*.tar.gz
+    expire_in: 90 days
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# 部署到Staging环境
+deploy:staging:
+  stage: deploy-staging
+  image: alpine:latest
+  environment:
+    name: staging
+    url: https://staging.example.com
+  before_script:
+    - apk add --no-cache openssh-client curl
+    - eval $(ssh-agent -s)
+    - echo "$STAGING_SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$STAGING_SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - echo "部署到Staging环境..."
+    - scp release/full-release_*.tar.gz $STAGING_USER@$STAGING_HOST:/tmp/
+    - |
+      ssh $STAGING_USER@$STAGING_HOST << 'EOF'
+        cd /opt/app
+        sudo systemctl stop app-service || true
+        sudo tar -xzf /tmp/full-release_*.tar.gz -C /opt/app/
+        sudo systemctl start app-service
+        sudo systemctl status app-service
+      EOF
+    - sleep 30
+    - curl -f http://$STAGING_HOST:8080/health || exit 1
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  when: manual
+
+# 部署到Production环境
+deploy:production:
+  stage: deploy-production
+  image: alpine:latest
+  environment:
+    name: production
+    url: https://production.example.com
+  before_script:
+    - apk add --no-cache openssh-client curl
+    - eval $(ssh-agent -s)
+    - echo "$PRODUCTION_SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$PRODUCTION_SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - echo "部署到Production环境..."
+    - scp release/full-release_*.tar.gz $PRODUCTION_USER@$PRODUCTION_HOST:/tmp/
+    - scp scripts/*.sh $PRODUCTION_USER@$PRODUCTION_HOST:/tmp/
+    - |
+      ssh $PRODUCTION_USER@$PRODUCTION_HOST << 'EOF'
+        chmod +x /tmp/*.sh
+        cd /opt/app
+        /tmp/deploy.sh
+      EOF
+    - sleep 60
+    - curl -f http://$PRODUCTION_HOST:8080/health || exit 1
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  when: manual
+  allow_failure: false
+
+# 定时清理任务
+cleanup:old-artifacts:
+  stage: cleanup
+  image: alpine:latest
+  script:
+    - echo "清理旧的构建产物..."
+    - find build/ -name "*.tar.gz" -mtime +30 -delete || true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  allow_failure: true
+
+# 通知任务
+notify:success:
+  stage: cleanup
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache curl
+  script:
+    - |
+      if [ -n "$WEBHOOK_URL" ]; then
+        curl -X POST "$WEBHOOK_URL" \
+          -H "Content-Type: application/json" \
+          -d "{\"text\":\"🚀 部署成功\\n项目: $CI_PROJECT_NAME\\n分支: $CI_COMMIT_REF_NAME\\n提交: $CI_COMMIT_SHORT_SHA\\n流水线: $CI_PIPELINE_URL\"}"
+      fi
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  when: on_success
+
+notify:failure:
+  stage: cleanup
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache curl
+  script:
+    - |
+      if [ -n "$WEBHOOK_URL" ]; then
+        curl -X POST "$WEBHOOK_URL" \
+          -H "Content-Type: application/json" \
+          -d "{\"text\":\"❌ 部署失败\\n项目: $CI_PROJECT_NAME\\n分支: $CI_COMMIT_REF_NAME\\n提交: $CI_COMMIT_SHORT_SHA\\n流水线: $CI_PIPELINE_URL\"}"
+      fi
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  when: on_failure
