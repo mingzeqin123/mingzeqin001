@@ -1,0 +1,49 @@
+# Prometheus 监控配置
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - "rules/*.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+scrape_configs:
+  # Prometheus自身监控
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # 应用服务监控
+  - job_name: 'app-service'
+    static_configs:
+      - targets: ['app:8080']
+    metrics_path: '/metrics'
+    scrape_interval: 30s
+
+  # 系统监控
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  # Docker监控
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+
+  # 日志监控
+  - job_name: 'fluent-bit'
+    static_configs:
+      - targets: ['log-collector:2020']
+
+  # 自定义健康检查
+  - job_name: 'health-check'
+    static_configs:
+      - targets: ['app:8080']
+    metrics_path: '/health'
+    scrape_interval: 60s
