@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信分享小卡片示例</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="text"], input[type="url"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #1aad19;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #179b16;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .code-block {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        pre {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>微信公众号分享小卡片配置</h1>
+        <p>此页面用于测试微信公众号分享功能。请确保服务器已启动，并且已配置正确的AppID和AppSecret。</p>
+        
+        <div class="form-group">
+            <label for="serverUrl">服务器地址:</label>
+            <input type="url" id="serverUrl" value="http://localhost:3000" placeholder="http://localhost:3000">
+        </div>
+        
+        <div class="form-group">
+            <label for="shareTitle">分享标题:</label>
+            <input type="text" id="shareTitle" value="微信分享测试" placeholder="请输入分享标题">
+        </div>
+        
+        <div class="form-group">
+            <label for="shareDesc">分享描述:</label>
+            <input type="text" id="shareDesc" value="这是一个微信分享功能的测试页面" placeholder="请输入分享描述">
+        </div>
+        
+        <div class="form-group">
+            <label for="shareLink">分享链接:</label>
+            <input type="url" id="shareLink" value="" placeholder="请输入分享链接">
+        </div>
+        
+        <div class="form-group">
+            <label for="shareImgUrl">分享图片:</label>
+            <input type="url" id="shareImgUrl" value="" placeholder="请输入分享图片URL">
+        </div>
+        
+        <button onclick="initWechatShare()">初始化微信分享</button>
+        <button onclick="testTicket()">测试获取Ticket</button>
+        
+        <div id="status"></div>
+    </div>
+
+    <!-- 微信JS-SDK -->
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    
+    <script>
+        // 设置默认的分享链接为当前页面
+        document.getElementById('shareLink').value = window.location.href;
+        
+        /**
+         * 显示状态信息
+         */
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = message;
+        }
+        
+        /**
+         * 测试获取ticket接口
+         */
+        async function testTicket() {
+            const serverUrl = document.getElementById('serverUrl').value;
+            
+            try {
+                showStatus('正在获取jsapi_ticket...', 'info');
+                
+                const response = await fetch(`${serverUrl}/api/wechat/jsapi_ticket`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    showStatus(`
+                        <h3>获取ticket成功:</h3>
+                        <div class="code-block">
+                            <pre>${JSON.stringify(result.data, null, 2)}</pre>
+                        </div>
+                    `, 'success');
+                } else {
+                    showStatus(`获取ticket失败: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`请求失败: ${error.message}`, 'error');
+            }
+        }
+        
+        /**
+         * 初始化微信分享
+         */
+        async function initWechatShare() {
+            const serverUrl = document.getElementById('serverUrl').value;
+            const shareTitle = document.getElementById('shareTitle').value;
+            const shareDesc = document.getElementById('shareDesc').value;
+            const shareLink = document.getElementById('shareLink').value;
+            const shareImgUrl = document.getElementById('shareImgUrl').value;
+            
+            if (!shareTitle || !shareDesc || !shareLink) {
+                showStatus('请填写完整的分享信息', 'error');
+                return;
+            }
+            
+            try {
+                showStatus('正在获取微信JS-SDK配置...', 'info');
+                
+                // 获取JS-SDK配置
+                const response = await fetch(`${serverUrl}/api/wechat/js_config`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        url: window.location.href.split('#')[0] // 去除hash部分
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (!result.success) {
+                    showStatus(`获取配置失败: ${result.message}`, 'error');
+                    return;
+                }
+                
+                const config = result.data;
+                
+                // 配置微信JS-SDK
+                wx.config({
+                    debug: false, // 开启调试模式
+                    appId: config.appId,
+                    timestamp: config.timestamp,
+                    nonceStr: config.nonceStr,
+                    signature: config.signature,
+                    jsApiList: config.jsApiList
+                });
+                
+                wx.ready(function () {
+                    // 配置分享到朋友圈
+                    wx.updateTimelineShareData({
+                        title: shareTitle,
+                        link: shareLink,
+                        imgUrl: shareImgUrl,
+                        success: function () {
+                            console.log('分享到朋友圈配置成功');
+                        }
+                    });
+                    
+                    // 配置分享给朋友
+                    wx.updateAppMessageShareData({
+                        title: shareTitle,
+                        desc: shareDesc,
+                        link: shareLink,
+                        imgUrl: shareImgUrl,
+                        success: function () {
+                            console.log('分享给朋友配置成功');
+                        }
+                    });
+                    
+                    showStatus(`
+                        <h3>微信分享配置成功!</h3>
+                        <p>现在您可以在微信中分享此页面，将显示自定义的标题、描述和图片。</p>
+                        <div class="code-block">
+                            <pre>配置信息:
+AppID: ${config.appId}
+时间戳: ${config.timestamp}
+随机字符串: ${config.nonceStr}
+签名: ${config.signature}</pre>
+                        </div>
+                    `, 'success');
+                });
+                
+                wx.error(function (res) {
+                    showStatus(`微信JS-SDK配置失败: ${JSON.stringify(res)}`, 'error');
+                });
+                
+            } catch (error) {
+                showStatus(`初始化失败: ${error.message}`, 'error');
+            }
+        }
+        
+        // 页面加载完成后的提示
+        window.onload = function() {
+            showStatus('请先启动后端服务器，然后点击"测试获取Ticket"按钮验证服务是否正常工作。', 'info');
+        };
+    </script>
+</body>
+</html>
