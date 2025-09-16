@@ -1,0 +1,26 @@
+{
+  "name": "wechat-ticket-server",
+  "version": "1.0.0",
+  "description": "微信公众号分享小卡片ticket获取服务",
+  "main": "wechat-ticket-server.js",
+  "scripts": {
+    "start": "node wechat-ticket-server.js",
+    "dev": "nodemon wechat-ticket-server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.0",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "wechat",
+    "jsapi",
+    "ticket",
+    "share"
+  ],
+  "author": "",
+  "license": "MIT"
+}
