@@ -1,5 +1,6 @@
 // pages/game/game.js
 import GameEngine from './gameEngine.js'
+const { wechatShareCard } = require('../../utils/wechatShare.js')
 
 Page({
   data: {
@@ -8,7 +9,10 @@ Page({
     gameState: 'start', // start, playing, over
     isPressing: false,
     power: 0,
-    isNewRecord: false
+    isNewRecord: false,
+    shareCardTicket: '',
+    shareCardQRCodeUrl: '',
+    isCreatingShareCard: false
   },
 
   onLoad() {
@@ -135,6 +139,83 @@ Page({
     })
   },
 
+  // 创建分享卡片ticket
+  async createShareCardTicket() {
+    const { score, bestScore } = this.data
+    
+    this.setData({ isCreatingShareCard: true })
+    
+    try {
+      const shareData = {
+        score: score,
+        playerName: '玩家',
+        bestScore: bestScore
+      }
+      
+      const result = await wechatShareCard.createGameShareCard(shareData)
+      
+      if (result.success) {
+        this.setData({
+          shareCardTicket: result.ticket,
+          shareCardQRCodeUrl: result.qrCodeUrl
+        })
+        
+        wx.showToast({
+          title: '分享卡片创建成功',
+          icon: 'success'
+        })
+        
+        // 显示分享卡片信息
+        this.showShareCardInfo(result)
+      } else {
+        throw new Error(result.error || '创建分享卡片失败')
+      }
+    } catch (error) {
+      console.error('创建分享卡片失败:', error)
+      wx.showToast({
+        title: '创建分享卡片失败',
+        icon: 'error'
+      })
+    } finally {
+      this.setData({ isCreatingShareCard: false })
+    }
+  },
+
+  // 显示分享卡片信息
+  showShareCardInfo(cardInfo) {
+    wx.showModal({
+      title: '分享卡片信息',
+      content: `Ticket: ${cardInfo.ticket}\n\n二维码URL: ${cardInfo.qrCodeUrl}`,
+      showCancel: true,
+      cancelText: '关闭',
+      confirmText: '复制Ticket',
+      success: (res) => {
+        if (res.confirm) {
+          wx.setClipboardData({
+            data: cardInfo.ticket,
+            success: () => {
+              wx.showToast({
+                title: 'Ticket已复制',
+                icon: 'success'
+              })
+            }
+          })
+        }
+      }
+    })
+  },
+
+  // 获取分享卡片ticket（供外部调用）
+  async getShareCardTicket() {
+    try {
+      await this.createShareCardTicket()
+      return this.data.shareCardTicket
+    } catch (error) {
+      console.error('获取分享卡片ticket失败:', error)
+      return null
+    }
+  },
+
   // 触摸开始
   onTouchStart(e) {
     if (this.data.gameState !== 'playing') return
@@ -168,20 +249,20 @@ Page({
 
   // 分享给朋友
   onShareAppMessage() {
-    const { score } = this.data
+    const { score, shareCardTicket } = this.data
     return {
       title: `我在跳一跳中获得了${score}分，快来挑战吧！`,
-      path: '/pages/game/game',
+      path: `/pages/game/game?score=${score}&from=share&ticket=${shareCardTicket || ''}`,
       imageUrl: '/images/share.png'
     }
   },
 
   // 分享到朋友圈
   onShareTimeline() {
-    const { score } = this.data
+    const { score, shareCardTicket } = this.data
     return {
       title: `跳一跳挑战：${score}分！`,
-      query: 'from=timeline',
+      query: `from=timeline&score=${score}&ticket=${shareCardTicket || ''}`,
       imageUrl: '/images/share.png'
     }
   }

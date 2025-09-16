@@ -40,6 +40,9 @@
     <view class="best-score-display" wx:if="{{isNewRecord}}">🎉 新纪录!</view>
     <button class="restart-btn" bindtap="restartGame">再来一局</button>
     <button class="share-btn" bindtap="shareScore">分享成绩</button>
+    <button class="share-card-btn" bindtap="createShareCardTicket" disabled="{{isCreatingShareCard}}">
+      {{isCreatingShareCard ? '创建中...' : '获取分享卡片'}}
+    </button>
   </view>
   
   <!-- 蓄力指示器 -->
