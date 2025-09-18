@@ -1,177 +1,258 @@
-# 微信小程序跳一跳游戏
+# 程序监控和自动重启脚本
 
-一个基于微信小程序平台开发的3D跳一跳小游戏，使用Three.js渲染引擎实现3D效果。
+一个功能强大的 Bash 脚本，用于监控程序运行状态并在程序崩溃时自动重启。
 
-## 🎮 游戏特色
+## 功能特性
 
-- **3D视觉效果**：使用Three.js渲染引擎，呈现精美的3D场景
-- **物理引擎**：真实的跳跃物理模拟和碰撞检测
-- **多样方块**：普通、小型、高型、特殊等多种方块类型
-- **蓄力系统**：长按蓄力，控制跳跃距离和高度
-- **分数系统**：完美落地获得额外分数，挑战最高纪录
-- **视觉特效**：粒子效果、动画过渡、阴影系统
-- **音效支持**：跳跃、落地、完美、游戏结束等音效
-- **社交分享**：支持微信好友和朋友圈分享
+- ✅ **自动监控**: 定期检查程序是否正常运行
+- ✅ **智能重启**: 程序崩溃时自动重启
+- ✅ **重启限制**: 支持设置最大重启次数，防止无限重启
+- ✅ **详细日志**: 记录所有监控活动和程序状态
+- ✅ **配置文件**: 支持通过配置文件管理参数
+- ✅ **PID管理**: 支持PID文件管理，避免重复运行
+- ✅ **优雅关闭**: 支持SIGTERM信号优雅关闭程序
+- ✅ **守护进程**: 支持后台守护进程模式
+- ✅ **多种检测**: 支持通过PID文件或进程名检测程序状态
 
-## 🚀 快速开始
+## 快速开始
 
-### 环境要求
-- 微信开发者工具 1.05.0 或更高版本
-- 小程序基础库 2.9.0 或更高版本
+### 1. 基本使用
 
-### 安装步骤
+```bash
+# 监控一个简单的程序
+./process_monitor.sh "python3 app.py"
 
-1. **克隆项目**
-   ```bash
-   git clone [项目地址]
-   cd jump-jump-game
-   ```
+# 指定程序名称和检查间隔
+./process_monitor.sh -n "Web Server" -i 10 "python3 app.py"
 
-2. **导入项目**
-   - 打开微信开发者工具
-   - 选择"导入项目"
-   - 选择项目目录
-   - 填入AppID（测试可使用测试号）
-
-3. **添加资源文件**
-   - 将Three.js完整库文件放入 `/pages/game/libs/three.min.js`
-   - 添加音效文件到 `/sounds/` 目录
-   - 添加图片资源到 `/images/` 目录
-
-4. **编译运行**
-   - 点击"编译"按钮
-   - 在模拟器或真机上预览
-
-## 📁 项目结构
-
-```
-jump-jump-game/
-├── app.js                 # 小程序入口文件
-├── app.json               # 小程序配置文件
-├── app.wxss              # 全局样式文件
-├── sitemap.json          # 站点地图配置
-├── project.config.json   # 项目配置文件
-├── pages/
-│   └── game/             # 游戏页面
-│       ├── game.js       # 页面逻辑
-│       ├── game.json     # 页面配置
-│       ├── game.wxml     # 页面结构
-│       ├── game.wxss     # 页面样式
-│       ├── gameEngine.js # 游戏引擎核心
-│       ├── player.js     # 玩家角色类
-│       ├── block.js      # 方块类
-│       ├── utils.js      # 工具函数
-│       └── libs/
-│           └── three.min.js # Three.js库
-├── images/               # 图片资源
-│   └── README.md        # 图片说明
-├── sounds/               # 音效资源
-│   └── README.md        # 音效说明
-└── README.md            # 项目说明
+# 设置最大重启次数
+./process_monitor.sh -m 5 "java -jar myapp.jar"
 ```
 
-## 🎯 游戏玩法
+### 2. 使用配置文件
 
-1. **开始游戏**：点击"开始游戏"按钮
-2. **蓄力跳跃**：长按屏幕蓄力，右侧显示蓄力条
-3. **释放跳跃**：松开手指，角色跳向下一个方块
-4. **获得分数**：
-   - 成功落地：+1分
-   - 良好落地：+3分
-   - 完美落地：+5分（中心位置）
-5. **游戏结束**：跳跃失败掉落时游戏结束
-6. **分享成绩**：可分享到微信好友或朋友圈
+```bash
+# 复制配置文件模板
+cp monitor.conf.example monitor.conf
 
-## 🔧 核心技术
+# 编辑配置文件
+nano monitor.conf
 
-### 渲染引擎
-- **Three.js**：3D场景渲染
-- **WebGL**：硬件加速渲染
-- **阴影系统**：实时阴影计算
-- **光照系统**：环境光+方向光
+# 使用配置文件运行
+./process_monitor.sh -c monitor.conf
+```
 
-### 物理系统
-- **跳跃轨迹**：抛物线运动模拟
-- **碰撞检测**：圆形碰撞检测算法
-- **重力模拟**：自然下落效果
+### 3. 后台守护进程模式
 
-### 动画系统
-- **缓动函数**：平滑的动画过渡
-- **骨骼动画**：角色动作表现
-- **粒子效果**：特殊效果展示
-- **相机跟随**：平滑的视角切换
+```bash
+# 以守护进程模式运行
+./process_monitor.sh --daemon -l /var/log/monitor.log "nginx -g 'daemon off;'"
 
-## 🎨 自定义配置
+# 检查运行状态
+cat monitor.pid  # 查看监控脚本PID
+tail -f /var/log/monitor.log  # 查看日志
+```
 
-### 游戏参数调整
-在 `gameEngine.js` 中可以调整：
-- `maxChargingTime`：最大蓄力时间
-- 跳跃距离和高度计算公式
-- 方块生成间距和角度
+## 命令行选项
 
-### 视觉效果
-在各个类文件中可以调整：
-- 方块颜色和材质
-- 光照强度和位置
-- 动画持续时间和缓动函数
+| 选项 | 长选项 | 参数 | 描述 |
+|------|--------|------|------|
+| `-n` | `--name` | NAME | 程序名称（用于日志显示） |
+| `-c` | `--config` | FILE | 配置文件路径 |
+| `-i` | `--interval` | SECONDS | 检查间隔（默认: 5秒） |
+| `-m` | `--max-restarts` | COUNT | 最大重启次数（默认: 10次，0为无限制） |
+| `-d` | `--delay` | SECONDS | 重启延迟（默认: 2秒） |
+| `-w` | `--workdir` | DIR | 工作目录（默认: 当前目录） |
+| `-l` | `--log` | FILE | 日志文件路径（默认: ./monitor.log） |
+| `-p` | `--pid` | FILE | PID文件路径（默认: ./monitor.pid） |
+| | `--program-pid` | FILE | 程序PID文件路径 |
+| `-q` | `--quiet` | | 静默模式 |
+| | `--daemon` | | 后台守护进程模式 |
+| `-h` | `--help` | | 显示帮助信息 |
 
-### 音效配置
-在 `utils.js` 的 `AudioManager` 类中：
-- 添加新的音效类型
-- 调整音量和播放逻辑
+## 配置文件格式
 
-## 📱 兼容性
+配置文件使用 INI 风格的格式：
 
-- **iOS**：iOS 10.0+
-- **Android**：Android 5.0+
-- **微信版本**：7.0.0+
-- **小程序基础库**：2.9.0+
+```ini
+# 程序基本信息
+program_name=My Application
+program_cmd=python3
+program_args=app.py --port 8080
+work_dir=/opt/myapp
 
-## 🔍 性能优化
+# 监控参数
+check_interval=10
+max_restart_count=5
+restart_delay=3
 
-1. **渲染优化**
-   - 对象池管理，减少GC
-   - 视锥剔除，只渲染可见对象
-   - LOD系统，距离越远细节越少
+# 文件路径
+log_file=/var/log/myapp_monitor.log
+pid_file=/var/run/myapp_monitor.pid
+program_pid_file=/var/run/myapp.pid
+```
 
-2. **内存管理**
-   - 及时销毁不需要的对象
-   - 纹理和几何体复用
-   - 音效资源预加载
+## 使用示例
 
-3. **帧率优化**
-   - 固定时间步长更新
-   - 动画插值平滑
-   - 避免在渲染循环中创建对象
+### Python Web 应用
 
-## 🐛 已知问题
+```bash
+# 方法1: 命令行参数
+./process_monitor.sh -n "Flask App" -i 10 -m 5 -w /home/user/webapp "python3 app.py"
 
-1. 在部分低端Android设备上可能出现卡顿
-2. Three.js库文件较大，首次加载时间较长
-3. WebGL兼容性问题，部分老设备不支持
+# 方法2: 配置文件
+cat > flask_monitor.conf << EOF
+program_name=Flask Web Server
+program_cmd=python3
+program_args=app.py
+work_dir=/home/user/webapp
+check_interval=10
+max_restart_count=5
+log_file=/var/log/flask_monitor.log
+EOF
 
-## 🔄 更新日志
+./process_monitor.sh -c flask_monitor.conf
+```
 
-### v1.0.0 (2024-01-15)
-- 基础游戏功能实现
-- 3D渲染和物理引擎
-- 完整的游戏流程
-- 分数系统和社交分享
+### Java 应用
 
-## 📄 许可证
+```bash
+./process_monitor.sh -n "Spring Boot" -i 15 -m 3 "java -jar -Xmx1024m myapp.jar"
+```
 
-本项目采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
+### Node.js 应用
 
-## 🤝 贡献
+```bash
+./process_monitor.sh -n "Node.js Server" -w /var/www/nodeapp "node server.js"
+```
 
-欢迎提交 Issue 和 Pull Request 来改进这个项目！
+### Nginx（非守护进程模式）
 
-## 📞 联系方式
+```bash
+./process_monitor.sh -n "Nginx" -i 30 -m 0 "nginx -g 'daemon off;'"
+```
 
-如有问题或建议，请通过以下方式联系：
-- GitHub Issues
-- 邮箱：[your-email@example.com]
+### 数据库服务
 
----
+```bash
+./process_monitor.sh -n "Redis Server" --program-pid /var/run/redis.pid "redis-server /etc/redis/redis.conf"
+```
 
-⭐ 如果这个项目对你有帮助，请给个星星支持一下！
+## 高级功能
+
+### 1. PID 文件管理
+
+脚本支持两种 PID 文件：
+- **监控脚本 PID 文件**: 记录监控脚本自身的PID，防止重复运行
+- **程序 PID 文件**: 如果被监控程序会创建PID文件，可以指定路径进行更精确的监控
+
+```bash
+# 指定程序PID文件
+./process_monitor.sh --program-pid /var/run/myapp.pid "myapp --daemon"
+```
+
+### 2. 信号处理
+
+监控脚本支持优雅关闭：
+
+```bash
+# 发送TERM信号停止监控
+kill -TERM $(cat monitor.pid)
+
+# 或使用INT信号（Ctrl+C）
+kill -INT $(cat monitor.pid)
+```
+
+### 3. 日志管理
+
+日志包含详细的监控信息：
+
+```bash
+# 实时查看日志
+tail -f monitor.log
+
+# 查看错误日志
+grep ERROR monitor.log
+
+# 查看重启记录
+grep "重启" monitor.log
+```
+
+### 4. 系统服务集成
+
+可以将监控脚本集成到 systemd 服务中：
+
+```ini
+# /etc/systemd/system/myapp-monitor.service
+[Unit]
+Description=MyApp Monitor Service
+After=network.target
+
+[Service]
+Type=simple
+User=myapp
+WorkingDirectory=/opt/myapp
+ExecStart=/opt/myapp/process_monitor.sh -c /opt/myapp/monitor.conf
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+```
+
+启用服务：
+
+```bash
+sudo systemctl enable myapp-monitor.service
+sudo systemctl start myapp-monitor.service
+sudo systemctl status myapp-monitor.service
+```
+
+## 故障排除
+
+### 常见问题
+
+1. **脚本无法启动程序**
+   - 检查程序路径是否正确
+   - 检查工作目录是否存在
+   - 检查程序是否有执行权限
+
+2. **程序频繁重启**
+   - 增加检查间隔时间
+   - 检查程序日志找出崩溃原因
+   - 调整重启延迟时间
+
+3. **监控脚本重复运行**
+   - 检查PID文件是否正确清理
+   - 确保之前的监控脚本已完全退出
+
+### 调试模式
+
+```bash
+# 启用详细日志输出
+./process_monitor.sh -n "Debug App" "python3 app.py" 2>&1 | tee debug.log
+
+# 使用较短的检查间隔进行测试
+./process_monitor.sh -i 1 -m 3 "python3 test_app.py"
+```
+
+## 性能考虑
+
+- **检查间隔**: 不要设置过短的检查间隔，建议最少5秒
+- **日志轮转**: 对于长期运行的服务，建议配置日志轮转
+- **资源使用**: 监控脚本本身占用资源很少，但频繁重启的程序可能消耗较多资源
+
+## 安全注意事项
+
+- 确保监控脚本以适当的用户权限运行
+- 不要在脚本中硬编码敏感信息
+- 定期检查日志文件权限
+- 使用配置文件时注意文件权限设置
+
+## 许可证
+
+本脚本采用 MIT 许可证，可自由使用和修改。
+
+## 贡献
+
+欢迎提交 Issue 和 Pull Request 来改进这个脚本！

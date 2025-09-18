@@ -1,0 +1,82 @@
+# 程序监控配置文件示例
+# Process Monitor Configuration Example
+# 
+# 使用方法：复制此文件为 monitor.conf，然后根据需要修改配置
+
+# 程序名称（用于日志显示）
+program_name=My Application
+
+# 程序命令（可执行文件路径或命令）
+program_cmd=python3
+
+# 程序参数
+program_args=app.py --port 8080
+
+# 工作目录（程序运行的目录）
+work_dir=/opt/myapp
+
+# 检查间隔（秒）
+# 监控脚本检查程序状态的时间间隔
+check_interval=5
+
+# 最大重启次数
+# 0 表示无限制重启
+max_restart_count=10
+
+# 重启延迟（秒）
+# 程序崩溃后等待多长时间再重启
+restart_delay=2
+
+# 日志文件路径
+log_file=./monitor.log
+
+# 监控脚本PID文件路径
+pid_file=./monitor.pid
+
+# 被监控程序的PID文件路径（可选）
+# 如果程序会创建PID文件，可以指定此路径
+# program_pid_file=/var/run/myapp.pid
+
+# ========================================
+# 常见应用配置示例
+# ========================================
+
+# Python Web应用示例
+# program_name=Flask Web Server
+# program_cmd=python3
+# program_args=app.py
+# work_dir=/home/user/webapp
+# check_interval=10
+# max_restart_count=5
+
+# Java应用示例
+# program_name=Spring Boot App
+# program_cmd=java
+# program_args=-jar -Xmx1024m myapp.jar
+# work_dir=/opt/myapp
+# check_interval=15
+# max_restart_count=3
+
+# Node.js应用示例
+# program_name=Node.js Server
+# program_cmd=node
+# program_args=server.js
+# work_dir=/var/www/nodeapp
+# check_interval=5
+# max_restart_count=10
+
+# Nginx示例（以非守护进程模式运行）
+# program_name=Nginx Web Server
+# program_cmd=nginx
+# program_args=-g 'daemon off;'
+# work_dir=/etc/nginx
+# check_interval=30
+# max_restart_count=0
+
+# 自定义脚本示例
+# program_name=Data Processor
+# program_cmd=/home/user/scripts/process_data.sh
+# program_args=
+# work_dir=/home/user/data
+# check_interval=60
+# max_restart_count=5
