@@ -1,0 +1,148 @@
+<!--pages/comments/comments.wxml-->
+<view class="container">
+  <!-- 评论输入区域 -->
+  <view class="comment-input-section">
+    <view class="input-header">
+      <text class="title">发表评论</text>
+      <view class="char-count">{{commentText.length}}/500</view>
+    </view>
+    
+    <view class="input-container">
+      <textarea 
+        class="comment-input"
+        placeholder="请输入您的评论内容..."
+        value="{{commentText}}"
+        bindinput="onCommentInput"
+        maxlength="500"
+        show-confirm-bar="{{false}}"
+        disabled="{{isSubmitting || isUserBlocked}}"
+      ></textarea>
+    </view>
+    
+    <!-- 验证码区域 -->
+    <view class="captcha-section" wx:if="{{showCaptcha}}">
+      <view class="captcha-container">
+        <text class="captcha-label">验证码：</text>
+        <view class="captcha-image" bindtap="refreshCaptcha">
+          <image src="{{captchaImage}}" mode="aspectFit"></image>
+          <text class="refresh-hint">点击刷新</text>
+        </view>
+        <input 
+          class="captcha-input" 
+          placeholder="请输入验证码"
+          value="{{captchaCode}}"
+          bindinput="onCaptchaInput"
+          maxlength="4"
+        />
+      </view>
+    </view>
+    
+    <!-- 提交按钮 -->
+    <view class="submit-section">
+      <button 
+        class="submit-btn {{isSubmitting ? 'disabled' : ''}}"
+        bindtap="submitComment"
+        disabled="{{isSubmitting || !canSubmit || isUserBlocked}}"
+        loading="{{isSubmitting}}"
+      >
+        {{isSubmitting ? '提交中...' : '发表评论'}}
+      </button>
+      
+      <!-- 用户状态提示 -->
+      <view class="user-status" wx:if="{{isUserBlocked}}">
+        <text class="blocked-message">您已被暂时限制评论，请稍后再试</text>
+      </view>
+      
+      <view class="cooldown-info" wx:if="{{cooldownTime > 0}}">
+        <text class="cooldown-message">请等待 {{cooldownTime}} 秒后再发表评论</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 评论列表 -->
+  <view class="comments-section">
+    <view class="section-header">
+      <text class="section-title">用户评论 ({{totalComments}})</text>
+      <view class="filter-options">
+        <picker bindchange="onSortChange" value="{{sortIndex}}" range="{{sortOptions}}">
+          <view class="picker">
+            {{sortOptions[sortIndex]}}
+            <text class="arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading" wx:if="{{loading}}">
+      <text>加载中...</text>
+    </view>
+
+    <!-- 评论列表 -->
+    <view class="comments-list" wx:if="{{!loading}}">
+      <view class="comment-item" wx:for="{{comments}}" wx:key="id">
+        <view class="comment-header">
+          <view class="user-info">
+            <image class="avatar" src="{{item.avatar || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+            <view class="user-details">
+              <text class="username">{{item.username}}</text>
+              <text class="comment-time">{{item.timeAgo}}</text>
+            </view>
+          </view>
+          <view class="comment-actions">
+            <text class="like-btn" bindtap="toggleLike" data-id="{{item.id}}">
+              👍 {{item.likes}}
+            </text>
+          </view>
+        </view>
+        
+        <view class="comment-content">
+          <text class="comment-text">{{item.content}}</text>
+          <view class="comment-tags" wx:if="{{item.tags.length > 0}}">
+            <text class="tag" wx:for="{{item.tags}}" wx:key="*this">{{item}}</text>
+          </view>
+        </view>
+        
+        <!-- 管理员操作 -->
+        <view class="admin-actions" wx:if="{{isAdmin}}">
+          <button class="admin-btn" bindtap="deleteComment" data-id="{{item.id}}">删除</button>
+          <button class="admin-btn" bindtap="blockUser" data-userid="{{item.userId}}">拉黑</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && comments.length === 0}}">
+      <text>暂无评论，快来发表第一条评论吧！</text>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{hasMore && !loading}}">
+      <button class="load-more-btn" bindtap="loadMoreComments">加载更多</button>
+    </view>
+  </view>
+</view>
+
+<!-- 统计信息弹窗 -->
+<view class="stats-modal {{showStatsModal ? 'show' : ''}}" bindtap="hideStatsModal">
+  <view class="stats-content" catchtap="">
+    <view class="stats-header">
+      <text class="stats-title">评论统计</text>
+      <text class="close-btn" bindtap="hideStatsModal">×</text>
+    </view>
+    <view class="stats-body">
+      <view class="stat-item">
+        <text class="stat-label">今日评论数：</text>
+        <text class="stat-value">{{stats.todayComments}}</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-label">总评论数：</text>
+        <text class="stat-value">{{stats.totalComments}}</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-label">活跃用户数：</text>
+        <text class="stat-value">{{stats.activeUsers}}</text>
+      </view>
+    </view>
+  </view>
+</view>
