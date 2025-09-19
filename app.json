@@ -1,7 +1,9 @@
 {
   "pages": [
     "pages/game/game",
-    "pages/watermark/watermark"
+    "pages/watermark/watermark",
+    "pages/comments/comments",
+    "pages/admin/admin"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -16,5 +18,29 @@
     "scope.userLocation": {
       "desc": "你的位置信息将用于小程序位置接口的效果展示"
     }
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#3cc51f",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/game/game",
+        "text": "游戏"
+      },
+      {
+        "pagePath": "pages/watermark/watermark",
+        "text": "水印"
+      },
+      {
+        "pagePath": "pages/comments/comments",
+        "text": "评论"
+      },
+      {
+        "pagePath": "pages/admin/admin",
+        "text": "管理"
+      }
+    ]
   }
 }

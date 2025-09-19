@@ -1,0 +1,179 @@
+<!--pages/comments/comments.wxml-->
+<view class="container">
+  <!-- 评论统计 -->
+  <view class="comment-stats">
+    <text class="stats-text">共 {{totalComments}} 条评论</text>
+    <view class="filter-options">
+      <text 
+        class="filter-btn {{sortType === 'time' ? 'active' : ''}}" 
+        bindtap="changeSortType" 
+        data-type="time"
+      >
+        最新
+      </text>
+      <text 
+        class="filter-btn {{sortType === 'hot' ? 'active' : ''}}" 
+        bindtap="changeSortType" 
+        data-type="hot"
+      >
+        热门
+      </text>
+    </view>
+  </view>
+
+  <!-- 评论列表 -->
+  <view class="comment-list">
+    <view 
+      wx:for="{{comments}}" 
+      wx:key="id" 
+      class="comment-item {{item.isBlocked ? 'blocked' : ''}}"
+    >
+      <!-- 用户信息 -->
+      <view class="user-info">
+        <image class="avatar" src="{{item.userAvatar || '/images/default-avatar.png'}}" />
+        <view class="user-details">
+          <text class="username">{{item.username || '匿名用户'}}</text>
+          <text class="time">{{item.timeDisplay}}</text>
+          <view wx:if="{{item.isVerified}}" class="verified-badge">
+            <text class="verified-icon">✓</text>
+          </view>
+        </view>
+        <view class="comment-actions">
+          <text class="action-btn" bindtap="likeComment" data-id="{{item.id}}">
+            👍 {{item.likes || 0}}
+          </text>
+          <text class="action-btn" bindtap="reportComment" data-id="{{item.id}}">
+            举报
+          </text>
+        </view>
+      </view>
+
+      <!-- 评论内容 -->
+      <view class="comment-content">
+        <text wx:if="{{!item.isBlocked}}" class="content-text">{{item.content}}</text>
+        <text wx:else class="blocked-text">该评论因违规已被屏蔽</text>
+        
+        <!-- 风险标记 -->
+        <view wx:if="{{item.riskLevel && item.riskLevel > 0}}" class="risk-indicator">
+          <text class="risk-text">{{item.riskLevel === 1 ? '低风险' : item.riskLevel === 2 ? '中风险' : '高风险'}}</text>
+        </view>
+      </view>
+
+      <!-- 回复按钮 -->
+      <view class="reply-section">
+        <text class="reply-btn" bindtap="showReplyInput" data-id="{{item.id}}">
+          回复
+        </text>
+        
+        <!-- 回复列表 -->
+        <view wx:if="{{item.replies && item.replies.length > 0}}" class="replies">
+          <view 
+            wx:for="{{item.replies}}" 
+            wx:for-item="reply" 
+            wx:key="id" 
+            class="reply-item"
+          >
+            <text class="reply-user">{{reply.username}}:</text>
+            <text class="reply-content">{{reply.content}}</text>
+            <text class="reply-time">{{reply.timeDisplay}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载更多 -->
+    <view wx:if="{{hasMore}}" class="load-more" bindtap="loadMoreComments">
+      <text>{{loading ? '加载中...' : '加载更多'}}</text>
+    </view>
+    
+    <!-- 没有更多评论 -->
+    <view wx:if="{{!hasMore && comments.length > 0}}" class="no-more">
+      <text>没有更多评论了</text>
+    </view>
+    
+    <!-- 空状态 -->
+    <view wx:if="{{comments.length === 0 && !loading}}" class="empty-state">
+      <text class="empty-icon">💬</text>
+      <text class="empty-text">还没有评论，来发表第一条吧！</text>
+    </view>
+  </view>
+
+  <!-- 评论输入框 -->
+  <view class="comment-input-container">
+    <!-- 回复提示 -->
+    <view wx:if="{{replyingTo}}" class="reply-hint">
+      <text>回复 @{{replyingTo.username}}: {{replyingTo.preview}}</text>
+      <text class="cancel-reply" bindtap="cancelReply">取消</text>
+    </view>
+    
+    <!-- 输入区域 -->
+    <view class="input-area">
+      <textarea
+        class="comment-input"
+        placeholder="{{replyingTo ? '输入回复内容...' : '发表你的看法...'}}"
+        value="{{inputContent}}"
+        bindinput="onInputChange"
+        maxlength="{{maxInputLength}}"
+        auto-height
+        show-confirm-bar="{{false}}"
+      />
+      <view class="input-tools">
+        <text class="char-count">{{inputContent.length}}/{{maxInputLength}}</text>
+        <button 
+          class="send-btn {{canSend ? 'active' : ''}}" 
+          bindtap="submitComment"
+          disabled="{{!canSend || submitting}}"
+        >
+          {{submitting ? '发送中...' : '发送'}}
+        </button>
+      </view>
+    </view>
+    
+    <!-- 安全提示 -->
+    <view wx:if="{{showSecurityTip}}" class="security-tip">
+      <text class="tip-icon">🛡️</text>
+      <text class="tip-text">为营造良好环境，系统会自动检测不当内容</text>
+    </view>
+    
+    <!-- 验证码（高风险用户） -->
+    <view wx:if="{{showCaptcha}}" class="captcha-section">
+      <text class="captcha-label">请输入验证码:</text>
+      <view class="captcha-container">
+        <canvas canvas-id="captcha-canvas" class="captcha-canvas"></canvas>
+        <input 
+          class="captcha-input" 
+          placeholder="验证码" 
+          value="{{captchaInput}}"
+          bindinput="onCaptchaInput"
+        />
+        <text class="refresh-captcha" bindtap="refreshCaptcha">刷新</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 举报弹窗 -->
+<modal 
+  wx:if="{{showReportModal}}" 
+  title="举报评论"
+  confirm-text="提交"
+  cancel-text="取消"
+  bindconfirm="submitReport"
+  bindcancel="closeReportModal"
+>
+  <view class="report-content">
+    <text class="report-title">请选择举报原因:</text>
+    <radio-group class="report-options" bindchange="onReportReasonChange">
+      <label wx:for="{{reportReasons}}" wx:key="value" class="report-option">
+        <radio value="{{item.value}}" />
+        <text>{{item.label}}</text>
+      </label>
+    </radio-group>
+    <textarea 
+      wx:if="{{reportReason === 'other'}}"
+      class="report-detail"
+      placeholder="请详细描述违规内容..."
+      bindinput="onReportDetailInput"
+    />
+  </view>
+</modal>
