@@ -1,5 +1,6 @@
 // pages/watermark/watermark.js
 const WatermarkUtil = require('../../utils/watermark.js');
+const apiProtection = require('../../utils/apiProtection.js');
 
 Page({
   data: {
@@ -166,15 +167,8 @@ Page({
       title: '添加水印中...'
     });
 
-    const promise = this.data.watermarkType === 'text' 
-      ? WatermarkUtil.addTextWatermark(this.data.selectedImage, this.data.textConfig)
-      : WatermarkUtil.addImageWatermark(
-          this.data.selectedImage, 
-          this.data.imageConfig.watermarkImage, 
-          this.data.imageConfig
-        );
-
-    promise.then((result) => {
+    // 使用API防护包装水印处理
+    this.processWatermarkWithProtection().then((result) => {
       this.setData({
         processedImage: result,
         processing: false
@@ -193,6 +187,42 @@ Page({
         icon: 'error'
       });
     });
+  },
+
+  // 带安全防护的水印处理
+  async processWatermarkWithProtection() {
+    const requestInfo = {
+      ip: '127.0.0.1',
+      userId: getApp().globalData.userInfo?.openId || 'anonymous',
+      deviceId: wx.getSystemInfoSync().deviceId || 'unknown',
+      endpoint: '/api/watermark/process',
+      userAgent: 'WeChat-MiniProgram',
+      referer: 'https://servicewechat.com',
+      requestSize: JSON.stringify({
+        watermarkType: this.data.watermarkType,
+        config: this.data.watermarkType === 'text' ? this.data.textConfig : this.data.imageConfig
+      }).length,
+      geoLocation: {
+        country: 'CN',
+        region: 'Unknown',
+        city: 'Unknown'
+      }
+    }
+
+    const protectedAPI = apiProtection.createProtectedEndpoint('/api/watermark/process', async (reqInfo) => {
+      // 执行实际的水印处理
+      const promise = this.data.watermarkType === 'text' 
+        ? WatermarkUtil.addTextWatermark(this.data.selectedImage, this.data.textConfig)
+        : WatermarkUtil.addImageWatermark(
+            this.data.selectedImage, 
+            this.data.imageConfig.watermarkImage, 
+            this.data.imageConfig
+          );
+      
+      return await promise;
+    })
+
+    return await protectedAPI(requestInfo);
   },
 
   // 批量添加水印

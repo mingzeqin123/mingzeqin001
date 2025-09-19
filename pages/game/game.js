@@ -1,5 +1,6 @@
 // pages/game/game.js
 import GameEngine from './gameEngine.js'
+const apiProtection = require('../../utils/apiProtection.js')
 
 Page({
   data: {
@@ -113,6 +114,9 @@ Page({
       isNewRecord = true
       getApp().setBestScore(score)
       this.setData({ bestScore: score })
+      
+      // 记录高分到服务器（带安全防护）
+      this.recordHighScore(score)
     }
     
     this.setData({
@@ -124,6 +128,46 @@ Page({
     wx.vibrateShort({
       type: 'heavy'
     })
+  },
+
+  // 记录高分到服务器
+  async recordHighScore(score) {
+    try {
+      const requestInfo = {
+        ip: '127.0.0.1', // 微信小程序中无法获取真实IP
+        userId: getApp().globalData.userInfo?.openId || 'anonymous',
+        deviceId: wx.getSystemInfoSync().deviceId || 'unknown',
+        endpoint: '/api/game/score',
+        userAgent: 'WeChat-MiniProgram',
+        referer: 'https://servicewechat.com',
+        requestSize: JSON.stringify({ score }).length,
+        geoLocation: {
+          country: 'CN',
+          region: 'Unknown',
+          city: 'Unknown'
+        }
+      }
+
+      const protectedAPI = apiProtection.createProtectedEndpoint('/api/game/score', async (reqInfo) => {
+        // 模拟服务器端分数记录
+        return {
+          success: true,
+          message: '分数记录成功',
+          score: reqInfo.score,
+          timestamp: new Date().toISOString()
+        }
+      })
+
+      const result = await protectedAPI(requestInfo)
+      
+      if (result.success) {
+        console.log('高分记录成功:', result)
+      } else {
+        console.warn('高分记录失败:', result.error)
+      }
+    } catch (error) {
+      console.error('记录高分时发生错误:', error)
+    }
   },
 
   // 分享成绩
