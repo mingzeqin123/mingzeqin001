@@ -1,0 +1,27 @@
+# Python 版本接口防刷系统依赖
+
+# Web 框架
+Flask>=2.0.0
+Werkzeug>=2.0.0
+
+# Redis 客户端
+redis>=4.0.0
+
+# 网络请求
+requests>=2.25.0
+
+# 地理位置服务（可选）
+geoip2>=4.5.0
+maxminddb>=2.2.0
+
+# 日志和监控
+structlog>=21.1.0
+
+# 开发依赖
+pytest>=6.0.0
+pytest-cov>=2.10.0
+black>=21.0.0
+flake8>=3.8.0
+
+# 类型检查
+mypy>=0.812
