@@ -1,0 +1,401 @@
+<!--pages/admin/admin.wxml-->
+<view class="container">
+  <!-- 管理员验证 -->
+  <view wx:if="{{!isAdmin}}" class="auth-container">
+    <view class="auth-card">
+      <text class="auth-title">管理员登录</text>
+      <input 
+        class="auth-input" 
+        type="password" 
+        placeholder="请输入管理员密码"
+        value="{{adminPassword}}"
+        bindinput="onPasswordInput"
+      />
+      <button class="auth-btn" bindtap="verifyAdmin">登录</button>
+    </view>
+  </view>
+
+  <!-- 管理后台主界面 -->
+  <view wx:if="{{isAdmin}}" class="admin-panel">
+    <!-- 统计面板 -->
+    <view class="stats-panel">
+      <text class="panel-title">数据统计</text>
+      <view class="stats-grid">
+        <view class="stat-item">
+          <text class="stat-number">{{stats.totalComments || 0}}</text>
+          <text class="stat-label">总评论数</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-number">{{stats.todayComments || 0}}</text>
+          <text class="stat-label">今日评论</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-number">{{stats.pendingReports || 0}}</text>
+          <text class="stat-label">待处理举报</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-number">{{stats.blockedComments || 0}}</text>
+          <text class="stat-label">已屏蔽评论</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 功能菜单 -->
+    <view class="menu-panel">
+      <text class="panel-title">管理功能</text>
+      <view class="menu-grid">
+        <view 
+          class="menu-item" 
+          bindtap="switchTab" 
+          data-tab="reports"
+        >
+          <text class="menu-icon">📋</text>
+          <text class="menu-text">举报管理</text>
+          <view wx:if="{{stats.pendingReports > 0}}" class="badge">
+            {{stats.pendingReports}}
+          </view>
+        </view>
+        
+        <view 
+          class="menu-item" 
+          bindtap="switchTab" 
+          data-tab="comments"
+        >
+          <text class="menu-icon">💬</text>
+          <text class="menu-text">评论管理</text>
+        </view>
+        
+        <view 
+          class="menu-item" 
+          bindtap="switchTab" 
+          data-tab="blacklist"
+        >
+          <text class="menu-icon">🚫</text>
+          <text class="menu-text">黑名单管理</text>
+        </view>
+        
+        <view 
+          class="menu-item" 
+          bindtap="switchTab" 
+          data-tab="settings"
+        >
+          <text class="menu-icon">⚙️</text>
+          <text class="menu-text">系统设置</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 举报管理 -->
+    <view wx:if="{{activeTab === 'reports'}}" class="content-panel">
+      <view class="panel-header">
+        <text class="panel-title">举报管理</text>
+        <view class="filter-tabs">
+          <text 
+            class="filter-tab {{reportFilter === 'pending' ? 'active' : ''}}"
+            bindtap="changeReportFilter"
+            data-filter="pending"
+          >
+            待处理
+          </text>
+          <text 
+            class="filter-tab {{reportFilter === 'all' ? 'active' : ''}}"
+            bindtap="changeReportFilter"
+            data-filter="all"
+          >
+            全部
+          </text>
+        </view>
+      </view>
+
+      <view class="report-list">
+        <view 
+          wx:for="{{reports}}" 
+          wx:key="id" 
+          class="report-item"
+        >
+          <view class="report-header">
+            <text class="report-reason">{{getReportReasonText(item.reason)}}</text>
+            <text class="report-time">{{formatTime(item.timestamp)}}</text>
+            <view class="report-status status-{{item.status}}">
+              {{getStatusText(item.status)}}
+            </view>
+          </view>
+          
+          <view class="report-content">
+            <text class="content-label">被举报内容:</text>
+            <text class="content-text">{{getCommentContent(item.commentId)}}</text>
+          </view>
+          
+          <view wx:if="{{item.detail}}" class="report-detail">
+            <text class="detail-label">举报详情:</text>
+            <text class="detail-text">{{item.detail}}</text>
+          </view>
+          
+          <view wx:if="{{item.status === 'pending'}}" class="report-actions">
+            <button 
+              class="action-btn approve" 
+              bindtap="processReport" 
+              data-id="{{item.id}}" 
+              data-action="approve"
+            >
+              确认违规
+            </button>
+            <button 
+              class="action-btn reject" 
+              bindtap="processReport" 
+              data-id="{{item.id}}" 
+              data-action="reject"
+            >
+              驳回举报
+            </button>
+          </view>
+        </view>
+        
+        <view wx:if="{{reports.length === 0}}" class="empty-state">
+          <text class="empty-icon">📝</text>
+          <text class="empty-text">暂无举报记录</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 评论管理 -->
+    <view wx:if="{{activeTab === 'comments'}}" class="content-panel">
+      <view class="panel-header">
+        <text class="panel-title">评论管理</text>
+        <view class="filter-tabs">
+          <text 
+            class="filter-tab {{commentFilter === 'all' ? 'active' : ''}}"
+            bindtap="changeCommentFilter"
+            data-filter="all"
+          >
+            全部
+          </text>
+          <text 
+            class="filter-tab {{commentFilter === 'blocked' ? 'active' : ''}}"
+            bindtap="changeCommentFilter"
+            data-filter="blocked"
+          >
+            已屏蔽
+          </text>
+          <text 
+            class="filter-tab {{commentFilter === 'high-risk' ? 'active' : ''}}"
+            bindtap="changeCommentFilter"
+            data-filter="high-risk"
+          >
+            高风险
+          </text>
+        </view>
+      </view>
+
+      <view class="comment-list">
+        <view 
+          wx:for="{{adminComments}}" 
+          wx:key="id" 
+          class="admin-comment-item {{item.isBlocked ? 'blocked' : ''}}"
+        >
+          <view class="comment-header">
+            <view class="user-info">
+              <text class="username">{{item.username}}</text>
+              <text class="user-id">({{item.userId}})</text>
+            </view>
+            <text class="comment-time">{{item.timeDisplay}}</text>
+          </view>
+          
+          <view class="comment-content">
+            <text class="content-text">{{item.content}}</text>
+          </view>
+          
+          <view class="comment-meta">
+            <text wx:if="{{item.riskLevel > 0}}" class="risk-level risk-{{item.riskLevel}}">
+              风险等级: {{getRiskLevelText(item.riskLevel)}}
+            </text>
+            <text class="likes-count">👍 {{item.likes || 0}}</text>
+          </view>
+          
+          <view class="comment-actions">
+            <button 
+              wx:if="{{!item.isBlocked}}"
+              class="action-btn block" 
+              bindtap="blockComment" 
+              data-id="{{item.id}}"
+            >
+              屏蔽
+            </button>
+            <button 
+              wx:if="{{item.isBlocked}}"
+              class="action-btn unblock" 
+              bindtap="unblockComment" 
+              data-id="{{item.id}}"
+            >
+              取消屏蔽
+            </button>
+            <button 
+              class="action-btn delete" 
+              bindtap="deleteComment" 
+              data-id="{{item.id}}"
+            >
+              删除
+            </button>
+            <button 
+              class="action-btn blacklist" 
+              bindtap="addUserToBlacklist" 
+              data-user-id="{{item.userId}}"
+            >
+              拉黑用户
+            </button>
+          </view>
+        </view>
+        
+        <view wx:if="{{adminComments.length === 0}}" class="empty-state">
+          <text class="empty-icon">💭</text>
+          <text class="empty-text">暂无评论</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 黑名单管理 -->
+    <view wx:if="{{activeTab === 'blacklist'}}" class="content-panel">
+      <view class="panel-header">
+        <text class="panel-title">黑名单管理</text>
+        <button class="add-btn" bindtap="showAddBlacklistModal">
+          添加用户
+        </button>
+      </view>
+
+      <view class="blacklist-container">
+        <view class="blacklist-input">
+          <input 
+            class="search-input" 
+            placeholder="输入用户ID搜索..."
+            value="{{blacklistSearch}}"
+            bindinput="onBlacklistSearchInput"
+          />
+        </view>
+
+        <view class="blacklist-list">
+          <view 
+            wx:for="{{blacklistUsers}}" 
+            wx:key="userId" 
+            class="blacklist-item"
+          >
+            <view class="blacklist-info">
+              <text class="blacklist-user-id">{{item.userId}}</text>
+              <text class="blacklist-reason">原因: {{item.reason}}</text>
+              <text class="blacklist-time">{{formatTime(item.timestamp)}}</text>
+            </view>
+            <button 
+              class="action-btn remove" 
+              bindtap="removeFromBlacklist" 
+              data-user-id="{{item.userId}}"
+            >
+              移除
+            </button>
+          </view>
+          
+          <view wx:if="{{blacklistUsers.length === 0}}" class="empty-state">
+            <text class="empty-icon">👥</text>
+            <text class="empty-text">黑名单为空</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 系统设置 -->
+    <view wx:if="{{activeTab === 'settings'}}" class="content-panel">
+      <text class="panel-title">系统设置</text>
+      
+      <view class="settings-section">
+        <text class="section-title">反垃圾设置</text>
+        
+        <view class="setting-item">
+          <text class="setting-label">每分钟最大评论数</text>
+          <input 
+            class="setting-input" 
+            type="number" 
+            value="{{settings.maxCommentsPerMinute}}"
+            bindinput="onSettingChange"
+            data-key="maxCommentsPerMinute"
+          />
+        </view>
+        
+        <view class="setting-item">
+          <text class="setting-label">每小时最大评论数</text>
+          <input 
+            class="setting-input" 
+            type="number" 
+            value="{{settings.maxCommentsPerHour}}"
+            bindinput="onSettingChange"
+            data-key="maxCommentsPerHour"
+          />
+        </view>
+        
+        <view class="setting-item">
+          <text class="setting-label">评论最小间隔(秒)</text>
+          <input 
+            class="setting-input" 
+            type="number" 
+            value="{{settings.minCommentInterval / 1000}}"
+            bindinput="onSettingChange"
+            data-key="minCommentInterval"
+          />
+        </view>
+        
+        <view class="setting-item">
+          <text class="setting-label">自动屏蔽举报阈值</text>
+          <input 
+            class="setting-input" 
+            type="number" 
+            value="{{settings.autoBlockThreshold}}"
+            bindinput="onSettingChange"
+            data-key="autoBlockThreshold"
+          />
+        </view>
+      </view>
+      
+      <view class="settings-section">
+        <text class="section-title">数据管理</text>
+        
+        <button class="setting-btn" bindtap="cleanupOldData">
+          清理30天前数据
+        </button>
+        
+        <button class="setting-btn" bindtap="exportData">
+          导出数据
+        </button>
+        
+        <button class="setting-btn danger" bindtap="resetAllData">
+          重置所有数据
+        </button>
+      </view>
+      
+      <button class="save-settings-btn" bindtap="saveSettings">
+        保存设置
+      </button>
+    </view>
+  </view>
+</view>
+
+<!-- 添加黑名单弹窗 -->
+<modal 
+  wx:if="{{showAddBlacklistModal}}" 
+  title="添加黑名单用户"
+  confirm-text="添加"
+  cancel-text="取消"
+  bindconfirm="addToBlacklistConfirm"
+  bindcancel="closeAddBlacklistModal"
+>
+  <view class="add-blacklist-form">
+    <input 
+      class="form-input" 
+      placeholder="用户ID"
+      value="{{newBlacklistUserId}}"
+      bindinput="onNewBlacklistUserIdInput"
+    />
+    <input 
+      class="form-input" 
+      placeholder="拉黑原因"
+      value="{{newBlacklistReason}}"
+      bindinput="onNewBlacklistReasonInput"
+    />
+  </view>
+</modal>
