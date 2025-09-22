@@ -1,0 +1,103 @@
+# Alternative YAML configuration file for ShardingSphere
+# This file demonstrates a more detailed configuration approach
+
+dataSources:
+  ds0:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: jdbc:mysql://localhost:3306/sharding_db_0?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: password
+    connectionTimeout: 30000
+    idleTimeout: 600000
+    maxLifetime: 1800000
+    maximumPoolSize: 10
+    minimumIdle: 5
+  ds1:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: jdbc:mysql://localhost:3306/sharding_db_1?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: password
+    connectionTimeout: 30000
+    idleTimeout: 600000
+    maxLifetime: 1800000
+    maximumPoolSize: 10
+    minimumIdle: 5
+
+rules:
+- !SHARDING
+  tables:
+    t_user:
+      actualDataNodes: ds$->{0..1}.t_user_$->{0..1}
+      databaseStrategy:
+        standard:
+          shardingColumn: user_id
+          shardingAlgorithmName: user_db_inline
+      tableStrategy:
+        standard:
+          shardingColumn: user_id
+          shardingAlgorithmName: user_table_inline
+      keyGenerateStrategy:
+        column: user_id
+        keyGeneratorName: snowflake
+    
+    t_order:
+      actualDataNodes: ds$->{0..1}.t_order_$->{0..3}
+      databaseStrategy:
+        standard:
+          shardingColumn: user_id
+          shardingAlgorithmName: order_db_inline
+      tableStrategy:
+        standard:
+          shardingColumn: order_id
+          shardingAlgorithmName: order_table_inline
+      keyGenerateStrategy:
+        column: order_id
+        keyGeneratorName: snowflake
+    
+    t_order_item:
+      actualDataNodes: ds$->{0..1}.t_order_item_$->{0..3}
+      databaseStrategy:
+        standard:
+          shardingColumn: user_id
+          shardingAlgorithmName: order_db_inline
+      tableStrategy:
+        standard:
+          shardingColumn: order_id
+          shardingAlgorithmName: order_table_inline
+      keyGenerateStrategy:
+        column: order_item_id
+        keyGeneratorName: snowflake
+  
+  bindingTables:
+    - t_order,t_order_item
+  
+  broadcastTables:
+    - t_config
+  
+  shardingAlgorithms:
+    user_db_inline:
+      type: INLINE
+      props:
+        algorithm-expression: ds$->{user_id % 2}
+    user_table_inline:
+      type: INLINE
+      props:
+        algorithm-expression: t_user_$->{user_id % 2}
+    order_db_inline:
+      type: INLINE
+      props:
+        algorithm-expression: ds$->{user_id % 2}
+    order_table_inline:
+      type: INLINE
+      props:
+        algorithm-expression: t_order_$->{order_id % 4}
+  
+  keyGenerators:
+    snowflake:
+      type: SNOWFLAKE
+
+props:
+  sql-show: true
+  sql-simple: false

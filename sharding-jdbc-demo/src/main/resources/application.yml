@@ -1,0 +1,133 @@
+spring:
+  application:
+    name: sharding-jdbc-demo
+  profiles:
+    active: sharding
+
+# ShardingSphere configuration
+spring:
+  shardingsphere:
+    # Data source configuration
+    datasource:
+      names: ds0,ds1
+      ds0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/sharding_db_0?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+        username: root
+        password: password
+      ds1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/sharding_db_1?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+        username: root
+        password: password
+    
+    # Sharding rules configuration
+    rules:
+      sharding:
+        # Table sharding strategy
+        tables:
+          # User table sharding
+          t_user:
+            # Actual data nodes: ds0.t_user_0, ds0.t_user_1, ds1.t_user_0, ds1.t_user_1
+            actual-data-nodes: ds$->{0..1}.t_user_$->{0..1}
+            # Database sharding strategy
+            database-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: user_db_inline
+            # Table sharding strategy
+            table-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: user_table_inline
+            # Key generation strategy
+            key-generate-strategy:
+              column: user_id
+              key-generator-name: snowflake
+          
+          # Order table sharding
+          t_order:
+            actual-data-nodes: ds$->{0..1}.t_order_$->{0..3}
+            database-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: order_db_inline
+            table-strategy:
+              standard:
+                sharding-column: order_id
+                sharding-algorithm-name: order_table_inline
+            key-generate-strategy:
+              column: order_id
+              key-generator-name: snowflake
+          
+          # Order item table sharding (binding table with t_order)
+          t_order_item:
+            actual-data-nodes: ds$->{0..1}.t_order_item_$->{0..3}
+            database-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: order_db_inline
+            table-strategy:
+              standard:
+                sharding-column: order_id
+                sharding-algorithm-name: order_table_inline
+            key-generate-strategy:
+              column: order_item_id
+              key-generator-name: snowflake
+        
+        # Binding tables (tables that have the same sharding strategy)
+        binding-tables:
+          - t_order,t_order_item
+        
+        # Broadcast tables (tables that exist in all shards)
+        broadcast-tables:
+          - t_config
+        
+        # Sharding algorithms
+        sharding-algorithms:
+          user_db_inline:
+            type: INLINE
+            props:
+              algorithm-expression: ds$->{user_id % 2}
+          user_table_inline:
+            type: INLINE
+            props:
+              algorithm-expression: t_user_$->{user_id % 2}
+          order_db_inline:
+            type: INLINE
+            props:
+              algorithm-expression: ds$->{user_id % 2}
+          order_table_inline:
+            type: INLINE
+            props:
+              algorithm-expression: t_order_$->{order_id % 4}
+        
+        # Key generators
+        key-generators:
+          snowflake:
+            type: SNOWFLAKE
+    
+    # Enable SQL show
+    props:
+      sql-show: true
+      sql-simple: false
+
+# MyBatis Plus configuration
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# Logging configuration
+logging:
+  level:
+    com.example: DEBUG
+    org.apache.shardingsphere: INFO
+    org.springframework.jdbc: DEBUG
