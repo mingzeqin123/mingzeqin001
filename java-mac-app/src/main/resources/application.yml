@@ -1,0 +1,108 @@
+spring:
+  application:
+    name: sharding-jdbc-demo
+  
+  shardingsphere:
+    datasource:
+      names: ds0,ds1
+      ds0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/test_db_0?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+        username: root
+        password: root
+        hikari:
+          maximum-pool-size: 10
+          minimum-idle: 5
+          connection-timeout: 30000
+          idle-timeout: 600000
+          max-lifetime: 1800000
+      ds1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/test_db_1?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+        username: root
+        password: root
+        hikari:
+          maximum-pool-size: 10
+          minimum-idle: 5
+          connection-timeout: 30000
+          idle-timeout: 600000
+          max-lifetime: 1800000
+    
+    rules:
+      sharding:
+        # 分表规则配置
+        tables:
+          # 用户表分表规则
+          t_user:
+            actual-data-nodes: ds0.t_user_$->{0..1},ds1.t_user_$->{0..1}
+            table-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: user-table-inline
+            database-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: user-database-inline
+          
+          # 订单表分表规则
+          t_order:
+            actual-data-nodes: ds0.t_order_$->{0..1},ds1.t_order_$->{0..1}
+            table-strategy:
+              standard:
+                sharding-column: order_id
+                sharding-algorithm-name: order-table-inline
+            database-strategy:
+              standard:
+                sharding-column: order_id
+                sharding-algorithm-name: order-database-inline
+        
+        # 分片算法配置
+        sharding-algorithms:
+          # 用户表分片算法
+          user-table-inline:
+            type: INLINE
+            props:
+              algorithm-expression: t_user_$->{user_id % 2}
+          
+          user-database-inline:
+            type: INLINE
+            props:
+              algorithm-expression: ds$->{user_id % 2}
+          
+          # 订单表分片算法
+          order-table-inline:
+            type: INLINE
+            props:
+              algorithm-expression: t_order_$->{order_id % 2}
+          
+          order-database-inline:
+            type: INLINE
+            props:
+              algorithm-expression: ds$->{order_id % 2}
+    
+    props:
+      # 显示SQL
+      sql-show: true
+      # 查询时是否允许跨库查询
+      allow-range-query-with-inline-sharding: true
+
+# MyBatis配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.app.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# 日志配置
+logging:
+  level:
+    com.example.app.mapper: debug
+    org.apache.shardingsphere: debug
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+server:
+  port: 8080
