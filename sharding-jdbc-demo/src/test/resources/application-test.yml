@@ -1,0 +1,107 @@
+# Test configuration using H2 in-memory databases
+spring:
+  shardingsphere:
+    # Data source configuration for testing
+    datasource:
+      names: ds0,ds1
+      ds0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: org.h2.Driver
+        jdbc-url: jdbc:h2:mem:ds0;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;MODE=MySQL
+        username: sa
+        password: 
+      ds1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: org.h2.Driver
+        jdbc-url: jdbc:h2:mem:ds1;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;MODE=MySQL
+        username: sa
+        password: 
+    
+    # Same sharding rules as production
+    rules:
+      sharding:
+        tables:
+          t_user:
+            actual-data-nodes: ds$->{0..1}.t_user_$->{0..1}
+            database-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: user_db_inline
+            table-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: user_table_inline
+            key-generate-strategy:
+              column: user_id
+              key-generator-name: snowflake
+          
+          t_order:
+            actual-data-nodes: ds$->{0..1}.t_order_$->{0..3}
+            database-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: order_db_inline
+            table-strategy:
+              standard:
+                sharding-column: order_id
+                sharding-algorithm-name: order_table_inline
+            key-generate-strategy:
+              column: order_id
+              key-generator-name: snowflake
+          
+          t_order_item:
+            actual-data-nodes: ds$->{0..1}.t_order_item_$->{0..3}
+            database-strategy:
+              standard:
+                sharding-column: user_id
+                sharding-algorithm-name: order_db_inline
+            table-strategy:
+              standard:
+                sharding-column: order_id
+                sharding-algorithm-name: order_table_inline
+            key-generate-strategy:
+              column: order_item_id
+              key-generator-name: snowflake
+        
+        binding-tables:
+          - t_order,t_order_item
+        
+        broadcast-tables:
+          - t_config
+        
+        sharding-algorithms:
+          user_db_inline:
+            type: INLINE
+            props:
+              algorithm-expression: ds$->{user_id % 2}
+          user_table_inline:
+            type: INLINE
+            props:
+              algorithm-expression: t_user_$->{user_id % 2}
+          order_db_inline:
+            type: INLINE
+            props:
+              algorithm-expression: ds$->{user_id % 2}
+          order_table_inline:
+            type: INLINE
+            props:
+              algorithm-expression: t_order_$->{order_id % 4}
+        
+        key-generators:
+          snowflake:
+            type: SNOWFLAKE
+    
+    props:
+      sql-show: true
+
+# MyBatis Plus configuration
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# Logging configuration
+logging:
+  level:
+    com.example: DEBUG
+    org.apache.shardingsphere: INFO
