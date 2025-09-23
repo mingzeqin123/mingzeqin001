@@ -1,177 +1,142 @@
-# 微信小程序跳一跳游戏
+# API代理程序
 
-一个基于微信小程序平台开发的3D跳一跳小游戏，使用Three.js渲染引擎实现3D效果。
+一个通用的API代理服务器，支持多种HTTP方法（GET、POST、PUT、DELETE等）的统一API访问。
 
-## 🎮 游戏特色
+## 功能特性
 
-- **3D视觉效果**：使用Three.js渲染引擎，呈现精美的3D场景
-- **物理引擎**：真实的跳跃物理模拟和碰撞检测
-- **多样方块**：普通、小型、高型、特殊等多种方块类型
-- **蓄力系统**：长按蓄力，控制跳跃距离和高度
-- **分数系统**：完美落地获得额外分数，挑战最高纪录
-- **视觉特效**：粒子效果、动画过渡、阴影系统
-- **音效支持**：跳跃、落地、完美、游戏结束等音效
-- **社交分享**：支持微信好友和朋友圈分享
+- 支持所有HTTP方法（GET、POST、PUT、DELETE、PATCH、OPTIONS等）
+- 自动处理请求头和响应头
+- 支持CORS跨域请求
+- 可配置的超时和连接池设置
+- 详细的日志记录
+- 健康检查端点
+- 两种代理模式：路径代理和查询参数代理
 
-## 🚀 快速开始
+## 安装依赖
 
-### 环境要求
-- 微信开发者工具 1.05.0 或更高版本
-- 小程序基础库 2.9.0 或更高版本
-
-### 安装步骤
-
-1. **克隆项目**
-   ```bash
-   git clone [项目地址]
-   cd jump-jump-game
-   ```
-
-2. **导入项目**
-   - 打开微信开发者工具
-   - 选择"导入项目"
-   - 选择项目目录
-   - 填入AppID（测试可使用测试号）
-
-3. **添加资源文件**
-   - 将Three.js完整库文件放入 `/pages/game/libs/three.min.js`
-   - 添加音效文件到 `/sounds/` 目录
-   - 添加图片资源到 `/images/` 目录
-
-4. **编译运行**
-   - 点击"编译"按钮
-   - 在模拟器或真机上预览
-
-## 📁 项目结构
-
-```
-jump-jump-game/
-├── app.js                 # 小程序入口文件
-├── app.json               # 小程序配置文件
-├── app.wxss              # 全局样式文件
-├── sitemap.json          # 站点地图配置
-├── project.config.json   # 项目配置文件
-├── pages/
-│   └── game/             # 游戏页面
-│       ├── game.js       # 页面逻辑
-│       ├── game.json     # 页面配置
-│       ├── game.wxml     # 页面结构
-│       ├── game.wxss     # 页面样式
-│       ├── gameEngine.js # 游戏引擎核心
-│       ├── player.js     # 玩家角色类
-│       ├── block.js      # 方块类
-│       ├── utils.js      # 工具函数
-│       └── libs/
-│           └── three.min.js # Three.js库
-├── images/               # 图片资源
-│   └── README.md        # 图片说明
-├── sounds/               # 音效资源
-│   └── README.md        # 音效说明
-└── README.md            # 项目说明
+```bash
+pip install -r requirements.txt
 ```
 
-## 🎯 游戏玩法
+## 使用方法
 
-1. **开始游戏**：点击"开始游戏"按钮
-2. **蓄力跳跃**：长按屏幕蓄力，右侧显示蓄力条
-3. **释放跳跃**：松开手指，角色跳向下一个方块
-4. **获得分数**：
-   - 成功落地：+1分
-   - 良好落地：+3分
-   - 完美落地：+5分（中心位置）
-5. **游戏结束**：跳跃失败掉落时游戏结束
-6. **分享成绩**：可分享到微信好友或朋友圈
+### 1. 启动代理服务器
 
-## 🔧 核心技术
+```bash
+python api_proxy.py
+```
 
-### 渲染引擎
-- **Three.js**：3D场景渲染
-- **WebGL**：硬件加速渲染
-- **阴影系统**：实时阴影计算
-- **光照系统**：环境光+方向光
+或者指定配置：
 
-### 物理系统
-- **跳跃轨迹**：抛物线运动模拟
-- **碰撞检测**：圆形碰撞检测算法
-- **重力模拟**：自然下落效果
+```bash
+python api_proxy.py --host 0.0.0.0 --port 8080 --config proxy_config.yaml
+```
 
-### 动画系统
-- **缓动函数**：平滑的动画过渡
-- **骨骼动画**：角色动作表现
-- **粒子效果**：特殊效果展示
-- **相机跟随**：平滑的视角切换
+### 2. 代理模式
 
-## 🎨 自定义配置
+#### 模式1：路径代理
+将目标URL作为路径的一部分：
 
-### 游戏参数调整
-在 `gameEngine.js` 中可以调整：
-- `maxChargingTime`：最大蓄力时间
-- 跳跃距离和高度计算公式
-- 方块生成间距和角度
+```
+GET /proxy/http://api.example.com/users
+POST /proxy/https://api.example.com/users
+PUT /proxy/http://api.example.com/users/123
+DELETE /proxy/http://api.example.com/users/123
+```
 
-### 视觉效果
-在各个类文件中可以调整：
-- 方块颜色和材质
-- 光照强度和位置
-- 动画持续时间和缓动函数
+#### 模式2：查询参数代理
+通过查询参数指定目标URL：
 
-### 音效配置
-在 `utils.js` 的 `AudioManager` 类中：
-- 添加新的音效类型
-- 调整音量和播放逻辑
+```
+GET /api?url=http://api.example.com/users
+POST /api?url=https://api.example.com/users
+PUT /api?url=http://api.example.com/users/123
+DELETE /api?url=http://api.example.com/users/123
+```
 
-## 📱 兼容性
+### 3. 使用示例
 
-- **iOS**：iOS 10.0+
-- **Android**：Android 5.0+
-- **微信版本**：7.0.0+
-- **小程序基础库**：2.9.0+
+#### 使用curl测试
 
-## 🔍 性能优化
+```bash
+# GET请求
+curl "http://localhost:8080/proxy/http://httpbin.org/get"
 
-1. **渲染优化**
-   - 对象池管理，减少GC
-   - 视锥剔除，只渲染可见对象
-   - LOD系统，距离越远细节越少
+# POST请求
+curl -X POST "http://localhost:8080/proxy/http://httpbin.org/post" \
+     -H "Content-Type: application/json" \
+     -d '{"name": "test", "value": 123}'
 
-2. **内存管理**
-   - 及时销毁不需要的对象
-   - 纹理和几何体复用
-   - 音效资源预加载
+# 使用查询参数模式
+curl "http://localhost:8080/api?url=http://httpbin.org/get"
+```
 
-3. **帧率优化**
-   - 固定时间步长更新
-   - 动画插值平滑
-   - 避免在渲染循环中创建对象
+#### 使用JavaScript
 
-## 🐛 已知问题
+```javascript
+// GET请求
+fetch('http://localhost:8080/proxy/http://api.example.com/users')
+  .then(response => response.json())
+  .then(data => console.log(data));
 
-1. 在部分低端Android设备上可能出现卡顿
-2. Three.js库文件较大，首次加载时间较长
-3. WebGL兼容性问题，部分老设备不支持
+// POST请求
+fetch('http://localhost:8080/proxy/http://api.example.com/users', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    name: 'John Doe',
+    email: 'john@example.com'
+  })
+})
+.then(response => response.json())
+.then(data => console.log(data));
+```
 
-## 🔄 更新日志
+## 配置说明
 
-### v1.0.0 (2024-01-15)
-- 基础游戏功能实现
-- 3D渲染和物理引擎
-- 完整的游戏流程
-- 分数系统和社交分享
+代理服务器会自动创建 `proxy_config.yaml` 配置文件，包含以下配置项：
 
-## 📄 许可证
+```yaml
+server:
+  host: "0.0.0.0"          # 服务器监听地址
+  port: 8080               # 服务器端口
+  timeout: 30              # 服务器超时时间
 
-本项目采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
+proxy:
+  timeout: 30              # 代理请求超时时间
+  max_connections: 100     # 最大连接数
+  max_keepalive_connections: 20  # 最大保持连接数
+  keepalive_timeout: 30    # 保持连接超时时间
 
-## 🤝 贡献
+allowed_origins: ["*"]     # 允许的源地址（CORS）
 
-欢迎提交 Issue 和 Pull Request 来改进这个项目！
+rate_limiting:
+  enabled: false           # 是否启用速率限制
+  requests_per_minute: 100 # 每分钟请求数限制
+```
 
-## 📞 联系方式
+## API端点
 
-如有问题或建议，请通过以下方式联系：
-- GitHub Issues
-- 邮箱：[your-email@example.com]
+- `GET /health` - 健康检查端点
+- `* /proxy/{target_url}` - 路径代理模式
+- `* /api?url={target_url}` - 查询参数代理模式
 
----
+## 日志
 
-⭐ 如果这个项目对你有帮助，请给个星星支持一下！
+代理服务器会记录详细的请求和响应日志到 `proxy.log` 文件和控制台输出。
+
+## 注意事项
+
+1. 确保目标API服务器支持CORS或通过代理访问
+2. 某些API可能需要特定的认证头，代理会转发所有请求头
+3. 大文件上传/下载时注意超时设置
+4. 生产环境建议配置适当的速率限制
+
+## 故障排除
+
+1. **连接超时**：检查目标URL是否可访问，调整timeout配置
+2. **CORS错误**：确保代理服务器正确设置了CORS头
+3. **认证失败**：检查请求头是否包含必要的认证信息
+4. **端口占用**：使用 `--port` 参数指定其他端口
