@@ -1,0 +1,227 @@
+{
+  "description": "示例API配置，展示如何配置不同类型的API端点",
+  
+  "httpApiExamples": [
+    {
+      "name": "jsonplaceholder-api",
+      "type": "http",
+      "baseUrl": "https://jsonplaceholder.typicode.com",
+      "path": "/api/v1/rest/*",
+      "target": "/posts/*",
+      "methods": ["GET", "POST", "PUT", "DELETE"],
+      "auth": {
+        "type": "none"
+      },
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "timeout": 10000,
+      "retries": 3
+    },
+    
+    {
+      "name": "weather-api",
+      "type": "http",
+      "baseUrl": "https://api.openweathermap.org/data/2.5",
+      "path": "/api/v1/weather/*",
+      "target": "/weather",
+      "methods": ["GET"],
+      "auth": {
+        "type": "apikey",
+        "key": "appid",
+        "value": "your-openweather-api-key"
+      }
+    },
+
+    {
+      "name": "secured-api",
+      "type": "https",
+      "baseUrl": "https://api.example.com",
+      "path": "/api/v1/secure/*",
+      "target": "/v1/*",
+      "methods": ["GET", "POST", "PUT", "DELETE"],
+      "auth": {
+        "type": "bearer",
+        "token": "your-bearer-token"
+      },
+      "headers": {
+        "User-Agent": "API-Proxy/1.0.0"
+      }
+    }
+  ],
+
+  "graphqlApiExamples": [
+    {
+      "name": "github-graphql",
+      "type": "graphql",
+      "baseUrl": "https://api.github.com/graphql",
+      "path": "/api/v1/github-graphql",
+      "auth": {
+        "type": "bearer",
+        "token": "your-github-token"
+      },
+      "timeout": 15000
+    },
+
+    {
+      "name": "hasura-graphql",
+      "type": "graphql",
+      "baseUrl": "https://your-hasura-instance.hasura.app/v1/graphql",
+      "path": "/api/v1/hasura",
+      "auth": {
+        "type": "apikey",
+        "key": "x-hasura-admin-secret",
+        "value": "your-hasura-admin-secret"
+      }
+    },
+
+    {
+      "name": "public-graphql",
+      "type": "graphql",
+      "baseUrl": "https://countries.trevorblades.com/",
+      "path": "/api/v1/countries",
+      "auth": {
+        "type": "none"
+      }
+    }
+  ],
+
+  "grpcApiExamples": [
+    {
+      "name": "local-grpc-service",
+      "type": "grpc",
+      "host": "localhost:50051",
+      "path": "/api/v1/grpc/local/*",
+      "protoPath": "./protos/example.proto",
+      "serviceName": "ExampleService",
+      "packageName": "example"
+    },
+
+    {
+      "name": "user-service",
+      "type": "grpc",
+      "host": "user-service:50051",
+      "path": "/api/v1/users/*",
+      "protoPath": "./protos/user.proto",
+      "serviceName": "UserService",
+      "packageName": "user.v1"
+    },
+
+    {
+      "name": "auth-service",
+      "type": "grpc",
+      "host": "auth-service.example.com:443",
+      "path": "/api/v1/auth/*",
+      "protoPath": "./protos/auth.proto",
+      "serviceName": "AuthService",
+      "packageName": "auth.v1",
+      "secure": true
+    }
+  ],
+
+  "mixedApiConfiguration": {
+    "description": "完整的混合API配置示例",
+    "apis": {
+      "default": {
+        "timeout": 10000,
+        "retries": 3,
+        "retryDelay": 1000
+      },
+      "endpoints": [
+        {
+          "name": "posts-api",
+          "type": "http",
+          "baseUrl": "https://jsonplaceholder.typicode.com",
+          "path": "/api/v1/posts/*",
+          "target": "/posts/*",
+          "methods": ["GET", "POST", "PUT", "DELETE"],
+          "auth": { "type": "none" }
+        },
+        
+        {
+          "name": "github-api",
+          "type": "graphql",
+          "baseUrl": "https://api.github.com/graphql",
+          "path": "/api/v1/github",
+          "auth": {
+            "type": "bearer",
+            "token": "${GITHUB_TOKEN}"
+          }
+        },
+
+        {
+          "name": "user-service",
+          "type": "grpc",
+          "host": "localhost:50051",
+          "path": "/api/v1/users/*",
+          "protoPath": "./protos/user.proto",
+          "serviceName": "UserService"
+        },
+
+        {
+          "name": "notification-api",
+          "type": "http",
+          "baseUrl": "https://api.notifications.example.com",
+          "path": "/api/v1/notifications/*",
+          "target": "/v2/*",
+          "methods": ["GET", "POST"],
+          "auth": {
+            "type": "apikey",
+            "key": "X-API-Key",
+            "value": "${NOTIFICATION_API_KEY}"
+          },
+          "headers": {
+            "Content-Type": "application/json"
+          }
+        }
+      ]
+    }
+  },
+
+  "authenticationExamples": {
+    "bearer_token": {
+      "type": "bearer",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    },
+
+    "api_key": {
+      "type": "apikey",
+      "key": "X-API-Key",
+      "value": "your-secret-api-key"
+    },
+
+    "basic_auth": {
+      "type": "basic",
+      "username": "your-username",
+      "password": "your-password"
+    },
+
+    "custom_header": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "Token your-custom-token"
+    }
+  },
+
+  "pathMappingExamples": {
+    "simple_prefix": {
+      "path": "/api/v1/users/*",
+      "target": "/users/*"
+    },
+
+    "version_mapping": {
+      "path": "/api/v2/posts/*",
+      "target": "/v1/posts/*"
+    },
+
+    "complete_rewrite": {
+      "path": "/api/legacy/*",
+      "pathMapping": "/new-api/*"
+    },
+
+    "parameter_extraction": {
+      "path": "/api/users/:id",
+      "target": "/user-service/get/:id"
+    }
+  }
+}

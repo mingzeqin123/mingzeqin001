@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package example;
+
+// 示例gRPC服务定义
+service ExampleService {
+  // 简单的问候方法
+  rpc SayHello (HelloRequest) returns (HelloResponse);
+  
+  // 获取用户信息
+  rpc GetUser (GetUserRequest) returns (User);
+  
+  // 创建用户
+  rpc CreateUser (CreateUserRequest) returns (User);
+  
+  // 流式响应示例
+  rpc ListUsers (ListUsersRequest) returns (stream User);
+  
+  // 双向流示例
+  rpc Chat (stream ChatMessage) returns (stream ChatMessage);
+}
+
+// 请求和响应消息定义
+message HelloRequest {
+  string name = 1;
+  string message = 2;
+}
+
+message HelloResponse {
+  string greeting = 1;
+  int64 timestamp = 2;
+}
+
+message GetUserRequest {
+  string user_id = 1;
+}
+
+message CreateUserRequest {
+  string name = 1;
+  string email = 2;
+  int32 age = 3;
+}
+
+message User {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  int32 age = 4;
+  int64 created_at = 5;
+  int64 updated_at = 6;
+}
+
+message ListUsersRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  string filter = 3;
+}
+
+message ChatMessage {
+  string user_id = 1;
+  string message = 2;
+  int64 timestamp = 3;
+  string room_id = 4;
+}

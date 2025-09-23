@@ -1,0 +1,69 @@
+{
+  "server": {
+    "port": 3000,
+    "host": "localhost",
+    "timeout": 30000,
+    "bodyLimit": "10mb"
+  },
+  "security": {
+    "corsEnabled": true,
+    "helmetEnabled": true,
+    "rateLimitEnabled": true,
+    "rateLimit": {
+      "windowMs": 900000,
+      "max": 100,
+      "message": "Too many requests from this IP, please try again later."
+    }
+  },
+  "logging": {
+    "level": "info",
+    "format": "combined",
+    "filename": "logs/api-proxy.log"
+  },
+  "auth": {
+    "jwtSecret": "your-jwt-secret-key",
+    "jwtExpiration": "1h",
+    "enableAuth": false
+  },
+  "apis": {
+    "default": {
+      "timeout": 10000,
+      "retries": 3,
+      "retryDelay": 1000
+    },
+    "endpoints": [
+      {
+        "name": "example-rest-api",
+        "type": "http",
+        "baseUrl": "https://jsonplaceholder.typicode.com",
+        "path": "/api/v1/rest/*",
+        "target": "/posts",
+        "methods": ["GET", "POST", "PUT", "DELETE"],
+        "auth": {
+          "type": "none"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      {
+        "name": "example-graphql-api",
+        "type": "graphql",
+        "baseUrl": "https://api.github.com/graphql",
+        "path": "/api/v1/graphql",
+        "auth": {
+          "type": "bearer",
+          "token": "your-github-token"
+        }
+      },
+      {
+        "name": "example-grpc-api",
+        "type": "grpc",
+        "host": "localhost:50051",
+        "path": "/api/v1/grpc/*",
+        "protoPath": "./protos/example.proto",
+        "serviceName": "ExampleService"
+      }
+    ]
+  }
+}
