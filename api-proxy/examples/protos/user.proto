@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package user.v1;
+
+// 用户服务
+service UserService {
+  // 获取用户
+  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+  
+  // 创建用户
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+  
+  // 更新用户
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
+  
+  // 删除用户
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+  
+  // 列出用户
+  rpc ListUsers (ListUsersRequest) returns (ListUsersResponse);
+  
+  // 用户登录
+  rpc Login (LoginRequest) returns (LoginResponse);
+}
+
+// 用户信息
+message User {
+  string id = 1;
+  string username = 2;
+  string email = 3;
+  string full_name = 4;
+  string avatar_url = 5;
+  UserStatus status = 6;
+  repeated string roles = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+// 用户状态枚举
+enum UserStatus {
+  USER_STATUS_UNSPECIFIED = 0;
+  USER_STATUS_ACTIVE = 1;
+  USER_STATUS_INACTIVE = 2;
+  USER_STATUS_SUSPENDED = 3;
+}
+
+// 请求消息
+message GetUserRequest {
+  string user_id = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+}
+
+message CreateUserRequest {
+  string username = 1;
+  string email = 2;
+  string password = 3;
+  string full_name = 4;
+  repeated string roles = 5;
+}
+
+message CreateUserResponse {
+  User user = 1;
+}
+
+message UpdateUserRequest {
+  string user_id = 1;
+  optional string email = 2;
+  optional string full_name = 3;
+  optional string avatar_url = 4;
+  optional UserStatus status = 5;
+  repeated string roles = 6;
+}
+
+message UpdateUserResponse {
+  User user = 1;
+}
+
+message DeleteUserRequest {
+  string user_id = 1;
+}
+
+message DeleteUserResponse {
+  bool success = 1;
+}
+
+message ListUsersRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+  optional string filter = 3;
+  optional UserStatus status = 4;
+}
+
+message ListUsersResponse {
+  repeated User users = 1;
+  int32 total_count = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+  User user = 3;
+  int64 expires_in = 4;
+}
+
+import "google/protobuf/timestamp.proto";

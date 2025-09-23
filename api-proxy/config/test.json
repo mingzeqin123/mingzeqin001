@@ -1,0 +1,51 @@
+{
+  "server": {
+    "port": 3001,
+    "host": "localhost",
+    "timeout": 5000,
+    "bodyLimit": "10mb"
+  },
+  "security": {
+    "corsEnabled": true,
+    "helmetEnabled": true,
+    "rateLimitEnabled": false,
+    "rateLimit": {
+      "windowMs": 900000,
+      "max": 100,
+      "message": "Too many requests from this IP, please try again later."
+    }
+  },
+  "logging": {
+    "level": "error",
+    "format": "combined",
+    "filename": "logs/api-proxy-test.log"
+  },
+  "auth": {
+    "jwtSecret": "test-jwt-secret-key",
+    "jwtExpiration": "1h",
+    "enableAuth": false
+  },
+  "apis": {
+    "default": {
+      "timeout": 5000,
+      "retries": 1,
+      "retryDelay": 500
+    },
+    "endpoints": [
+      {
+        "name": "test-rest-api",
+        "type": "http",
+        "baseUrl": "https://jsonplaceholder.typicode.com",
+        "path": "/api/v1/rest/*",
+        "target": "/posts/*",
+        "methods": ["GET", "POST", "PUT", "DELETE"],
+        "auth": {
+          "type": "none"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    ]
+  }
+}
