@@ -1,177 +1,158 @@
-# 微信小程序跳一跳游戏
+# Mac安装器Java应用程序
 
-一个基于微信小程序平台开发的3D跳一跳小游戏，使用Three.js渲染引擎实现3D效果。
+这是一个Java GUI应用程序，可以打包成Mac安装包并在Mac系统上安装运行。
 
-## 🎮 游戏特色
+## 功能特性
 
-- **3D视觉效果**：使用Three.js渲染引擎，呈现精美的3D场景
-- **物理引擎**：真实的跳跃物理模拟和碰撞检测
-- **多样方块**：普通、小型、高型、特殊等多种方块类型
-- **蓄力系统**：长按蓄力，控制跳跃距离和高度
-- **分数系统**：完美落地获得额外分数，挑战最高纪录
-- **视觉特效**：粒子效果、动画过渡、阴影系统
-- **音效支持**：跳跃、落地、完美、游戏结束等音效
-- **社交分享**：支持微信好友和朋友圈分享
+- 简单的GUI界面，使用Java Swing
+- 点击计数器功能
+- 系统信息显示
+- 操作日志记录
+- 支持Mac原生外观
+- 可打包成DMG安装包
 
-## 🚀 快速开始
+## 系统要求
 
-### 环境要求
-- 微信开发者工具 1.05.0 或更高版本
-- 小程序基础库 2.9.0 或更高版本
+- Java 11或更高版本
+- Mac OS X 10.14或更高版本（用于DMG安装包）
+- Maven 3.6或更高版本（用于构建）
 
-### 安装步骤
+## 快速开始
 
-1. **克隆项目**
-   ```bash
-   git clone [项目地址]
-   cd jump-jump-game
-   ```
+### 1. 构建应用程序
 
-2. **导入项目**
-   - 打开微信开发者工具
-   - 选择"导入项目"
-   - 选择项目目录
-   - 填入AppID（测试可使用测试号）
-
-3. **添加资源文件**
-   - 将Three.js完整库文件放入 `/pages/game/libs/three.min.js`
-   - 添加音效文件到 `/sounds/` 目录
-   - 添加图片资源到 `/images/` 目录
-
-4. **编译运行**
-   - 点击"编译"按钮
-   - 在模拟器或真机上预览
-
-## 📁 项目结构
-
-```
-jump-jump-game/
-├── app.js                 # 小程序入口文件
-├── app.json               # 小程序配置文件
-├── app.wxss              # 全局样式文件
-├── sitemap.json          # 站点地图配置
-├── project.config.json   # 项目配置文件
-├── pages/
-│   └── game/             # 游戏页面
-│       ├── game.js       # 页面逻辑
-│       ├── game.json     # 页面配置
-│       ├── game.wxml     # 页面结构
-│       ├── game.wxss     # 页面样式
-│       ├── gameEngine.js # 游戏引擎核心
-│       ├── player.js     # 玩家角色类
-│       ├── block.js      # 方块类
-│       ├── utils.js      # 工具函数
-│       └── libs/
-│           └── three.min.js # Three.js库
-├── images/               # 图片资源
-│   └── README.md        # 图片说明
-├── sounds/               # 音效资源
-│   └── README.md        # 音效说明
-└── README.md            # 项目说明
+```bash
+# 构建JAR文件
+./build-mac-installer.sh
 ```
 
-## 🎯 游戏玩法
+### 2. 在Mac上安装
 
-1. **开始游戏**：点击"开始游戏"按钮
-2. **蓄力跳跃**：长按屏幕蓄力，右侧显示蓄力条
-3. **释放跳跃**：松开手指，角色跳向下一个方块
-4. **获得分数**：
-   - 成功落地：+1分
-   - 良好落地：+3分
-   - 完美落地：+5分（中心位置）
-5. **游戏结束**：跳跃失败掉落时游戏结束
-6. **分享成绩**：可分享到微信好友或朋友圈
+```bash
+# 安装到Applications文件夹
+./install.sh
+```
 
-## 🔧 核心技术
+### 3. 手动运行
 
-### 渲染引擎
-- **Three.js**：3D场景渲染
-- **WebGL**：硬件加速渲染
-- **阴影系统**：实时阴影计算
-- **光照系统**：环境光+方向光
+```bash
+# 直接运行JAR文件
+java -jar target/mac-installer-app.jar
+```
 
-### 物理系统
-- **跳跃轨迹**：抛物线运动模拟
-- **碰撞检测**：圆形碰撞检测算法
-- **重力模拟**：自然下落效果
+## 项目结构
 
-### 动画系统
-- **缓动函数**：平滑的动画过渡
-- **骨骼动画**：角色动作表现
-- **粒子效果**：特殊效果展示
-- **相机跟随**：平滑的视角切换
+```
+├── pom.xml                          # Maven配置文件
+├── build-mac-installer.sh           # 构建脚本
+├── install.sh                       # Mac安装脚本
+├── README.md                        # 说明文档
+└── src/
+    └── main/
+        └── java/
+            └── com/
+                └── example/
+                    └── MainApp.java # 主应用程序
+```
 
-## 🎨 自定义配置
+## 构建说明
 
-### 游戏参数调整
-在 `gameEngine.js` 中可以调整：
-- `maxChargingTime`：最大蓄力时间
-- 跳跃距离和高度计算公式
-- 方块生成间距和角度
+### 构建JAR文件
 
-### 视觉效果
-在各个类文件中可以调整：
-- 方块颜色和材质
-- 光照强度和位置
-- 动画持续时间和缓动函数
+```bash
+mvn clean package
+```
 
-### 音效配置
-在 `utils.js` 的 `AudioManager` 类中：
-- 添加新的音效类型
-- 调整音量和播放逻辑
+这将创建一个可执行的JAR文件：`target/mac-installer-app.jar`
 
-## 📱 兼容性
+### 创建Mac安装包
 
-- **iOS**：iOS 10.0+
-- **Android**：Android 5.0+
-- **微信版本**：7.0.0+
-- **小程序基础库**：2.9.0+
+在Mac系统上运行：
 
-## 🔍 性能优化
+```bash
+./build-mac-installer.sh
+```
 
-1. **渲染优化**
-   - 对象池管理，减少GC
-   - 视锥剔除，只渲染可见对象
-   - LOD系统，距离越远细节越少
+这将创建：
+- 应用程序包：`dist/MacInstallerApp.app`
+- DMG安装包：`dist/MacInstallerApp-1.0.0.dmg`
 
-2. **内存管理**
-   - 及时销毁不需要的对象
-   - 纹理和几何体复用
-   - 音效资源预加载
+## 安装说明
 
-3. **帧率优化**
-   - 固定时间步长更新
-   - 动画插值平滑
-   - 避免在渲染循环中创建对象
+### 方法1：使用安装脚本
 
-## 🐛 已知问题
+```bash
+./install.sh
+```
 
-1. 在部分低端Android设备上可能出现卡顿
-2. Three.js库文件较大，首次加载时间较长
-3. WebGL兼容性问题，部分老设备不支持
+此脚本将：
+1. 检查Java环境
+2. 创建应用程序包结构
+3. 安装到`/Applications`文件夹
+4. 设置正确的权限
 
-## 🔄 更新日志
+### 方法2：手动安装
 
-### v1.0.0 (2024-01-15)
-- 基础游戏功能实现
-- 3D渲染和物理引擎
-- 完整的游戏流程
-- 分数系统和社交分享
+1. 构建应用程序：`./build-mac-installer.sh`
+2. 将`dist/MacInstallerApp.app`拖拽到`/Applications`文件夹
+3. 在Launchpad或Applications文件夹中找到并运行
 
-## 📄 许可证
+### 方法3：使用DMG安装包
 
-本项目采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
+1. 构建DMG：`./build-mac-installer.sh`
+2. 双击`dist/MacInstallerApp-1.0.0.dmg`
+3. 将应用程序拖拽到Applications文件夹
 
-## 🤝 贡献
+## 应用程序功能
 
-欢迎提交 Issue 和 Pull Request 来改进这个项目！
+- **点击计数**：点击按钮进行计数
+- **系统信息**：显示详细的系统信息
+- **操作日志**：记录所有操作和系统信息
+- **清空日志**：重置计数器和清空日志
 
-## 📞 联系方式
+## 故障排除
 
-如有问题或建议，请通过以下方式联系：
-- GitHub Issues
-- 邮箱：[your-email@example.com]
+### Java未找到
 
----
+如果遇到"Java未找到"错误：
 
-⭐ 如果这个项目对你有帮助，请给个星星支持一下！
+1. 安装Java 11或更高版本
+2. 设置JAVA_HOME环境变量
+3. 确保java命令在PATH中
+
+### 权限问题
+
+如果遇到权限问题：
+
+```bash
+# 给脚本执行权限
+chmod +x build-mac-installer.sh
+chmod +x install.sh
+
+# 安装时使用sudo
+sudo ./install.sh
+```
+
+### 应用程序无法启动
+
+1. 检查Java版本：`java -version`
+2. 检查JAR文件：`ls -la target/mac-installer-app.jar`
+3. 手动运行：`java -jar target/mac-installer-app.jar`
+
+## 开发说明
+
+### 修改应用程序
+
+1. 编辑`src/main/java/com/example/MainApp.java`
+2. 重新构建：`mvn clean package`
+3. 重新安装：`./install.sh`
+
+### 自定义配置
+
+- 修改`pom.xml`中的应用程序信息
+- 更新`build-mac-installer.sh`中的DMG设置
+- 修改`install.sh`中的安装路径
+
+## 许可证
+
+此项目仅用于演示目的。
