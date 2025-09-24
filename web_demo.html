@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 文件类型检测器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .file-input {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .file-input input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .results-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .results-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .result-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            color: #333;
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: 5px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .error {
+            background: #fff5f5;
+            border-left-color: #e53e3e;
+            color: #e53e3e;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .examples {
+            background: #f0f4f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .examples h4 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .example-item {
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+
+        .example-item:hover {
+            background: #e6f3ff;
+        }
+
+        .example-type {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .example-desc {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .btn-group {
+                justify-content: center;
+            }
+            
+            button {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Base64 文件类型检测器</h1>
+            <p>通过分析文件签名(Magic Bytes)自动识别Base64编码文件的原始类型</p>
+        </div>
+        
+        <div class="content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="base64Input">粘贴或输入 Base64 编码字符串:</label>
+                    <textarea id="base64Input" placeholder="在这里粘贴您的 Base64 编码字符串...&#10;支持 data URI 格式（如：data:image/png;base64,iVBORw0KGgoAAAA...）"></textarea>
+                </div>
+                
+                <div class="btn-group">
+                    <button onclick="analyzeBase64()">分析文件类型</button>
+                    <button class="file-input">
+                        选择文件转换
+                        <input type="file" onchange="handleFileSelect(event)">
+                    </button>
+                    <button onclick="clearAll()">清空</button>
+                </div>
+            </div>
+            
+            <div class="examples">
+                <h4>示例 Base64 数据（点击使用）:</h4>
+                <div class="example-item" onclick="useExample('png')">
+                    <div class="example-type">PNG 图片</div>
+                    <div class="example-desc">1x1像素透明PNG图片</div>
+                </div>
+                <div class="example-item" onclick="useExample('pdf')">
+                    <div class="example-type">PDF 文档</div>
+                    <div class="example-desc">简单的PDF文档头部</div>
+                </div>
+                <div class="example-item" onclick="useExample('json')">
+                    <div class="example-type">JSON 文件</div>
+                    <div class="example-desc">JSON格式数据</div>
+                </div>
+            </div>
+            
+            <div id="results" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // File type signatures (magic bytes)
+        const FILE_SIGNATURES = {
+            // Images
+            'FFD8FF': 'jpeg',
+            '89504E470D0A1A0A': 'png',
+            '474946383761': 'gif',
+            '474946383961': 'gif',
+            '424D': 'bmp',
+            '52494646': 'webp', // Need additional check for WebP
+            '00000100': 'ico',
+            '00000200': 'cur',
+            
+            // Documents
+            '25504446': 'pdf',
+            'D0CF11E0A1B11AE1': 'doc',
+            '504B0304': 'zip', // Also DOCX, XLSX, PPTX
+            '504B0506': 'zip',
+            '504B0708': 'zip',
+            
+            // Archives
+            '1F8B': 'gzip',
+            '526172211A0700': 'rar',
+            '526172211A070100': 'rar',
+            '377ABCAF271C': '7z',
+            'FD377A585A00': 'xz',
+            
+            // Audio
+            '494433': 'mp3',
+            'FFFB': 'mp3',
+            'FFF3': 'mp3',
+            'FFF2': 'mp3',
+            '4F676753': 'ogg',
+            '664C6143': 'flac',
+            
+            // Video
+            '66747970': 'mp4', // After 4 bytes of size
+            '464C56': 'flv',
+            '1A45DFA3': 'mkv',
+            
+            // Executables
+            '4D5A': 'exe',
+            '7F454C46': 'elf',
+            'FEEDFACE': 'macho',
+            'FEEDFACF': 'macho',
+            'CFFAEDFE': 'macho',
+            
+            // Other
+            '3C3F786D6C': 'xml',
+            '894844460D0A1A0A': 'hdf5',
+            '425A68': 'bzip2',
+            'CAFEBABE': 'class'
+        };
+
+        const MIME_TYPES = {
+            'jpeg': 'image/jpeg',
+            'png': 'image/png',
+            'gif': 'image/gif',
+            'bmp': 'image/bmp',
+            'webp': 'image/webp',
+            'ico': 'image/x-icon',
+            'cur': 'image/x-cursor',
+            'svg': 'image/svg+xml',
+            'pdf': 'application/pdf',
+            'doc': 'application/msword',
+            'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'xml': 'application/xml',
+            'html': 'text/html',
+            'json': 'application/json',
+            'text': 'text/plain',
+            'zip': 'application/zip',
+            'gzip': 'application/gzip',
+            'rar': 'application/x-rar-compressed',
+            '7z': 'application/x-7z-compressed',
+            'xz': 'application/x-xz',
+            'bzip2': 'application/x-bzip2',
+            'mp3': 'audio/mpeg',
+            'ogg': 'audio/ogg',
+            'flac': 'audio/flac',
+            'wav': 'audio/wav',
+            'mp4': 'video/mp4',
+            'flv': 'video/x-flv',
+            'mkv': 'video/x-matroska',
+            'avi': 'video/x-msvideo',
+            'exe': 'application/x-msdownload',
+            'elf': 'application/x-executable',
+            'macho': 'application/x-mach-binary',
+            'class': 'application/java-vm',
+            'hdf5': 'application/x-hdf'
+        };
+
+        const EXAMPLES = {
+            png: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==',
+            pdf: 'JVBERi0xLjQKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMiAwIFIKPj4KZW5kb2Jq',
+            json: 'eyJuYW1lIjogInRlc3QiLCAidHlwZSI6ICJkZW1vIiwgInZhbHVlIjogMTIzfQ=='
+        };
+
+        function decodeBase64(base64String) {
+            try {
+                // Remove data URI prefix if present
+                if (base64String.startsWith('data:')) {
+                    base64String = base64String.split(',')[1];
+                }
+                
+                // Remove whitespace
+                base64String = base64String.replace(/\s/g, '');
+                
+                // Decode base64
+                const binaryString = atob(base64String);
+                const bytes = new Uint8Array(binaryString.length);
+                for (let i = 0; i < binaryString.length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                return bytes;
+            } catch (error) {
+                throw new Error('Invalid Base64 string: ' + error.message);
+            }
+        }
+
+        function bytesToHex(bytes, length = 16) {
+            return Array.from(bytes.slice(0, length))
+                .map(b => b.toString(16).padStart(2, '0').toUpperCase())
+                .join('');
+        }
+
+        function detectFileType(bytes) {
+            const hex = bytesToHex(bytes, 32); // Check first 32 bytes
+            const detectedSignatures = [];
+            
+            // Check for magic bytes
+            for (const [signature, fileType] of Object.entries(FILE_SIGNATURES)) {
+                if (hex.startsWith(signature)) {
+                    detectedSignatures.push({ signature, fileType });
+                }
+            }
+            
+            // Special handling for RIFF files
+            if (hex.startsWith('52494646')) { // RIFF
+                const riffType = bytesToHex(bytes.slice(8, 12));
+                if (riffType === '57454250') return 'webp'; // WEBP
+                if (riffType === '57415645') return 'wav';  // WAVE
+                if (riffType === '41564920') return 'avi';  // AVI
+            }
+            
+            // Special handling for Office files
+            if (hex.startsWith('504B0304')) { // ZIP format
+                const text = new TextDecoder().decode(bytes.slice(0, 1000));
+                if (text.includes('word/') || text.includes('[Content_Types].xml')) return 'docx';
+                if (text.includes('xl/')) return 'xlsx';
+                if (text.includes('ppt/')) return 'pptx';
+                return 'zip';
+            }
+            
+            // Check for MP4 variants
+            if (hex.length >= 16) {
+                const ftypIndex = hex.indexOf('66747970'); // 'ftyp'
+                if (ftypIndex >= 8 && ftypIndex <= 12) return 'mp4';
+            }
+            
+            // Return first detected type
+            if (detectedSignatures.length > 0) {
+                return detectedSignatures[0].fileType;
+            }
+            
+            // Try to detect text files
+            try {
+                const text = new TextDecoder().decode(bytes);
+                const trimmedText = text.trim();
+                
+                if (trimmedText.startsWith('{') && trimmedText.endsWith('}')) {
+                    JSON.parse(text); // Validate JSON
+                    return 'json';
+                } else if (text.toLowerCase().includes('<html')) {
+                    return 'html';
+                } else if (text.toLowerCase().includes('<svg')) {
+                    return 'svg';
+                } else if (/^[\x20-\x7E\s]*$/.test(text)) {
+                    return 'text';
+                }
+            } catch (e) {
+                // Not valid text
+            }
+            
+            return 'unknown';
+        }
+
+        function analyzeBase64() {
+            const base64Input = document.getElementById('base64Input').value.trim();
+            const resultsDiv = document.getElementById('results');
+            
+            if (!base64Input) {
+                alert('请输入 Base64 编码字符串');
+                return;
+            }
+            
+            try {
+                // Show loading
+                resultsDiv.style.display = 'block';
+                resultsDiv.innerHTML = '<div class="loading">正在分析...</div>';
+                
+                // Decode base64
+                const bytes = decodeBase64(base64Input);
+                const fileType = detectFileType(bytes);
+                const mimeType = MIME_TYPES[fileType] || 'application/octet-stream';
+                const hexBytes = bytesToHex(bytes);
+                
+                // Display results
+                setTimeout(() => {
+                    resultsDiv.innerHTML = `
+                        <div class="results-section">
+                            <h3>分析结果</h3>
+                            <div class="result-item">
+                                <div class="result-label">检测到的文件类型:</div>
+                                <div class="result-value">${fileType.toUpperCase()}</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-label">MIME 类型:</div>
+                                <div class="result-value">${mimeType}</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-label">文件大小:</div>
+                                <div class="result-value">${bytes.length.toLocaleString()} 字节</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-label">前16字节 (十六进制):</div>
+                                <div class="result-value">${hexBytes}</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-label">Base64 长度:</div>
+                                <div class="result-value">${base64Input.length.toLocaleString()} 字符</div>
+                            </div>
+                        </div>
+                    `;
+                }, 500);
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="results-section">
+                        <div class="result-item error">
+                            <div class="result-label">错误:</div>
+                            <div class="result-value">${error.message}</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                alert('文件太大！请选择小于10MB的文件。');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64 = btoa(e.target.result);
+                document.getElementById('base64Input').value = base64;
+            };
+            reader.readAsBinaryString(file);
+        }
+
+        function useExample(type) {
+            document.getElementById('base64Input').value = EXAMPLES[type];
+            analyzeBase64();
+        }
+
+        function clearAll() {
+            document.getElementById('base64Input').value = '';
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'none';
+        }
+
+        // Allow Enter key to analyze
+        document.getElementById('base64Input').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                analyzeBase64();
+            }
+        });
+    </script>
+</body>
+</html>
