@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/todolist/todolist",
     "pages/game/game",
     "pages/watermark/watermark"
   ],
