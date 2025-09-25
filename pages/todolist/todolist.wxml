@@ -1,0 +1,96 @@
+<!--todolist.wxml-->
+<view class="container">
+  <!-- 头部标题 -->
+  <view class="header">
+    <text class="title">待办事项清单</text>
+    <text class="subtitle">{{todoList.length}} 项任务</text>
+  </view>
+
+  <!-- 添加新任务 -->
+  <view class="add-section">
+    <view class="input-wrapper">
+      <input 
+        class="task-input" 
+        type="text" 
+        placeholder="添加新的待办事项..." 
+        value="{{newTask}}"
+        bindinput="onInputChange"
+        bindconfirm="addTask"
+        focus="{{inputFocus}}"
+      />
+      <button class="add-btn" bindtap="addTask" disabled="{{!newTask.trim()}}">
+        <text class="add-icon">+</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 任务列表 -->
+  <view class="task-list">
+    <!-- 未完成任务 -->
+    <view wx:if="{{uncompletedTasks.length > 0}}" class="section">
+      <view class="section-header">
+        <text class="section-title">待完成 ({{uncompletedTasks.length}})</text>
+      </view>
+      <view wx:for="{{uncompletedTasks}}" wx:key="id" class="task-item">
+        <view class="task-content" bindtap="toggleTask" data-id="{{item.id}}">
+          <view class="checkbox {{item.completed ? 'checked' : ''}}">
+            <text wx:if="{{item.completed}}" class="check-icon">✓</text>
+          </view>
+          <text class="task-text {{item.completed ? 'completed' : ''}}">{{item.text}}</text>
+        </view>
+        <view class="task-actions">
+          <button class="edit-btn" bindtap="editTask" data-id="{{item.id}}">编辑</button>
+          <button class="delete-btn" bindtap="deleteTask" data-id="{{item.id}}">删除</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 已完成任务 -->
+    <view wx:if="{{completedTasks.length > 0}}" class="section">
+      <view class="section-header">
+        <text class="section-title">已完成 ({{completedTasks.length}})</text>
+        <button class="clear-btn" bindtap="clearCompleted">清空已完成</button>
+      </view>
+      <view wx:for="{{completedTasks}}" wx:key="id" class="task-item completed-item">
+        <view class="task-content" bindtap="toggleTask" data-id="{{item.id}}">
+          <view class="checkbox checked">
+            <text class="check-icon">✓</text>
+          </view>
+          <text class="task-text completed">{{item.text}}</text>
+        </view>
+        <view class="task-actions">
+          <button class="delete-btn" bindtap="deleteTask" data-id="{{item.id}}">删除</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:if="{{todoList.length === 0}}" class="empty-state">
+      <text class="empty-icon">📝</text>
+      <text class="empty-text">暂无待办事项</text>
+      <text class="empty-subtitle">添加第一个任务开始规划吧！</text>
+    </view>
+  </view>
+
+  <!-- 编辑弹窗 -->
+  <view wx:if="{{showEditModal}}" class="modal-overlay" bindtap="closeEditModal">
+    <view class="modal-content" catchtap="preventClose">
+      <view class="modal-header">
+        <text class="modal-title">编辑任务</text>
+      </view>
+      <view class="modal-body">
+        <input 
+          class="edit-input" 
+          type="text" 
+          value="{{editingText}}"
+          bindinput="onEditInputChange"
+          focus="{{true}}"
+        />
+      </view>
+      <view class="modal-footer">
+        <button class="cancel-btn" bindtap="closeEditModal">取消</button>
+        <button class="confirm-btn" bindtap="confirmEdit">确认</button>
+      </view>
+    </view>
+  </view>
+</view>
