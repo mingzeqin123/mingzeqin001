@@ -1,0 +1,7 @@
+Flask==2.3.3
+sqlite3
+smtplib
+email
+secrets
+hashlib
+logging
