@@ -1,0 +1,59 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="header">
+    <text class="title">WebSocket 聊天室</text>
+    <text class="subtitle">实时聊天，即时互动</text>
+  </view>
+
+  <view class="content">
+    <!-- 房间输入 -->
+    <view class="input-section">
+      <text class="label">房间ID</text>
+      <input 
+        class="room-input" 
+        type="text" 
+        placeholder="输入房间ID或创建新房间"
+        value="{{roomId}}"
+        bindinput="onRoomIdInput"
+      />
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="button-section">
+      <button class="join-button primary" bindtap="joinChatRoom">
+        加入聊天室
+      </button>
+      
+      <button class="join-button secondary" bindtap="joinDefaultRoom">
+        加入默认房间
+      </button>
+      
+      <button class="join-button secondary" bindtap="joinRandomRoom">
+        创建随机房间
+      </button>
+    </view>
+
+    <!-- 功能说明 -->
+    <view class="features">
+      <text class="features-title">功能特性</text>
+      <view class="feature-list">
+        <view class="feature-item">
+          <text class="feature-icon">💬</text>
+          <text class="feature-text">实时消息发送与接收</text>
+        </view>
+        <view class="feature-item">
+          <text class="feature-icon">👥</text>
+          <text class="feature-text">多用户在线聊天</text>
+        </view>
+        <view class="feature-item">
+          <text class="feature-icon">🔄</text>
+          <text class="feature-text">断线自动重连</text>
+        </view>
+        <view class="feature-item">
+          <text class="feature-icon">⌨️</text>
+          <text class="feature-text">输入状态提示</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

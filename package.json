@@ -1,0 +1,24 @@
+{
+  "name": "websocket-chat-server",
+  "version": "1.0.0",
+  "description": "WebSocket聊天服务器",
+  "main": "chat-server.js",
+  "scripts": {
+    "start": "node chat-server.js",
+    "dev": "nodemon chat-server.js"
+  },
+  "dependencies": {
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "websocket",
+    "chat",
+    "realtime",
+    "node.js"
+  ],
+  "author": "",
+  "license": "MIT"
+}
