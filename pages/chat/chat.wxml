@@ -1,0 +1,120 @@
+<!--pages/chat/chat.wxml-->
+<view class="chat-container">
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">连接中...</text>
+  </view>
+
+  <!-- 聊天头部信息 -->
+  <view class="chat-header">
+    <view class="room-info">
+      <text class="room-name">房间: {{roomId}}</text>
+      <view class="online-status" bindtap="showOnlineUsers">
+        <text class="online-count">{{onlineUsers.length}}人在线</text>
+        <text class="status-dot {{socketOpen ? 'connected' : 'disconnected'}}"></text>
+      </view>
+    </view>
+    
+    <!-- 正在输入提示 -->
+    <view wx:if="{{typingUsers.size > 0}}" class="typing-indicator">
+      <text class="typing-text">{{typingUsers}}正在输入...</text>
+      <view class="typing-dots">
+        <view class="dot"></view>
+        <view class="dot"></view>
+        <view class="dot"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 聊天消息列表 -->
+  <scroll-view 
+    class="message-list" 
+    scroll-y="true" 
+    scroll-top="{{scrollTop}}"
+    scroll-to-view="{{scrollToView}}"
+    scroll-with-animation="true"
+    style="bottom: {{keyboardHeight + 60}}px;"
+    refresher-enabled="{{true}}"
+    refresher-triggered="{{false}}"
+    bindrefresherrefresh="onRefresh"
+  >
+    <view wx:for="{{messages}}" wx:key="id" class="message-item" id="{{item.id}}">
+      <!-- 系统消息 -->
+      <view wx:if="{{item.type === 'system'}}" class="system-message">
+        <text class="system-text">{{item.content}}</text>
+        <text class="message-time">{{formatTime(item.timestamp)}}</text>
+      </view>
+
+      <!-- 聊天消息 -->
+      <view wx:else class="chat-message {{item.isSelf ? 'self' : 'other'}}" 
+            bindlongpress="onMessageLongPress" 
+            data-id="{{item.id}}">
+        
+        <!-- 其他用户头像 -->
+        <view wx:if="{{!item.isSelf}}" class="avatar-container">
+          <image class="avatar" src="{{item.user.avatar || '/images/default-avatar.png'}}"></image>
+        </view>
+
+        <view class="message-content">
+          <!-- 用户名（非自己的消息） -->
+          <view wx:if="{{!item.isSelf}}" class="username">{{item.user.nickname}}</view>
+          
+          <!-- 消息气泡 -->
+          <view class="message-bubble {{item.isSelf ? 'self-bubble' : 'other-bubble'}}">
+            <text class="message-text">{{item.content}}</text>
+          </view>
+          
+          <!-- 时间戳 -->
+          <view class="message-time {{item.isSelf ? 'self-time' : 'other-time'}}">
+            {{formatTime(item.timestamp)}}
+          </view>
+        </view>
+
+        <!-- 自己的头像 -->
+        <view wx:if="{{item.isSelf}}" class="avatar-container">
+          <image class="avatar" src="{{userInfo.avatar || '/images/default-avatar.png'}}"></image>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部占位 -->
+    <view class="message-placeholder"></view>
+  </scroll-view>
+
+  <!-- 输入区域 -->
+  <view class="input-container" style="bottom: {{keyboardHeight}}px;">
+    <view class="input-wrapper">
+      <input 
+        class="message-input" 
+        type="text" 
+        placeholder="输入消息..." 
+        value="{{inputValue}}"
+        bindinput="onInputChange"
+        bindconfirm="sendChatMessage"
+        adjust-position="{{false}}"
+        bindfocus="onInputFocus"
+        bindblur="onInputBlur"
+        bindkeyboardheightchange="onKeyboardHeightChange"
+        confirm-type="send"
+      />
+      <button 
+        class="send-button {{inputValue ? 'active' : ''}}" 
+        bindtap="sendChatMessage"
+        disabled="{{!inputValue || !socketOpen}}"
+      >
+        发送
+      </button>
+    </view>
+  </view>
+
+  <!-- 功能按钮 -->
+  <view class="action-buttons">
+    <button class="action-btn" bindtap="onRefresh">
+      <text class="btn-text">刷新</text>
+    </button>
+    <button class="action-btn" bindtap="showOnlineUsers">
+      <text class="btn-text">用户</text>
+    </button>
+  </view>
+</view>

@@ -1,0 +1,9 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "聊天室",
+  "navigationBarBackgroundColor": "#007AFF",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#F5F5F5",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 50
+}
