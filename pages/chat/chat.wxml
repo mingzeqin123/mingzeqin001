@@ -1,0 +1,93 @@
+<!--pages/chat/chat.wxml-->
+<view class="chat-container">
+  <!-- 顶部状态栏 -->
+  <view class="header">
+    <view class="room-info">
+      <text class="room-name">{{room}}</text>
+      <text class="user-count">{{userList.length}}人在线</text>
+    </view>
+    <view class="header-actions">
+      <button class="user-list-btn" bindtap="toggleUserList">
+        <text class="icon">👥</text>
+      </button>
+      <view class="connection-status {{isConnected ? 'connected' : 'disconnected'}}">
+        <text class="status-dot"></text>
+        <text class="status-text">{{isConnected ? '已连接' : '连接中...'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 用户列表侧边栏 -->
+  <view class="user-list {{showUserList ? 'show' : ''}}" wx:if="{{showUserList}}">
+    <view class="user-list-header">
+      <text class="user-list-title">在线用户 ({{userList.length}})</text>
+      <button class="close-btn" bindtap="toggleUserList">×</button>
+    </view>
+    <scroll-view class="user-list-content" scroll-y>
+      <view class="user-item" wx:for="{{userList}}" wx:key="id">
+        <view class="user-avatar">{{item.username.charAt(0)}}</view>
+        <view class="user-info">
+          <text class="user-name">{{item.username}}</text>
+          <text class="user-status">在线</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 消息列表 -->
+  <scroll-view 
+    class="message-list" 
+    scroll-y 
+    scroll-top="{{scrollTop}}"
+    scroll-into-view="{{scrollIntoView}}"
+  >
+    <view class="message-item" 
+          wx:for="{{messages}}" 
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindlongpress="onLongPressMessage"
+          class="{{item.username === username ? 'own-message' : 'other-message'}}"
+    >
+      <view class="message-content">
+        <view class="message-header" wx:if="{{item.username !== username}}">
+          <text class="sender-name">{{item.username}}</text>
+        </view>
+        <view class="message-bubble">
+          <text class="message-text">{{item.content}}</text>
+        </view>
+        <view class="message-time">
+          <text>{{formatTime(item.timestamp)}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 正在输入提示 -->
+    <view class="typing-indicator" wx:if="{{typingUsers.length > 0}}">
+      <text class="typing-text">
+        {{typingUsers.join(', ')}} 正在输入...
+      </text>
+    </view>
+  </scroll-view>
+
+  <!-- 输入区域 -->
+  <view class="input-area">
+    <view class="input-container">
+      <input 
+        class="message-input" 
+        placeholder="输入消息..." 
+        value="{{inputValue}}"
+        bindinput="onInputChange"
+        bindconfirm="onInputConfirm"
+        confirm-type="send"
+        disabled="{{!isConnected}}"
+      />
+      <button 
+        class="send-btn {{inputValue.length > 0 ? 'active' : ''}}" 
+        bindtap="sendMessage"
+        disabled="{{!isConnected || inputValue.length === 0}}"
+      >
+        发送
+      </button>
+    </view>
+  </view>
+</view>

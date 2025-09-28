@@ -1,0 +1,79 @@
+<!--pages/login/login.wxml-->
+<view class="login-container">
+  <view class="header">
+    <text class="title">WebSocket聊天室</text>
+    <text class="subtitle">实时聊天，畅所欲言</text>
+  </view>
+
+  <view class="form-container">
+    <!-- 用户名输入 -->
+    <view class="form-group">
+      <text class="label">用户名</text>
+      <input 
+        class="input" 
+        placeholder="请输入用户名" 
+        value="{{username}}"
+        bindinput="onUsernameInput"
+        maxlength="20"
+      />
+    </view>
+
+    <!-- 房间选择 -->
+    <view class="form-group">
+      <text class="label">选择房间</text>
+      <picker 
+        class="picker" 
+        range="{{roomList}}" 
+        bindchange="onRoomChange"
+        value="{{roomList.indexOf(room)}}"
+      >
+        <view class="picker-text">
+          {{room}}
+          <text class="picker-arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 自定义房间 -->
+    <view class="form-group" wx:if="{{showCustomRoom}}">
+      <text class="label">自定义房间名</text>
+      <input 
+        class="input" 
+        placeholder="请输入房间名" 
+        value="{{customRoom}}"
+        bindinput="onCustomRoomInput"
+        maxlength="20"
+      />
+    </view>
+
+    <!-- 按钮组 -->
+    <view class="button-group">
+      <button class="btn primary" bindtap="enterChat">
+        进入聊天室
+      </button>
+      <button class="btn secondary" bindtap="quickEnter">
+        快速进入
+      </button>
+    </view>
+  </view>
+
+  <!-- 功能说明 -->
+  <view class="features">
+    <view class="feature-item">
+      <text class="feature-icon">💬</text>
+      <text class="feature-text">实时消息</text>
+    </view>
+    <view class="feature-item">
+      <text class="feature-icon">👥</text>
+      <text class="feature-text">多人在线</text>
+    </view>
+    <view class="feature-item">
+      <text class="feature-icon">🏠</text>
+      <text class="feature-text">多房间支持</text>
+    </view>
+    <view class="feature-item">
+      <text class="feature-icon">⌨️</text>
+      <text class="feature-text">输入状态</text>
+    </view>
+  </view>
+</view>
