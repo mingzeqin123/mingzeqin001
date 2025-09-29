@@ -1,177 +1,177 @@
-# 微信小程序跳一跳游戏
+# Redis分布式锁防重复提交
 
-一个基于微信小程序平台开发的3D跳一跳小游戏，使用Three.js渲染引擎实现3D效果。
+基于Java和Redis实现的分布式锁，用于防止定时任务重复提交。
 
-## 🎮 游戏特色
+## 功能特性
 
-- **3D视觉效果**：使用Three.js渲染引擎，呈现精美的3D场景
-- **物理引擎**：真实的跳跃物理模拟和碰撞检测
-- **多样方块**：普通、小型、高型、特殊等多种方块类型
-- **蓄力系统**：长按蓄力，控制跳跃距离和高度
-- **分数系统**：完美落地获得额外分数，挑战最高纪录
-- **视觉特效**：粒子效果、动画过渡、阴影系统
-- **音效支持**：跳跃、落地、完美、游戏结束等音效
-- **社交分享**：支持微信好友和朋友圈分享
+- ✅ 基于Redis的分布式锁实现
+- ✅ 支持Lua脚本保证原子性
+- ✅ 支持锁的自动过期
+- ✅ 支持重试机制
+- ✅ 支持SpEL表达式动态生成锁key
+- ✅ 提供AOP注解简化使用
+- ✅ 支持定时任务和手动任务
+- ✅ 完整的测试用例
 
-## 🚀 快速开始
-
-### 环境要求
-- 微信开发者工具 1.05.0 或更高版本
-- 小程序基础库 2.9.0 或更高版本
-
-### 安装步骤
-
-1. **克隆项目**
-   ```bash
-   git clone [项目地址]
-   cd jump-jump-game
-   ```
-
-2. **导入项目**
-   - 打开微信开发者工具
-   - 选择"导入项目"
-   - 选择项目目录
-   - 填入AppID（测试可使用测试号）
-
-3. **添加资源文件**
-   - 将Three.js完整库文件放入 `/pages/game/libs/three.min.js`
-   - 添加音效文件到 `/sounds/` 目录
-   - 添加图片资源到 `/images/` 目录
-
-4. **编译运行**
-   - 点击"编译"按钮
-   - 在模拟器或真机上预览
-
-## 📁 项目结构
+## 项目结构
 
 ```
-jump-jump-game/
-├── app.js                 # 小程序入口文件
-├── app.json               # 小程序配置文件
-├── app.wxss              # 全局样式文件
-├── sitemap.json          # 站点地图配置
-├── project.config.json   # 项目配置文件
-├── pages/
-│   └── game/             # 游戏页面
-│       ├── game.js       # 页面逻辑
-│       ├── game.json     # 页面配置
-│       ├── game.wxml     # 页面结构
-│       ├── game.wxss     # 页面样式
-│       ├── gameEngine.js # 游戏引擎核心
-│       ├── player.js     # 玩家角色类
-│       ├── block.js      # 方块类
-│       ├── utils.js      # 工具函数
-│       └── libs/
-│           └── three.min.js # Three.js库
-├── images/               # 图片资源
-│   └── README.md        # 图片说明
-├── sounds/               # 音效资源
-│   └── README.md        # 音效说明
-└── README.md            # 项目说明
+src/main/java/com/example/
+├── annotation/
+│   └── DistributedLock.java          # 分布式锁注解
+├── aspect/
+│   └── DistributedLockAspect.java    # AOP切面实现
+├── config/
+│   └── RedisConfig.java              # Redis配置
+├── controller/
+│   └── TaskController.java           # 任务控制器
+├── lock/
+│   ├── RedisDistributedLock.java     # 分布式锁核心实现
+│   └── DistributedLockManager.java   # 锁管理器
+├── task/
+│   └── ScheduledTaskService.java     # 定时任务示例
+└── Application.java                  # 启动类
 ```
 
-## 🎯 游戏玩法
+## 快速开始
 
-1. **开始游戏**：点击"开始游戏"按钮
-2. **蓄力跳跃**：长按屏幕蓄力，右侧显示蓄力条
-3. **释放跳跃**：松开手指，角色跳向下一个方块
-4. **获得分数**：
-   - 成功落地：+1分
-   - 良好落地：+3分
-   - 完美落地：+5分（中心位置）
-5. **游戏结束**：跳跃失败掉落时游戏结束
-6. **分享成绩**：可分享到微信好友或朋友圈
+### 1. 环境要求
 
-## 🔧 核心技术
+- JDK 8+
+- Maven 3.6+
+- Redis 3.0+
 
-### 渲染引擎
-- **Three.js**：3D场景渲染
-- **WebGL**：硬件加速渲染
-- **阴影系统**：实时阴影计算
-- **光照系统**：环境光+方向光
+### 2. 启动Redis
 
-### 物理系统
-- **跳跃轨迹**：抛物线运动模拟
-- **碰撞检测**：圆形碰撞检测算法
-- **重力模拟**：自然下落效果
+```bash
+# 使用Docker启动Redis
+docker run -d --name redis -p 6379:6379 redis:latest
 
-### 动画系统
-- **缓动函数**：平滑的动画过渡
-- **骨骼动画**：角色动作表现
-- **粒子效果**：特殊效果展示
-- **相机跟随**：平滑的视角切换
+# 或使用本地Redis
+redis-server
+```
 
-## 🎨 自定义配置
+### 3. 运行项目
 
-### 游戏参数调整
-在 `gameEngine.js` 中可以调整：
-- `maxChargingTime`：最大蓄力时间
-- 跳跃距离和高度计算公式
-- 方块生成间距和角度
+```bash
+# 编译项目
+mvn clean compile
 
-### 视觉效果
-在各个类文件中可以调整：
-- 方块颜色和材质
-- 光照强度和位置
-- 动画持续时间和缓动函数
+# 运行项目
+mvn spring-boot:run
+```
 
-### 音效配置
-在 `utils.js` 的 `AudioManager` 类中：
-- 添加新的音效类型
-- 调整音量和播放逻辑
+### 4. 测试接口
 
-## 📱 兼容性
+```bash
+# 健康检查
+curl http://localhost:8080/api/task/health
 
-- **iOS**：iOS 10.0+
-- **Android**：Android 5.0+
-- **微信版本**：7.0.0+
-- **小程序基础库**：2.9.0+
+# 手动触发任务
+curl -X POST http://localhost:8080/api/task/manual
 
-## 🔍 性能优化
+# 带任务ID的手动触发
+curl -X POST http://localhost:8080/api/task/manual/test-task-001
+```
 
-1. **渲染优化**
-   - 对象池管理，减少GC
-   - 视锥剔除，只渲染可见对象
-   - LOD系统，距离越远细节越少
+## 使用方式
 
-2. **内存管理**
-   - 及时销毁不需要的对象
-   - 纹理和几何体复用
-   - 音效资源预加载
+### 1. 注解方式（推荐）
 
-3. **帧率优化**
-   - 固定时间步长更新
-   - 动画插值平滑
-   - 避免在渲染循环中创建对象
+```java
+@Service
+public class MyTaskService {
+    
+    @Scheduled(fixedRate = 10000)
+    @DistributedLock(expireTime = 30, timeUnit = TimeUnit.SECONDS)
+    public void scheduledTask() {
+        // 定时任务逻辑
+    }
+    
+    @DistributedLock(key = "manualTask:#{#taskId}", expireTime = 5, timeUnit = TimeUnit.MINUTES)
+    public void manualTask(String taskId) {
+        // 手动任务逻辑
+    }
+}
+```
 
-## 🐛 已知问题
+### 2. 编程方式
 
-1. 在部分低端Android设备上可能出现卡顿
-2. Three.js库文件较大，首次加载时间较长
-3. WebGL兼容性问题，部分老设备不支持
+```java
+@Service
+public class MyTaskService {
+    
+    @Autowired
+    private DistributedLockManager lockManager;
+    
+    public void executeTask() {
+        lockManager.executeWithLock("myTask", 30, TimeUnit.SECONDS, () -> {
+            // 需要加锁的业务逻辑
+            System.out.println("执行任务...");
+        });
+    }
+}
+```
 
-## 🔄 更新日志
+## 注解参数说明
 
-### v1.0.0 (2024-01-15)
-- 基础游戏功能实现
-- 3D渲染和物理引擎
-- 完整的游戏流程
-- 分数系统和社交分享
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| key | String | "" | 锁的key，支持SpEL表达式 |
+| expireTime | long | 30 | 锁的过期时间 |
+| timeUnit | TimeUnit | SECONDS | 时间单位 |
+| retryTimes | int | 0 | 重试次数 |
+| retryInterval | long | 1000 | 重试间隔（毫秒） |
+| throwException | boolean | false | 获取锁失败时是否抛出异常 |
+| message | String | "获取分布式锁失败" | 异常信息 |
 
-## 📄 许可证
+## SpEL表达式示例
 
-本项目采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
+```java
+// 使用方法参数
+@DistributedLock(key = "task:#{#taskId}")
+public void task(String taskId) { }
 
-## 🤝 贡献
+// 使用对象属性
+@DistributedLock(key = "user:#{#user.id}")
+public void userTask(User user) { }
 
-欢迎提交 Issue 和 Pull Request 来改进这个项目！
+// 组合表达式
+@DistributedLock(key = "task:#{#type}:#{#id}")
+public void complexTask(String type, String id) { }
+```
 
-## 📞 联系方式
+## 测试
 
-如有问题或建议，请通过以下方式联系：
-- GitHub Issues
-- 邮箱：[your-email@example.com]
+```bash
+# 运行所有测试
+mvn test
 
----
+# 运行特定测试类
+mvn test -Dtest=RedisDistributedLockTest
 
-⭐ 如果这个项目对你有帮助，请给个星星支持一下！
+# 运行测试并生成报告
+mvn test jacoco:report
+```
+
+## 注意事项
+
+1. **锁的过期时间**：设置合理的过期时间，避免死锁
+2. **重试机制**：合理设置重试次数和间隔，避免过度重试
+3. **锁的粒度**：根据业务需求选择合适的锁粒度
+4. **异常处理**：确保在异常情况下锁能被正确释放
+5. **Redis连接**：确保Redis服务稳定可用
+
+## 性能考虑
+
+- 使用Lua脚本保证原子性，减少网络往返
+- 合理设置连接池参数
+- 避免过长的锁持有时间
+- 考虑使用Redis集群提高可用性
+
+## 扩展功能
+
+- 支持锁的可重入性
+- 支持锁的公平性
+- 支持锁的监控和统计
+- 支持锁的自动续期
