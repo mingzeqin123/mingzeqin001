@@ -65,7 +65,7 @@
     </plugins>
   </build>
   <properties>
-    <main.class>com.example.app.MacJavaApp</main.class>
+    <main.class>com.example.DistributedLockApplication</main.class>
     <maven.compiler.source>21</maven.compiler.source>
     <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
     <maven.compiler.target>21</maven.compiler.target>
