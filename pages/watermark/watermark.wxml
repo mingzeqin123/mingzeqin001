@@ -1,23 +1,23 @@
 <!--pages/watermark/watermark.wxml-->
 <view class="container">
   <view class="header">
-    <text class="title">图片水印工具</text>
-    <text class="subtitle">为图片添加文字或图片水印</text>
+    <text class="title">Image Watermark Tool</text>
+    <text class="subtitle">Add text or image watermarks to pictures</text>
   </view>
 
-  <!-- 模式切换 -->
+  <!-- Mode Switch -->
   <view class="mode-switch">
     <button 
       class="mode-btn {{!batchMode ? 'active' : ''}}" 
       bindtap="{{batchMode ? 'reset' : ''}}"
     >
-      单张处理
+      Single Process
     </button>
     <button 
       class="mode-btn {{batchMode ? 'active' : ''}}" 
       bindtap="selectBatchImages"
     >
-      批量处理
+      Batch Process
     </button>
   </view>
 
@@ -36,7 +36,7 @@
         />
         <view wx:else class="select-placeholder">
           <text class="iconfont">📷</text>
-          <text>点击选择图片</text>
+          <text>Click to select image</text>
         </view>
       </view>
     </view>
@@ -51,7 +51,7 @@
           data-src="{{processedImage}}"
           bindtap="previewImage"
         />
-        <button class="save-btn" bindtap="saveToAlbum">保存到相册</button>
+        <button class="save-btn" bindtap="saveToAlbum">Save to Album</button>
       </view>
     </view>
   </view>
@@ -93,11 +93,11 @@
     <radio-group class="radio-group" bindchange="onWatermarkTypeChange">
       <label class="radio-item">
         <radio value="text" checked="{{watermarkType === 'text'}}" />
-        <text>文字水印</text>
+        <text>Text Watermark</text>
       </label>
       <label class="radio-item">
         <radio value="image" checked="{{watermarkType === 'image'}}" />
-        <text>图片水印</text>
+        <text>Image Watermark</text>
       </label>
     </radio-group>
   </view>
@@ -244,7 +244,7 @@
       bindtap="addWatermark"
       disabled="{{processing}}"
     >
-      {{processing ? '处理中...' : '添加水印'}}
+      {{processing ? 'Processing...' : 'Add Watermark'}}
     </button>
     
     <button 
@@ -253,11 +253,11 @@
       bindtap="batchAddWatermark"
       disabled="{{processing || selectedImages.length === 0}}"
     >
-      {{processing ? '批量处理中...' : '批量添加水印'}}
+      {{processing ? 'Batch Processing...' : 'Batch Add Watermark'}}
     </button>
 
     <button class="action-btn secondary" bindtap="reset">
-      重置
+      Reset
     </button>
   </view>
 </view>

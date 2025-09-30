@@ -1,207 +1,207 @@
 # Mac Java Application
 
-一个为 macOS 设计的 Java 应用程序，具有现代化的 GUI 界面和系统集成功能。
+A Java application designed for macOS with modern GUI interface and system integration features.
 
-## 功能特性
+## Features
 
-- 🖥️ 现代化的 JavaFX GUI 界面
-- 📁 文件选择和操作功能
-- 💻 系统信息显示
-- 🍎 macOS 原生集成
-- 📦 支持 PKG 和 DMG 安装包格式
-- 🌍 中文界面支持
+- 🖥️ Modern JavaFX GUI interface
+- 📁 File selection and operation functionality
+- 💻 System information display
+- 🍎 Native macOS integration
+- 📦 Support for PKG and DMG installer formats
+- 🌍 English interface support
 
-## 系统要求
+## System Requirements
 
-- **操作系统**: macOS 10.14 (Mojave) 或更高版本
-- **Java**: Java 11 或更高版本
-- **内存**: 最少 256MB RAM
-- **存储**: 约 50MB 可用空间
+- **Operating System**: macOS 10.14 (Mojave) or higher
+- **Java**: Java 11 or higher
+- **Memory**: Minimum 256MB RAM
+- **Storage**: Approximately 50MB available space
 
-## 安装 Java
+## Installing Java
 
-如果您的系统没有安装 Java，请按以下步骤安装：
+If Java is not installed on your system, please follow these steps:
 
-1. 访问 [Eclipse Temurin](https://adoptium.net) 
-2. 下载适合您系统的 Java 11 LTS 版本
-3. 运行安装程序并按提示完成安装
-4. 验证安装：在终端运行 `java -version`
+1. Visit [Eclipse Temurin](https://adoptium.net) 
+2. Download Java 11 LTS version suitable for your system
+3. Run the installer and follow the prompts to complete installation
+4. Verify installation: Run `java -version` in terminal
 
-## 构建和安装
+## Build and Installation
 
-### 方法一：使用预构建的安装包
+### Method 1: Using Pre-built Installer
 
-1. 下载发布版本中的安装包
-2. 选择以下安装方式之一：
-   - **PKG 安装包**: 双击 `.pkg` 文件，按提示安装
-   - **DMG 磁盘镜像**: 双击 `.dmg` 文件，将应用拖拽到 Applications 文件夹
+1. Download the installer from the release version
+2. Choose one of the following installation methods:
+   - **PKG Installer**: Double-click the `.pkg` file and follow the prompts
+   - **DMG Disk Image**: Double-click the `.dmg` file and drag the app to Applications folder
 
-### 方法二：从源码构建
+### Method 2: Build from Source
 
-#### 前置要求
+#### Prerequisites
 
-- Java 11 或更高版本
-- Maven 3.6 或更高版本（可选，项目包含 Maven Wrapper）
-- Xcode Command Line Tools（用于创建 macOS 安装包）
+- Java 11 or higher
+- Maven 3.6 or higher (optional, project includes Maven Wrapper)
+- Xcode Command Line Tools (for creating macOS installers)
 
-#### 构建步骤
+#### Build Steps
 
-1. **克隆或下载项目**
+1. **Clone or download the project**
    ```bash
    git clone <repository-url>
    cd java-mac-app
    ```
 
-2. **构建 PKG 安装包**
+2. **Build PKG installer**
    ```bash
    ./build-mac-installer.sh
    ```
    
-   这将创建：
-   - `MacJavaApp-1.0.0.pkg` - PKG 安装包
-   - `target/MacJavaApp.app` - macOS 应用程序包
+   This will create:
+   - `MacJavaApp-1.0.0.pkg` - PKG installer
+   - `target/MacJavaApp.app` - macOS application bundle
 
-3. **构建 DMG 磁盘镜像**（可选）
+3. **Build DMG disk image** (optional)
    ```bash
    ./build-dmg.sh
    ```
    
-   这将创建：
-   - `MacJavaApp-1.0.0.dmg` - DMG 磁盘镜像
+   This will create:
+   - `MacJavaApp-1.0.0.dmg` - DMG disk image
 
-#### 手动构建
+#### Manual Build
 
-如果您想手动构建：
+If you want to build manually:
 
 ```bash
-# 编译项目
+# Compile project
 mvn clean compile
 
-# 打包 JAR
+# Package JAR
 mvn package
 
-# 运行应用程序（测试）
+# Run application (test)
 java -jar target/mac-java-app-1.0.0.jar
 ```
 
-## 使用说明
+## Usage Instructions
 
-### 启动应用程序
+### Starting the Application
 
-- **从启动台**: 在启动台中找到 "MacJavaApp" 并点击
-- **从应用程序文件夹**: 在 Finder 中打开应用程序文件夹，双击 MacJavaApp
-- **从命令行**: `java -jar MacJavaApp-1.0.0.jar`
+- **From Launchpad**: Find "MacJavaApp" in Launchpad and click
+- **From Applications folder**: Open Applications folder in Finder, double-click MacJavaApp
+- **From command line**: `java -jar MacJavaApp-1.0.0.jar`
 
-### 主要功能
+### Main Features
 
-1. **问候消息**: 显示欢迎信息和应用程序功能介绍
-2. **选择文件**: 打开文件选择对话框，显示文件信息
-3. **系统信息**: 显示详细的系统和 Java 环境信息
-4. **清空输出**: 清除输出区域的内容
+1. **Greeting Message**: Display welcome information and application feature introduction
+2. **Select File**: Open file selection dialog, display file information
+3. **System Information**: Display detailed system and Java environment information
+4. **Clear Output**: Clear content in the output area
 
-### 界面说明
+### Interface Description
 
-- **输出区域**: 显示操作结果和系统信息
-- **状态栏**: 显示当前操作状态
-- **按钮面板**: 包含所有主要功能按钮
+- **Output Area**: Display operation results and system information
+- **Status Bar**: Display current operation status
+- **Button Panel**: Contains all main feature buttons
 
-## 项目结构
+## Project Structure
 
 ```
 java-mac-app/
 ├── src/main/java/
-│   ├── module-info.java                    # Java 模块描述符
+│   ├── module-info.java                    # Java module descriptor
 │   └── com/example/app/
-│       └── MacJavaApp.java                 # 主应用程序类
-├── target/                                 # 构建输出目录
-├── build-mac-installer.sh                 # PKG 安装包构建脚本
-├── build-dmg.sh                          # DMG 磁盘镜像构建脚本
-├── pom.xml                               # Maven 配置文件
-└── README.md                             # 项目说明文档
+│       └── MacJavaApp.java                 # Main application class
+├── target/                                 # Build output directory
+├── build-mac-installer.sh                 # PKG installer build script
+├── build-dmg.sh                          # DMG disk image build script
+├── pom.xml                               # Maven configuration file
+└── README.md                             # Project documentation
 ```
 
-## 开发说明
+## Development Notes
 
-### 技术栈
+### Technology Stack
 
-- **Java 11+**: 核心开发语言
-- **JavaFX 17**: GUI 框架
-- **Maven**: 构建工具
-- **macOS 原生工具**: pkgbuild, hdiutil
+- **Java 11+**: Core development language
+- **JavaFX 17**: GUI framework
+- **Maven**: Build tool
+- **macOS Native Tools**: pkgbuild, hdiutil
 
-### 自定义配置
+### Custom Configuration
 
-您可以通过修改以下文件来自定义应用程序：
+You can customize the application by modifying the following files:
 
-1. **应用程序信息**: 编辑 `pom.xml` 中的项目信息
-2. **界面样式**: 修改 `MacJavaApp.java` 中的样式定义
-3. **安装包配置**: 编辑构建脚本中的配置变量
+1. **Application Information**: Edit project information in `pom.xml`
+2. **Interface Style**: Modify style definitions in `MacJavaApp.java`
+3. **Installer Configuration**: Edit configuration variables in build scripts
 
-### 添加新功能
+### Adding New Features
 
-1. 在 `MacJavaApp.java` 中添加新的按钮和事件处理器
-2. 如需要新的依赖，在 `pom.xml` 中添加
-3. 更新 `module-info.java` 如果使用了新的模块
+1. Add new buttons and event handlers in `MacJavaApp.java`
+2. Add new dependencies in `pom.xml` if needed
+3. Update `module-info.java` if new modules are used
 
-## 故障排除
+## Troubleshooting
 
-### 常见问题
+### Common Issues
 
-**Q: 应用程序无法启动，提示找不到 Java**
-A: 请确保已安装 Java 11 或更高版本，并且 `JAVA_HOME` 环境变量设置正确。
+**Q: Application won't start, says Java not found**
+A: Please ensure Java 11 or higher is installed and the `JAVA_HOME` environment variable is set correctly.
 
-**Q: 构建时出现权限错误**
-A: 确保构建脚本有执行权限：`chmod +x build-mac-installer.sh`
+**Q: Permission error during build**
+A: Ensure build scripts have execute permissions: `chmod +x build-mac-installer.sh`
 
-**Q: macOS 提示应用程序来自未知开发者**
-A: 在系统偏好设置 > 安全性与隐私中允许运行，或者对应用程序进行代码签名。
+**Q: macOS says application is from unknown developer**
+A: Allow running in System Preferences > Security & Privacy, or code sign the application.
 
-**Q: JavaFX 模块找不到**
-A: 确保使用 Java 11 或更高版本，JavaFX 已包含在项目依赖中。
+**Q: JavaFX module not found**
+A: Ensure using Java 11 or higher, JavaFX is included in project dependencies.
 
-### 调试模式
+### Debug Mode
 
-要在调试模式下运行应用程序：
+To run the application in debug mode:
 
 ```bash
 java -Djava.util.logging.level=ALL -jar target/mac-java-app-1.0.0.jar
 ```
 
-### 日志文件
+### Log Files
 
-应用程序日志存储在系统日志中，可以通过控制台应用程序查看。
+Application logs are stored in system logs, viewable through Console application.
 
-## 代码签名和公证（可选）
+## Code Signing and Notarization (Optional)
 
-对于生产环境，建议对应用程序进行代码签名和公证：
+For production environments, it's recommended to code sign and notarize the application:
 
-1. **获取开发者证书**: 从 Apple Developer Program 获取
-2. **签名应用程序**:
+1. **Get Developer Certificate**: Obtain from Apple Developer Program
+2. **Sign Application**:
    ```bash
    codesign --force --deep --sign "Developer ID Application: Your Name" MacJavaApp.app
    ```
-3. **创建签名的安装包**:
+3. **Create Signed Installer**:
    ```bash
    productsign --sign "Developer ID Installer: Your Name" MacJavaApp-1.0.0.pkg MacJavaApp-1.0.0-signed.pkg
    ```
 
-## 许可证
+## License
 
-本项目采用 MIT 许可证。详情请参阅 LICENSE 文件。
+This project uses the MIT license. See LICENSE file for details.
 
-## 贡献
+## Contributing
 
-欢迎提交 Issue 和 Pull Request！
+Issues and Pull Requests are welcome!
 
-## 版本历史
+## Version History
 
 - **v1.0.0** (2024-01-XX)
-  - 初始版本
-  - JavaFX GUI 界面
-  - 文件选择功能
-  - 系统信息显示
-  - macOS 安装包支持
+  - Initial version
+  - JavaFX GUI interface
+  - File selection functionality
+  - System information display
+  - macOS installer support
 
 ---
 
-**享受使用 Mac Java Application！** 🚀
+**Enjoy using Mac Java Application!** 🚀

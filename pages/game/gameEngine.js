@@ -9,35 +9,35 @@ class GameEngine {
     this.canvas = canvas
     this.ctx = ctx
     
-    // 游戏状态
+    // Game state
     this.isRunning = false
     this.isPaused = false
     this.score = 0
     this.gameState = 'waiting' // waiting, charging, jumping, falling
     
-    // 蓄力相关
+    // Power charging related
     this.chargingStartTime = 0
-    this.maxChargingTime = 2000 // 最大蓄力时间2秒
+    this.maxChargingTime = 2000 // Maximum charging time 2 seconds
     this.currentPower = 0
     
-    // 回调函数
+    // Callback functions
     this.onScoreChange = null
     this.onGameOver = null
     this.onPowerChange = null
     
-    // 初始化Three.js场景
+    // Initialize Three.js scene
     this.initScene()
     this.initLighting()
     this.initCamera()
     
-    // 初始化游戏对象
+    // Initialize game objects
     this.initGameObjects()
     
-    // 绑定渲染循环
+    // Bind render loop
     this.render = this.render.bind(this)
   }
   
-  // 初始化场景
+  // Initialize scene
   initScene() {
     this.scene = new THREE.Scene()
     this.scene.background = new THREE.Color(0x87CEEB) // 天蓝色背景

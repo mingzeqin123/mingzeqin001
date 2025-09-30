@@ -1,177 +1,177 @@
-# 微信小程序跳一跳游戏
+# WeChat Mini Program Jump Jump Game
 
-一个基于微信小程序平台开发的3D跳一跳小游戏，使用Three.js渲染引擎实现3D效果。
+A 3D Jump Jump mini-game developed based on the WeChat Mini Program platform, using the Three.js rendering engine to achieve 3D effects.
 
-## 🎮 游戏特色
+## 🎮 Game Features
 
-- **3D视觉效果**：使用Three.js渲染引擎，呈现精美的3D场景
-- **物理引擎**：真实的跳跃物理模拟和碰撞检测
-- **多样方块**：普通、小型、高型、特殊等多种方块类型
-- **蓄力系统**：长按蓄力，控制跳跃距离和高度
-- **分数系统**：完美落地获得额外分数，挑战最高纪录
-- **视觉特效**：粒子效果、动画过渡、阴影系统
-- **音效支持**：跳跃、落地、完美、游戏结束等音效
-- **社交分享**：支持微信好友和朋友圈分享
+- **3D Visual Effects**: Uses Three.js rendering engine to present beautiful 3D scenes
+- **Physics Engine**: Realistic jumping physics simulation and collision detection
+- **Various Blocks**: Multiple block types including normal, small, tall, and special blocks
+- **Power System**: Long press to charge power, control jumping distance and height
+- **Scoring System**: Get extra points for perfect landings, challenge the highest record
+- **Visual Effects**: Particle effects, animation transitions, shadow system
+- **Sound Support**: Jump, landing, perfect, game over and other sound effects
+- **Social Sharing**: Support sharing to WeChat friends and Moments
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 环境要求
-- 微信开发者工具 1.05.0 或更高版本
-- 小程序基础库 2.9.0 或更高版本
+### Environment Requirements
+- WeChat Developer Tools 1.05.0 or higher
+- Mini Program Base Library 2.9.0 or higher
 
-### 安装步骤
+### Installation Steps
 
-1. **克隆项目**
+1. **Clone Project**
    ```bash
-   git clone [项目地址]
+   git clone [project-address]
    cd jump-jump-game
    ```
 
-2. **导入项目**
-   - 打开微信开发者工具
-   - 选择"导入项目"
-   - 选择项目目录
-   - 填入AppID（测试可使用测试号）
+2. **Import Project**
+   - Open WeChat Developer Tools
+   - Select "Import Project"
+   - Select project directory
+   - Fill in AppID (test ID can be used for testing)
 
-3. **添加资源文件**
-   - 将Three.js完整库文件放入 `/pages/game/libs/three.min.js`
-   - 添加音效文件到 `/sounds/` 目录
-   - 添加图片资源到 `/images/` 目录
+3. **Add Resource Files**
+   - Place the complete Three.js library file in `/pages/game/libs/three.min.js`
+   - Add sound effect files to `/sounds/` directory
+   - Add image resources to `/images/` directory
 
-4. **编译运行**
-   - 点击"编译"按钮
-   - 在模拟器或真机上预览
+4. **Compile and Run**
+   - Click the "Compile" button
+   - Preview in simulator or real device
 
-## 📁 项目结构
+## 📁 Project Structure
 
 ```
 jump-jump-game/
-├── app.js                 # 小程序入口文件
-├── app.json               # 小程序配置文件
-├── app.wxss              # 全局样式文件
-├── sitemap.json          # 站点地图配置
-├── project.config.json   # 项目配置文件
+├── app.js                 # Mini program entry file
+├── app.json               # Mini program configuration file
+├── app.wxss              # Global style file
+├── sitemap.json          # Sitemap configuration
+├── project.config.json   # Project configuration file
 ├── pages/
-│   └── game/             # 游戏页面
-│       ├── game.js       # 页面逻辑
-│       ├── game.json     # 页面配置
-│       ├── game.wxml     # 页面结构
-│       ├── game.wxss     # 页面样式
-│       ├── gameEngine.js # 游戏引擎核心
-│       ├── player.js     # 玩家角色类
-│       ├── block.js      # 方块类
-│       ├── utils.js      # 工具函数
+│   └── game/             # Game page
+│       ├── game.js       # Page logic
+│       ├── game.json     # Page configuration
+│       ├── game.wxml     # Page structure
+│       ├── game.wxss     # Page styles
+│       ├── gameEngine.js # Game engine core
+│       ├── player.js     # Player character class
+│       ├── block.js      # Block class
+│       ├── utils.js      # Utility functions
 │       └── libs/
-│           └── three.min.js # Three.js库
-├── images/               # 图片资源
-│   └── README.md        # 图片说明
-├── sounds/               # 音效资源
-│   └── README.md        # 音效说明
-└── README.md            # 项目说明
+│           └── three.min.js # Three.js library
+├── images/               # Image resources
+│   └── README.md        # Image description
+├── sounds/               # Sound effect resources
+│   └── README.md        # Sound effect description
+└── README.md            # Project description
 ```
 
-## 🎯 游戏玩法
+## 🎯 Gameplay
 
-1. **开始游戏**：点击"开始游戏"按钮
-2. **蓄力跳跃**：长按屏幕蓄力，右侧显示蓄力条
-3. **释放跳跃**：松开手指，角色跳向下一个方块
-4. **获得分数**：
-   - 成功落地：+1分
-   - 良好落地：+3分
-   - 完美落地：+5分（中心位置）
-5. **游戏结束**：跳跃失败掉落时游戏结束
-6. **分享成绩**：可分享到微信好友或朋友圈
+1. **Start Game**: Click the "Start Game" button
+2. **Power Jump**: Long press the screen to charge power, the power bar is displayed on the right
+3. **Release Jump**: Release finger, character jumps to the next block
+4. **Get Points**:
+   - Successful landing: +1 point
+   - Good landing: +3 points
+   - Perfect landing: +5 points (center position)
+5. **Game Over**: Game ends when jump fails and falls
+6. **Share Score**: Can share to WeChat friends or Moments
 
-## 🔧 核心技术
+## 🔧 Core Technologies
 
-### 渲染引擎
-- **Three.js**：3D场景渲染
-- **WebGL**：硬件加速渲染
-- **阴影系统**：实时阴影计算
-- **光照系统**：环境光+方向光
+### Rendering Engine
+- **Three.js**: 3D scene rendering
+- **WebGL**: Hardware accelerated rendering
+- **Shadow System**: Real-time shadow calculation
+- **Lighting System**: Ambient light + directional light
 
-### 物理系统
-- **跳跃轨迹**：抛物线运动模拟
-- **碰撞检测**：圆形碰撞检测算法
-- **重力模拟**：自然下落效果
+### Physics System
+- **Jump Trajectory**: Parabolic motion simulation
+- **Collision Detection**: Circular collision detection algorithm
+- **Gravity Simulation**: Natural falling effect
 
-### 动画系统
-- **缓动函数**：平滑的动画过渡
-- **骨骼动画**：角色动作表现
-- **粒子效果**：特殊效果展示
-- **相机跟随**：平滑的视角切换
+### Animation System
+- **Easing Functions**: Smooth animation transitions
+- **Skeletal Animation**: Character action performance
+- **Particle Effects**: Special effect display
+- **Camera Following**: Smooth perspective switching
 
-## 🎨 自定义配置
+## 🎨 Custom Configuration
 
-### 游戏参数调整
-在 `gameEngine.js` 中可以调整：
-- `maxChargingTime`：最大蓄力时间
-- 跳跃距离和高度计算公式
-- 方块生成间距和角度
+### Game Parameter Adjustment
+In `gameEngine.js` you can adjust:
+- `maxChargingTime`: Maximum charging time
+- Jump distance and height calculation formulas
+- Block generation spacing and angles
 
-### 视觉效果
-在各个类文件中可以调整：
-- 方块颜色和材质
-- 光照强度和位置
-- 动画持续时间和缓动函数
+### Visual Effects
+In various class files you can adjust:
+- Block colors and materials
+- Light intensity and position
+- Animation duration and easing functions
 
-### 音效配置
-在 `utils.js` 的 `AudioManager` 类中：
-- 添加新的音效类型
-- 调整音量和播放逻辑
+### Sound Configuration
+In the `AudioManager` class in `utils.js`:
+- Add new sound effect types
+- Adjust volume and playback logic
 
-## 📱 兼容性
+## 📱 Compatibility
 
-- **iOS**：iOS 10.0+
-- **Android**：Android 5.0+
-- **微信版本**：7.0.0+
-- **小程序基础库**：2.9.0+
+- **iOS**: iOS 10.0+
+- **Android**: Android 5.0+
+- **WeChat Version**: 7.0.0+
+- **Mini Program Base Library**: 2.9.0+
 
-## 🔍 性能优化
+## 🔍 Performance Optimization
 
-1. **渲染优化**
-   - 对象池管理，减少GC
-   - 视锥剔除，只渲染可见对象
-   - LOD系统，距离越远细节越少
+1. **Rendering Optimization**
+   - Object pool management, reduce GC
+   - Frustum culling, only render visible objects
+   - LOD system, less detail at greater distances
 
-2. **内存管理**
-   - 及时销毁不需要的对象
-   - 纹理和几何体复用
-   - 音效资源预加载
+2. **Memory Management**
+   - Timely destruction of unnecessary objects
+   - Texture and geometry reuse
+   - Sound effect resource preloading
 
-3. **帧率优化**
-   - 固定时间步长更新
-   - 动画插值平滑
-   - 避免在渲染循环中创建对象
+3. **Frame Rate Optimization**
+   - Fixed timestep updates
+   - Animation interpolation smoothing
+   - Avoid creating objects in render loop
 
-## 🐛 已知问题
+## 🐛 Known Issues
 
-1. 在部分低端Android设备上可能出现卡顿
-2. Three.js库文件较大，首次加载时间较长
-3. WebGL兼容性问题，部分老设备不支持
+1. May experience lag on some low-end Android devices
+2. Three.js library file is large, initial loading time is long
+3. WebGL compatibility issues, some older devices do not support
 
-## 🔄 更新日志
+## 🔄 Update Log
 
 ### v1.0.0 (2024-01-15)
-- 基础游戏功能实现
-- 3D渲染和物理引擎
-- 完整的游戏流程
-- 分数系统和社交分享
+- Basic game functionality implementation
+- 3D rendering and physics engine
+- Complete game flow
+- Scoring system and social sharing
 
-## 📄 许可证
+## 📄 License
 
-本项目采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
+This project uses the MIT license, see [LICENSE](LICENSE) file for details.
 
-## 🤝 贡献
+## 🤝 Contribution
 
-欢迎提交 Issue 和 Pull Request 来改进这个项目！
+Welcome to submit Issues and Pull Requests to improve this project!
 
-## 📞 联系方式
+## 📞 Contact
 
-如有问题或建议，请通过以下方式联系：
+If you have questions or suggestions, please contact us through:
 - GitHub Issues
-- 邮箱：[your-email@example.com]
+- Email: [your-email@example.com]
 
 ---
 
-⭐ 如果这个项目对你有帮助，请给个星星支持一下！
+⭐ If this project helps you, please give it a star!
