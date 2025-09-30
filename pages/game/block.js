@@ -7,15 +7,15 @@ class Block {
     this.position = new THREE.Vector3(x, y, z)
     this.type = type
     
-    // 创建方块模型
+    // Create block model
     this.createModel()
   }
   
-  // 创建方块模型
+  // Create block model
   createModel() {
     this.group = new THREE.Group()
     
-    // 根据类型创建不同的方块
+    // Create different blocks based on type
     switch (this.type) {
       case 'start':
         this.createStartBlock()
@@ -33,15 +33,15 @@ class Block {
         this.createNormalBlock()
     }
     
-    // 设置位置
+    // Set position
     this.group.position.copy(this.position)
     this.scene.add(this.group)
     
-    // 添加入场动画
+    // Add entrance animation
     this.playEntranceAnimation()
   }
   
-  // 创建普通方块
+  // Create normal block
   createNormalBlock() {
     const geometry = new THREE.CylinderGeometry(1, 1, 0.5, 8)
     const material = new THREE.MeshLambertMaterial({ 
@@ -55,11 +55,11 @@ class Block {
     
     this.group.add(this.mesh)
     
-    // 添加顶部装饰
+    // Add top decoration
     this.addTopDecoration()
   }
   
-  // 创建起始方块
+  // Create starting block
   createStartBlock() {
     const geometry = new THREE.CylinderGeometry(1.2, 1.2, 0.6, 8)
     const material = new THREE.MeshLambertMaterial({ 
@@ -73,11 +73,11 @@ class Block {
     
     this.group.add(this.mesh)
     
-    // 添加发光效果
+    // Add glow effect
     this.addGlowEffect()
   }
   
-  // 创建小方块
+  // Create small block
   createSmallBlock() {
     const geometry = new THREE.CylinderGeometry(0.6, 0.6, 0.4, 6)
     const material = new THREE.MeshLambertMaterial({ 
@@ -92,7 +92,7 @@ class Block {
     this.group.add(this.mesh)
   }
   
-  // 创建高方块
+  // Create tall block
   createTallBlock() {
     const geometry = new THREE.CylinderGeometry(0.8, 1, 1.5, 6)
     const material = new THREE.MeshLambertMaterial({ 
@@ -106,7 +106,7 @@ class Block {
     
     this.group.add(this.mesh)
     
-    // 添加顶部平台
+    // Add top platform
     const topGeometry = new THREE.CylinderGeometry(0.8, 0.8, 0.1, 6)
     const topMaterial = new THREE.MeshLambertMaterial({ 
       color: 0xffffff
@@ -120,9 +120,9 @@ class Block {
     this.group.add(topMesh)
   }
   
-  // 创建特殊方块
+  // Create special block
   createSpecialBlock() {
-    // 主体
+    // Main body
     const geometry = new THREE.CylinderGeometry(1, 1, 0.5, 8)
     const material = new THREE.MeshLambertMaterial({ 
       color: 0xffd700
@@ -135,14 +135,14 @@ class Block {
     
     this.group.add(this.mesh)
     
-    // 添加旋转的装饰
+    // Add rotating decoration
     this.addRotatingDecoration()
     
-    // 特殊方块有额外分数
+    // Special blocks have extra score
     this.bonusPoints = 5
   }
   
-  // 添加顶部装饰
+  // Add top decoration
   addTopDecoration() {
     const decorations = []
     const decorationCount = 3 + Math.floor(Math.random() * 3)
@@ -168,7 +168,7 @@ class Block {
     this.decorations = decorations
   }
   
-  // 添加发光效果
+  // Add glow effect
   addGlowEffect() {
     const glowGeometry = new THREE.CylinderGeometry(1.4, 1.4, 0.1, 16)
     const glowMaterial = new THREE.MeshLambertMaterial({ 
@@ -183,7 +183,7 @@ class Block {
     this.group.add(this.glowMesh)
   }
   
-  // 添加旋转装饰
+  // Add rotating decoration
   addRotatingDecoration() {
     const geometry = new THREE.TorusGeometry(0.3, 0.05, 8, 16)
     const material = new THREE.MeshLambertMaterial({ 
@@ -197,25 +197,25 @@ class Block {
     this.group.add(this.rotatingDecoration)
   }
   
-  // 获取随机颜色
+  // Get random color
   getRandomColor() {
     const colors = [
-      0xff6b6b, // 红色
-      0x4ecdc4, // 青色
-      0x45b7d1, // 蓝色
-      0x96ceb4, // 绿色
-      0xffeaa7, // 黄色
-      0xdda0dd, // 紫色
-      0xffa07a, // 橙色
-      0x98d8c8  // 薄荷绿
+      0xff6b6b, // Red
+      0x4ecdc4, // Cyan
+      0x45b7d1, // Blue
+      0x96ceb4, // Green
+      0xffeaa7, // Yellow
+      0xdda0dd, // Purple
+      0xffa07a, // Orange
+      0x98d8c8  // Mint green
     ]
     
     return colors[Math.floor(Math.random() * colors.length)]
   }
   
-  // 播放入场动画
+  // Play entrance animation
   playEntranceAnimation() {
-    // 从下方升起
+    // Rise from below
     this.group.position.y = this.position.y - 2
     this.group.scale.set(0.1, 0.1, 0.1)
     
@@ -226,7 +226,7 @@ class Block {
       const elapsed = Date.now() - startTime
       const progress = Math.min(elapsed / duration, 1)
       
-      // 使用缓动函数
+      // Use easing function
       const easeProgress = 1 - Math.pow(1 - progress, 3)
       
       this.group.position.y = (this.position.y - 2) + easeProgress * 2
@@ -243,9 +243,9 @@ class Block {
     animate()
   }
   
-  // 播放落地效果
+  // Play landing effect
   playLandingEffect() {
-    // 方块轻微震动
+    // Block slight vibration
     const originalY = this.group.position.y
     const startTime = Date.now()
     const duration = 200
@@ -266,35 +266,35 @@ class Block {
     animate()
   }
   
-  // 更新动画
+  // Update animation
   update(deltaTime) {
     const time = Date.now() * 0.001
     
-    // 旋转装饰动画
+    // Rotating decoration animation
     if (this.rotatingDecoration) {
       this.rotatingDecoration.rotation.z += deltaTime * 2
     }
     
-    // 发光效果动画
+    // Glow effect animation
     if (this.glowMesh) {
       this.glowMesh.material.opacity = 0.2 + Math.sin(time * 2) * 0.1
       this.glowMesh.rotation.y += deltaTime
     }
     
-    // 装饰品动画
+    // Decoration animation
     if (this.decorations) {
       this.decorations.forEach((decoration, index) => {
         decoration.position.y = 0.55 + Math.sin(time * 3 + index) * 0.05
       })
     }
     
-    // 特殊方块的整体旋转
+    // Special block overall rotation
     if (this.type === 'special') {
       this.group.rotation.y += deltaTime * 0.5
     }
   }
   
-  // 获取方块高度（用于碰撞检测）
+  // Get block height (for collision detection)
   getHeight() {
     switch (this.type) {
       case 'start':
@@ -308,7 +308,7 @@ class Block {
     }
   }
   
-  // 获取方块半径（用于碰撞检测）
+  // Get block radius (for collision detection)
   getRadius() {
     switch (this.type) {
       case 'start':
@@ -322,7 +322,7 @@ class Block {
     }
   }
   
-  // 销毁方块
+  // Destroy block
   destroy() {
     if (this.group && this.scene) {
       this.scene.remove(this.group)

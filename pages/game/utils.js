@@ -1,26 +1,26 @@
 // pages/game/utils.js
 
-// 线性插值
+// Linear interpolation
 export function lerp(start, end, factor) {
   return start + (end - start) * factor
 }
 
-// 缓动函数 - 四次方缓出
+// Easing function - quartic ease out
 export function easeOutQuart(t) {
   return 1 - Math.pow(1 - t, 4)
 }
 
-// 缓动函数 - 四次方缓入
+// Easing function - quartic ease in
 export function easeInQuart(t) {
   return t * t * t * t
 }
 
-// 缓动函数 - 三次方缓入缓出
+// Easing function - cubic ease in out
 export function easeInOutCubic(t) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
 }
 
-// 缓动函数 - 弹性缓出
+// Easing function - elastic ease out
 export function easeOutElastic(t) {
   const c4 = (2 * Math.PI) / 3
   
@@ -31,7 +31,7 @@ export function easeOutElastic(t) {
     : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1
 }
 
-// 缓动函数 - 反弹缓出
+// Easing function - bounce ease out
 export function easeOutBounce(t) {
   const n1 = 7.5625
   const d1 = 2.75
@@ -47,39 +47,39 @@ export function easeOutBounce(t) {
   }
 }
 
-// 角度转弧度
+// Convert degrees to radians
 export function degToRad(degrees) {
   return degrees * (Math.PI / 180)
 }
 
-// 弧度转角度
+// Convert radians to degrees
 export function radToDeg(radians) {
   return radians * (180 / Math.PI)
 }
 
-// 限制数值范围
+// Clamp value range
 export function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max)
 }
 
-// 随机数生成
+// Random number generation
 export function random(min, max) {
   return Math.random() * (max - min) + min
 }
 
-// 随机整数生成
+// Random integer generation
 export function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-// 计算两点距离
+// Calculate distance between two points
 export function distance(x1, y1, x2, y2) {
   const dx = x2 - x1
   const dy = y2 - y1
   return Math.sqrt(dx * dx + dy * dy)
 }
 
-// 计算三维距离
+// Calculate 3D distance
 export function distance3D(x1, y1, z1, x2, y2, z2) {
   const dx = x2 - x1
   const dy = y2 - y1
@@ -87,38 +87,38 @@ export function distance3D(x1, y1, z1, x2, y2, z2) {
   return Math.sqrt(dx * dx + dy * dy + dz * dz)
 }
 
-// 向量归一化
+// Vector normalization
 export function normalize(x, y) {
   const length = Math.sqrt(x * x + y * y)
   if (length === 0) return { x: 0, y: 0 }
   return { x: x / length, y: y / length }
 }
 
-// 向量点积
+// Vector dot product
 export function dotProduct(x1, y1, x2, y2) {
   return x1 * x2 + y1 * y2
 }
 
-// 向量叉积
+// Vector cross product
 export function crossProduct(x1, y1, x2, y2) {
   return x1 * y2 - y1 * x2
 }
 
-// 平滑步长函数
+// Smooth step function
 export function smoothstep(edge0, edge1, x) {
   const t = clamp((x - edge0) / (edge1 - edge0), 0, 1)
   return t * t * (3 - 2 * t)
 }
 
-// 噪声函数（简单版）
+// Noise function (simple version)
 export function noise(x, y) {
   const n = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453
   return n - Math.floor(n)
 }
 
-// 颜色相关工具
+// Color related utilities
 export const ColorUtils = {
-  // HSL转RGB
+  // HSL to RGB
   hslToRgb(h, s, l) {
     h /= 360
     s /= 100
@@ -136,7 +136,7 @@ export const ColorUtils = {
     let r, g, b
     
     if (s === 0) {
-      r = g = b = l // 灰色
+      r = g = b = l // Gray
     } else {
       const q = l < 0.5 ? l * (1 + s) : l + s - l * s
       const p = 2 * l - q
@@ -152,17 +152,17 @@ export const ColorUtils = {
     }
   },
   
-  // RGB转十六进制
+  // RGB to hexadecimal
   rgbToHex(r, g, b) {
     return ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')
   },
   
-  // 生成随机颜色
+  // Generate random color
   randomColor() {
     return Math.floor(Math.random() * 16777215)
   },
   
-  // 颜色插值
+  // Color interpolation
   lerpColor(color1, color2, factor) {
     const r1 = (color1 >> 16) & 0xff
     const g1 = (color1 >> 8) & 0xff
@@ -180,7 +180,7 @@ export const ColorUtils = {
   }
 }
 
-// 性能监控工具
+// Performance monitoring tools
 export class PerformanceMonitor {
   constructor() {
     this.frameCount = 0
@@ -209,9 +209,9 @@ export class PerformanceMonitor {
   }
 }
 
-// 本地存储工具
+// Local storage tools
 export const StorageUtils = {
-  // 设置数据
+  // Set data
   set(key, value) {
     try {
       wx.setStorageSync(key, JSON.stringify(value))
@@ -222,7 +222,7 @@ export const StorageUtils = {
     }
   },
   
-  // 获取数据
+  // Get data
   get(key, defaultValue = null) {
     try {
       const value = wx.getStorageSync(key)
@@ -233,7 +233,7 @@ export const StorageUtils = {
     }
   },
   
-  // 删除数据
+  // Delete data
   remove(key) {
     try {
       wx.removeStorageSync(key)
@@ -244,7 +244,7 @@ export const StorageUtils = {
     }
   },
   
-  // 清空所有数据
+  // Clear all data
   clear() {
     try {
       wx.clearStorageSync()
@@ -256,7 +256,7 @@ export const StorageUtils = {
   }
 }
 
-// 音效管理工具
+// Audio management tools
 export class AudioManager {
   constructor() {
     this.sounds = new Map()
@@ -264,7 +264,7 @@ export class AudioManager {
     this.soundEnabled = true
   }
   
-  // 加载音效
+  // Load audio
   loadSound(name, url) {
     try {
       const audio = wx.createInnerAudioContext()
@@ -277,7 +277,7 @@ export class AudioManager {
     }
   }
   
-  // 播放音效
+  // Play audio
   playSound(name, volume = 1) {
     if (!this.soundEnabled) return
     
@@ -288,7 +288,7 @@ export class AudioManager {
     }
   }
   
-  // 停止音效
+  // Stop audio
   stopSound(name) {
     const audio = this.sounds.get(name)
     if (audio) {
@@ -296,17 +296,17 @@ export class AudioManager {
     }
   }
   
-  // 设置音效开关
+  // Set audio switch
   setSoundEnabled(enabled) {
     this.soundEnabled = enabled
   }
   
-  // 设置音乐开关
+  // Set music switch
   setMusicEnabled(enabled) {
     this.musicEnabled = enabled
   }
   
-  // 销毁所有音效
+  // Destroy all audio
   destroy() {
     this.sounds.forEach(audio => {
       audio.destroy()
@@ -315,7 +315,7 @@ export class AudioManager {
   }
 }
 
-// 触摸手势识别
+// Touch gesture recognition
 export class GestureRecognizer {
   constructor() {
     this.startX = 0
@@ -341,7 +341,7 @@ export class GestureRecognizer {
     
     this.isPressed = false
     
-    // 判断手势类型
+    // Determine gesture type
     if (deltaTime < 200 && distance < 10) {
       return { type: 'tap', x, y }
     } else if (deltaTime > 500 && distance < 20) {

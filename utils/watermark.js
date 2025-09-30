@@ -1,26 +1,26 @@
 /**
- * 图片水印工具类
- * 支持文字水印和图片水印
+ * Image watermark utility class
+ * Supports text watermarks and image watermarks
  */
 class WatermarkUtil {
   /**
-   * 添加文字水印
-   * @param {string} imagePath - 原图片路径
-   * @param {Object} options - 水印配置
-   * @param {string} options.text - 水印文字
-   * @param {number} options.x - 水印x坐标 (0-1之间的比例，或具体像素值)
-   * @param {number} options.y - 水印y坐标 (0-1之间的比例，或具体像素值)
-   * @param {string} options.color - 文字颜色，默认白色
-   * @param {number} options.fontSize - 字体大小，默认20
-   * @param {string} options.fontFamily - 字体，默认Arial
-   * @param {number} options.opacity - 透明度 (0-1)，默认0.8
-   * @param {string} options.position - 预设位置：'top-left', 'top-right', 'bottom-left', 'bottom-right', 'center'
-   * @returns {Promise<string>} 返回添加水印后的图片临时路径
+   * Add text watermark
+   * @param {string} imagePath - Original image path
+   * @param {Object} options - Watermark configuration
+   * @param {string} options.text - Watermark text
+   * @param {number} options.x - Watermark x coordinate (ratio between 0-1, or specific pixel value)
+   * @param {number} options.y - Watermark y coordinate (ratio between 0-1, or specific pixel value)
+   * @param {string} options.color - Text color, default white
+   * @param {number} options.fontSize - Font size, default 20
+   * @param {string} options.fontFamily - Font family, default Arial
+   * @param {number} options.opacity - Opacity (0-1), default 0.8
+   * @param {string} options.position - Preset position: 'top-left', 'top-right', 'bottom-left', 'bottom-right', 'center'
+   * @returns {Promise<string>} Returns temporary path of image with watermark added
    */
   static addTextWatermark(imagePath, options = {}) {
     return new Promise((resolve, reject) => {
       const {
-        text = '水印',
+        text = 'Watermark',
         color = '#FFFFFF',
         fontSize = 20,
         fontFamily = 'Arial',
@@ -28,33 +28,33 @@ class WatermarkUtil {
         position = 'bottom-right'
       } = options;
 
-      // 获取图片信息
+      // Get image information
       wx.getImageInfo({
         src: imagePath,
         success: (imageInfo) => {
           const { width, height } = imageInfo;
           
-          // 创建canvas上下文
+          // Create canvas context
           const canvasId = `watermark-canvas-${Date.now()}`;
           const ctx = wx.createCanvasContext(canvasId);
           
-          // 绘制原图
+          // Draw original image
           ctx.drawImage(imagePath, 0, 0, width, height);
           
-          // 设置文字样式
+          // Set text style
           ctx.setFontSize(fontSize);
           ctx.setFillStyle(color);
           ctx.setGlobalAlpha(opacity);
           
-          // 计算水印位置
+          // Calculate watermark position
           const { x, y } = this._calculateTextPosition(width, height, text, fontSize, position, options);
           
-          // 绘制文字水印
+          // Draw text watermark
           ctx.fillText(text, x, y);
           
-          // 绘制到canvas
+          // Draw to canvas
           ctx.draw(false, () => {
-            // 导出图片
+            // Export image
             wx.canvasToTempFilePath({
               canvasId: canvasId,
               success: (res) => {
@@ -70,50 +70,50 @@ class WatermarkUtil {
   }
 
   /**
-   * 添加图片水印
-   * @param {string} imagePath - 原图片路径
-   * @param {string} watermarkPath - 水印图片路径
-   * @param {Object} options - 水印配置
-   * @param {number} options.width - 水印宽度
-   * @param {number} options.height - 水印高度
-   * @param {number} options.x - 水印x坐标
-   * @param {number} options.y - 水印y坐标
-   * @param {number} options.opacity - 透明度 (0-1)，默认0.8
-   * @param {string} options.position - 预设位置
-   * @returns {Promise<string>} 返回添加水印后的图片临时路径
+   * Add image watermark
+   * @param {string} imagePath - Original image path
+   * @param {string} watermarkPath - Watermark image path
+   * @param {Object} options - Watermark configuration
+   * @param {number} options.width - Watermark width
+   * @param {number} options.height - Watermark height
+   * @param {number} options.x - Watermark x coordinate
+   * @param {number} options.y - Watermark y coordinate
+   * @param {number} options.opacity - Opacity (0-1), default 0.8
+   * @param {string} options.position - Preset position
+   * @returns {Promise<string>} Returns temporary path of image with watermark added
    */
   static addImageWatermark(imagePath, watermarkPath, options = {}) {
     return new Promise((resolve, reject) => {
       const { opacity = 0.8, position = 'bottom-right' } = options;
 
-      // 获取原图信息
+      // Get original image information
       wx.getImageInfo({
         src: imagePath,
         success: (imageInfo) => {
           const { width: imgWidth, height: imgHeight } = imageInfo;
           
-          // 获取水印图信息
+          // Get watermark image information
           wx.getImageInfo({
             src: watermarkPath,
             success: (watermarkInfo) => {
               const { width: wmWidth, height: wmHeight } = watermarkInfo;
               
-              // 创建canvas上下文
+              // Create canvas context
               const canvasId = `watermark-canvas-${Date.now()}`;
               const ctx = wx.createCanvasContext(canvasId);
               
-              // 绘制原图
+              // Draw original image
               ctx.drawImage(imagePath, 0, 0, imgWidth, imgHeight);
               
-              // 设置透明度
+              // Set opacity
               ctx.setGlobalAlpha(opacity);
               
-              // 计算水印位置和大小
+              // Calculate watermark position and size
               const watermarkConfig = this._calculateImagePosition(
                 imgWidth, imgHeight, wmWidth, wmHeight, position, options
               );
               
-              // 绘制水印图片
+              // Draw watermark image
               ctx.drawImage(
                 watermarkPath,
                 watermarkConfig.x,
@@ -122,9 +122,9 @@ class WatermarkUtil {
                 watermarkConfig.height
               );
               
-              // 绘制到canvas
+              // Draw to canvas
               ctx.draw(false, () => {
-                // 导出图片
+                // Export image
                 wx.canvasToTempFilePath({
                   canvasId: canvasId,
                   success: (res) => {
@@ -143,12 +143,12 @@ class WatermarkUtil {
   }
 
   /**
-   * 批量添加水印
-   * @param {Array} imagePaths - 图片路径数组
-   * @param {Object} watermarkConfig - 水印配置
-   * @param {string} watermarkConfig.type - 水印类型：'text' 或 'image'
-   * @param {Function} progressCallback - 进度回调函数
-   * @returns {Promise<Array>} 返回处理后的图片路径数组
+   * Batch add watermarks
+   * @param {Array} imagePaths - Array of image paths
+   * @param {Object} watermarkConfig - Watermark configuration
+   * @param {string} watermarkConfig.type - Watermark type: 'text' or 'image'
+   * @param {Function} progressCallback - Progress callback function
+   * @returns {Promise<Array>} Returns array of processed image paths
    */
   static batchAddWatermark(imagePaths, watermarkConfig, progressCallback) {
     return new Promise((resolve, reject) => {
@@ -186,7 +186,7 @@ class WatermarkUtil {
             });
           }
           
-          // 继续处理下一张
+          // Continue processing next image
           setTimeout(processNext, 100);
           
         } catch (error) {
@@ -207,24 +207,24 @@ class WatermarkUtil {
   }
 
   /**
-   * 计算文字水印位置
+   * Calculate text watermark position
    * @private
    */
   static _calculateTextPosition(imgWidth, imgHeight, text, fontSize, position, options) {
     let x = options.x;
     let y = options.y;
     
-    // 如果已经指定了具体坐标
+    // If specific coordinates are already specified
     if (x !== undefined && y !== undefined) {
-      // 如果是比例值 (0-1)，转换为像素值
+      // If ratio value (0-1), convert to pixel value
       if (x <= 1) x = x * imgWidth;
       if (y <= 1) y = y * imgHeight;
       return { x, y };
     }
     
-    // 使用预设位置
+    // Use preset position
     const padding = 20;
-    const textWidth = text.length * fontSize * 0.6; // 估算文字宽度
+    const textWidth = text.length * fontSize * 0.6; // Estimate text width
     
     switch (position) {
       case 'top-left':
@@ -256,30 +256,30 @@ class WatermarkUtil {
   }
 
   /**
-   * 计算图片水印位置和大小
+   * Calculate image watermark position and size
    * @private
    */
   static _calculateImagePosition(imgWidth, imgHeight, wmWidth, wmHeight, position, options) {
     let x = options.x;
     let y = options.y;
-    let width = options.width || wmWidth * 0.2; // 默认为原图20%大小
+    let width = options.width || wmWidth * 0.2; // Default to 20% of original image size
     let height = options.height || wmHeight * 0.2;
     
-    // 保持宽高比
+    // Maintain aspect ratio
     if (options.width && !options.height) {
       height = (options.width / wmWidth) * wmHeight;
     } else if (options.height && !options.width) {
       width = (options.height / wmHeight) * wmWidth;
     }
     
-    // 如果已经指定了具体坐标
+    // If specific coordinates are already specified
     if (x !== undefined && y !== undefined) {
       if (x <= 1) x = x * imgWidth;
       if (y <= 1) y = y * imgHeight;
       return { x, y, width, height };
     }
     
-    // 使用预设位置
+    // Use preset position
     const padding = 20;
     
     switch (position) {

@@ -7,7 +7,7 @@ class Player {
     this.scene = scene
     this.position = new THREE.Vector3(0, 1, 0)
     
-    // 动画状态
+    // Animation state
     this.isJumping = false
     this.isCharging = false
     this.jumpStartTime = 0
@@ -16,16 +16,16 @@ class Player {
     this.jumpEndPos = new THREE.Vector3()
     this.jumpHeight = 0
     
-    // 创建玩家模型
+    // Create player model
     this.createModel()
   }
   
-  // 创建玩家模型
+  // Create player model
   createModel() {
-    // 创建玩家组
+    // Create player group
     this.group = new THREE.Group()
     
-    // 身体（圆柱体）
+    // Body (cylinder)
     const bodyGeometry = new THREE.CylinderGeometry(0.3, 0.4, 0.8, 8)
     const bodyMaterial = new THREE.MeshLambertMaterial({ color: 0x4a90e2 })
     this.body = new THREE.Mesh(bodyGeometry, bodyMaterial)
@@ -33,7 +33,7 @@ class Player {
     this.body.castShadow = true
     this.group.add(this.body)
     
-    // 头部（球体）
+    // Head (sphere)
     const headGeometry = new THREE.SphereGeometry(0.25, 16, 16)
     const headMaterial = new THREE.MeshLambertMaterial({ color: 0xffc107 })
     this.head = new THREE.Mesh(headGeometry, headMaterial)
@@ -41,7 +41,7 @@ class Player {
     this.head.castShadow = true
     this.group.add(this.head)
     
-    // 眼睛
+    // Eyes
     const eyeGeometry = new THREE.SphereGeometry(0.05, 8, 8)
     const eyeMaterial = new THREE.MeshLambertMaterial({ color: 0x000000 })
     
@@ -53,14 +53,14 @@ class Player {
     this.rightEye.position.set(0.1, 1.1, 0.2)
     this.group.add(this.rightEye)
     
-    // 嘴巴
+    // Mouth
     const mouthGeometry = new THREE.SphereGeometry(0.03, 8, 8)
     const mouthMaterial = new THREE.MeshLambertMaterial({ color: 0xff0000 })
     this.mouth = new THREE.Mesh(mouthGeometry, mouthMaterial)
     this.mouth.position.set(0, 0.95, 0.22)
     this.group.add(this.mouth)
     
-    // 手臂
+    // Arms
     const armGeometry = new THREE.CylinderGeometry(0.08, 0.08, 0.5, 6)
     const armMaterial = new THREE.MeshLambertMaterial({ color: 0x4a90e2 })
     
@@ -76,7 +76,7 @@ class Player {
     this.rightArm.castShadow = true
     this.group.add(this.rightArm)
     
-    // 腿部
+    // Legs
     const legGeometry = new THREE.CylinderGeometry(0.1, 0.1, 0.4, 6)
     const legMaterial = new THREE.MeshLambertMaterial({ color: 0x4a90e2 })
     
@@ -90,54 +90,54 @@ class Player {
     this.rightLeg.castShadow = true
     this.group.add(this.rightLeg)
     
-    // 设置初始位置
+    // Set initial position
     this.group.position.copy(this.position)
     this.scene.add(this.group)
     
-    // 保存原始比例和位置
+    // Save original scale and position
     this.originalScale = this.group.scale.clone()
     this.originalBodyScale = this.body.scale.clone()
   }
   
-  // 设置位置
+  // Set position
   setPosition(x, y, z) {
     this.position.set(x, y, z)
     this.group.position.copy(this.position)
   }
   
-  // 开始蓄力动画
+  // Start charging animation
   startCharging() {
     this.isCharging = true
     this.chargingStartTime = Date.now()
   }
   
-  // 跳跃
+  // Jump
   jump(distance, height, onComplete) {
     if (this.isJumping) return
     
     this.isJumping = true
     this.isCharging = false
     this.jumpStartTime = Date.now()
-    this.jumpDuration = 800 // 跳跃持续时间
+    this.jumpDuration = 800 // Jump duration
     this.jumpHeight = height
     this.onJumpComplete = onComplete
     
-    // 计算跳跃起点和终点
+    // Calculate jump start and end points
     this.jumpStartPos.copy(this.position)
     
-    // 计算跳跃方向（朝向最近的方块）
-    const angle = Math.random() * Math.PI * 2 // 随机方向，实际应该根据最近方块计算
+    // Calculate jump direction (towards nearest block)
+    const angle = Math.random() * Math.PI * 2 // Random direction, should actually calculate based on nearest block
     this.jumpEndPos.set(
       this.position.x + Math.sin(angle) * distance,
       this.position.y,
       this.position.z + Math.cos(angle) * distance
     )
     
-    // 播放跳跃音效（如果有的话）
+    // Play jump sound effect (if available)
     this.playJumpSound()
   }
   
-  // 坠落
+  // Fall
   fall(onComplete) {
     this.isFalling = true
     this.fallStartTime = Date.now()
@@ -146,16 +146,16 @@ class Player {
     this.onFallComplete = onComplete
   }
   
-  // 显示完美落地效果
+  // Show perfect landing effect
   showPerfectEffect() {
-    // 创建粒子效果
+    // Create particle effect
     this.createParticleEffect()
     
-    // 播放特殊音效
+    // Play special sound effect
     this.playPerfectSound()
   }
   
-  // 创建粒子效果
+  // Create particle effect
   createParticleEffect() {
     const particleCount = 20
     const particles = new THREE.Group()
@@ -167,7 +167,7 @@ class Player {
       })
       const particle = new THREE.Mesh(geometry, material)
       
-      // 随机位置
+      // Random position
       const angle = (i / particleCount) * Math.PI * 2
       particle.position.set(
         this.position.x + Math.cos(angle) * 0.5,
@@ -180,7 +180,7 @@ class Player {
     
     this.scene.add(particles)
     
-    // 动画粒子
+    // Animate particles
     const startTime = Date.now()
     const animateParticles = () => {
       const elapsed = Date.now() - startTime
@@ -203,35 +203,35 @@ class Player {
     animateParticles()
   }
   
-  // 更新动画
+  // Update animation
   update(deltaTime) {
     const currentTime = Date.now()
     
-    // 蓄力动画
+    // Charging animation
     if (this.isCharging) {
       const chargingTime = currentTime - this.chargingStartTime
       const intensity = Math.sin(chargingTime * 0.01) * 0.1 + 1
       
-      // 身体压缩效果
+      // Body compression effect
       this.body.scale.y = this.originalBodyScale.y * (1 - intensity * 0.2)
       this.body.scale.x = this.originalBodyScale.x * (1 + intensity * 0.1)
       this.body.scale.z = this.originalBodyScale.z * (1 + intensity * 0.1)
       
-      // 整体震动
+      // Overall vibration
       this.group.position.y = this.position.y + Math.sin(chargingTime * 0.02) * 0.02
     }
     
-    // 跳跃动画
+    // Jump animation
     if (this.isJumping) {
       const elapsed = currentTime - this.jumpStartTime
       const progress = Math.min(elapsed / this.jumpDuration, 1)
       
       if (progress < 1) {
-        // 水平移动（线性）
+        // Horizontal movement (linear)
         this.position.x = lerp(this.jumpStartPos.x, this.jumpEndPos.x, progress)
         this.position.z = lerp(this.jumpStartPos.z, this.jumpEndPos.z, progress)
         
-        // 垂直移动（抛物线）
+        // Vertical movement (parabolic)
         const jumpProgress = progress * 2
         let heightMultiplier
         if (jumpProgress <= 1) {
@@ -242,15 +242,15 @@ class Player {
         
         this.position.y = this.jumpStartPos.y + this.jumpHeight * heightMultiplier
         
-        // 旋转动画
+        // Rotation animation
         this.group.rotation.x = progress * Math.PI * 2
         
-        // 恢复身体形状
+        // Restore body shape
         this.body.scale.copy(this.originalBodyScale)
         
         this.group.position.copy(this.position)
       } else {
-        // 跳跃结束
+        // Jump end
         this.isJumping = false
         this.group.rotation.x = 0
         this.position.copy(this.jumpEndPos)
@@ -262,16 +262,16 @@ class Player {
       }
     }
     
-    // 坠落动画
+    // Fall animation
     if (this.isFalling) {
       const elapsed = currentTime - this.fallStartTime
       const progress = Math.min(elapsed / this.fallDuration, 1)
       
       if (progress < 1) {
-        // 加速下落
+        // Accelerated fall
         this.position.y = this.fallStartPos.y - easeInQuart(progress) * 10
         
-        // 旋转坠落
+        // Rotating fall
         this.group.rotation.x = progress * Math.PI * 4
         this.group.rotation.z = progress * Math.PI * 2
         
@@ -284,19 +284,19 @@ class Player {
       }
     }
     
-    // 空闲时的微动画
+    // Idle micro animation
     if (!this.isJumping && !this.isCharging && !this.isFalling) {
       const time = currentTime * 0.002
       this.group.position.y = this.position.y + Math.sin(time) * 0.02
       
-      // 眼睛眨动
+      // Eye blinking
       if (Math.random() < 0.01) {
         this.blink()
       }
     }
   }
   
-  // 眨眼动画
+  // Blink animation
   blink() {
     const originalScale = this.leftEye.scale.y
     this.leftEye.scale.y = 0.1
@@ -308,18 +308,18 @@ class Player {
     }, 100)
   }
   
-  // 播放跳跃音效
+  // Play jump sound effect
   playJumpSound() {
-    // 这里可以添加音效播放逻辑
-    // wx.createInnerAudioContext() 等
+    // Can add sound effect playback logic here
+    // wx.createInnerAudioContext() etc
   }
   
-  // 播放完美落地音效
+  // Play perfect landing sound effect
   playPerfectSound() {
-    // 这里可以添加特殊音效播放逻辑
+    // Can add special sound effect playback logic here
   }
   
-  // 重置玩家状态
+  // Reset player state
   reset() {
     this.position.set(0, 1, 0)
     this.group.position.copy(this.position)
@@ -332,7 +332,7 @@ class Player {
     this.isFalling = false
   }
   
-  // 销毁玩家
+  // Destroy player
   destroy() {
     if (this.group && this.scene) {
       this.scene.remove(this.group)

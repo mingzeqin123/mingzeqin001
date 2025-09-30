@@ -12,37 +12,37 @@ Page({
   },
 
   onLoad() {
-    // 获取最高分
+    // Get best score
     this.setData({
       bestScore: getApp().getBestScore()
     })
     
-    // 初始化游戏引擎
+    // Initialize game engine
     this.initGame()
   },
 
   onShow() {
-    // 页面显示时恢复游戏
+    // Resume game when page is shown
     if (this.gameEngine) {
       this.gameEngine.resume()
     }
   },
 
   onHide() {
-    // 页面隐藏时暂停游戏
+    // Pause game when page is hidden
     if (this.gameEngine) {
       this.gameEngine.pause()
     }
   },
 
   onUnload() {
-    // 页面卸载时清理资源
+    // Clean up resources when page is unloaded
     if (this.gameEngine) {
       this.gameEngine.destroy()
     }
   },
 
-  // 初始化游戏
+  // Initialize game
   initGame() {
     const query = wx.createSelectorQuery()
     query.select('#gameCanvas')
@@ -51,16 +51,16 @@ Page({
         const canvas = res[0].node
         const ctx = canvas.getContext('webgl')
         
-        // 设置画布大小
+        // Set canvas size
         const dpr = wx.getSystemInfoSync().pixelRatio
         canvas.width = res[0].width * dpr
         canvas.height = res[0].height * dpr
         ctx.viewport(0, 0, canvas.width, canvas.height)
 
-        // 初始化游戏引擎
+        // Initialize game engine
         this.gameEngine = new GameEngine(canvas, ctx)
         
-        // 绑定游戏事件
+        // Bind game events
         this.gameEngine.onScoreChange = (score) => {
           this.setData({ score })
         }
@@ -73,12 +73,12 @@ Page({
           this.setData({ power })
         }
 
-        // 开始渲染循环
+        // Start rendering loop
         this.gameEngine.start()
       })
   },
 
-  // 开始游戏
+  // Start game
   startGame() {
     this.setData({
       gameState: 'playing',
@@ -91,7 +91,7 @@ Page({
     }
   },
 
-  // 重新开始游戏
+  // Restart game
   restartGame() {
     this.setData({
       gameState: 'playing',
@@ -104,7 +104,7 @@ Page({
     }
   },
 
-  // 游戏结束处理
+  // Handle game over
   handleGameOver() {
     const { score, bestScore } = this.data
     let isNewRecord = false
@@ -120,13 +120,13 @@ Page({
       isNewRecord
     })
     
-    // 震动反馈
+    // Vibration feedback
     wx.vibrateShort({
       type: 'heavy'
     })
   },
 
-  // 分享成绩
+  // Share score
   shareScore() {
     const { score } = this.data
     wx.showShareMenu({
@@ -135,7 +135,7 @@ Page({
     })
   },
 
-  // 触摸开始
+  // Touch start
   onTouchStart(e) {
     if (this.data.gameState !== 'playing') return
     
@@ -146,13 +146,13 @@ Page({
     }
   },
 
-  // 触摸移动
+  // Touch move
   onTouchMove(e) {
-    // 防止页面滚动
+    // Prevent page scrolling
     e.preventDefault()
   },
 
-  // 触摸结束
+  // Touch end
   onTouchEnd(e) {
     if (this.data.gameState !== 'playing') return
     
@@ -166,21 +166,21 @@ Page({
     }
   },
 
-  // 分享给朋友
+  // Share to friends
   onShareAppMessage() {
     const { score } = this.data
     return {
-      title: `我在跳一跳中获得了${score}分，快来挑战吧！`,
+      title: `I scored ${score} points in Jump Game, come and challenge me!`,
       path: '/pages/game/game',
       imageUrl: '/images/share.png'
     }
   },
 
-  // 分享到朋友圈
+  // Share to timeline
   onShareTimeline() {
     const { score } = this.data
     return {
-      title: `跳一跳挑战：${score}分！`,
+      title: `Jump Game Challenge: ${score} points!`,
       query: 'from=timeline',
       imageUrl: '/images/share.png'
     }
