@@ -4,9 +4,9 @@ const WatermarkUtil = require('../../utils/watermark.js');
 Page({
   data: {
     selectedImage: '',
-    watermarkType: 'text', // 'text' 或 'image'
+    watermarkType: 'text', // 'text' or 'image'
     textConfig: {
-      text: '水印文字',
+      text: 'Watermark Text',
       color: '#FFFFFF',
       fontSize: 20,
       opacity: 0.8,
@@ -27,10 +27,10 @@ Page({
   },
 
   onLoad: function (options) {
-    console.log('水印页面加载');
+    console.log('Watermark page loaded');
   },
 
-  // 选择要添加水印的图片
+  // Select image to add watermark
   selectImage: function() {
     wx.chooseImage({
       count: 1,
@@ -39,12 +39,12 @@ Page({
       success: (res) => {
         this.setData({
           selectedImage: res.tempFilePaths[0],
-          processedImage: '' // 清空之前的结果
+          processedImage: '' // Clear previous results
         });
       },
       fail: (err) => {
         wx.showToast({
-          title: '选择图片失败',
+          title: 'Failed to select image',
           icon: 'error'
         });
       }

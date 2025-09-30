@@ -1,98 +1,99 @@
-# 开发指南
+# Development Guide
 
-本文档提供跳一跳小游戏的详细开发指南和技术说明。
+This document provides detailed development guide and technical specifications for the Jump Jump mini-game.
 
-## 🏗️ 架构设计
+## 🏗️ Architecture Design
 
-### 整体架构
+### Overall Architecture
 ```
 ┌─────────────────┐
-│   微信小程序     │
+│   WeChat Mini   │
+│   Program       │
 │   (WXML/WXSS)   │
 ├─────────────────┤
-│   游戏页面       │
+│   Game Page     │
 │   (game.js)     │
 ├─────────────────┤
-│   游戏引擎       │
+│   Game Engine   │
 │  (gameEngine.js) │
 ├─────────────────┤
-│   游戏对象       │
+│   Game Objects  │
 │ Player & Block   │
 ├─────────────────┤
 │   Three.js      │
-│   渲染引擎       │
+│   Render Engine │
 ├─────────────────┤
 │   WebGL API     │
 └─────────────────┘
 ```
 
-### 模块划分
+### Module Division
 
-1. **表现层** (`game.wxml`, `game.wxss`)
-   - UI界面布局
-   - 用户交互处理
-   - 状态显示
+1. **Presentation Layer** (`game.wxml`, `game.wxss`)
+   - UI layout
+   - User interaction handling
+   - Status display
 
-2. **控制层** (`game.js`)
-   - 页面生命周期管理
-   - 用户输入处理
-   - 游戏状态管理
+2. **Control Layer** (`game.js`)
+   - Page lifecycle management
+   - User input handling
+   - Game state management
 
-3. **逻辑层** (`gameEngine.js`)
-   - 游戏核心逻辑
-   - 物理模拟
-   - 碰撞检测
-   - 场景管理
+3. **Logic Layer** (`gameEngine.js`)
+   - Core game logic
+   - Physics simulation
+   - Collision detection
+   - Scene management
 
-4. **数据层** (`player.js`, `block.js`)
-   - 游戏对象定义
-   - 属性和行为封装
-   - 动画和效果
+4. **Data Layer** (`player.js`, `block.js`)
+   - Game object definitions
+   - Property and behavior encapsulation
+   - Animations and effects
 
-5. **工具层** (`utils.js`)
-   - 通用工具函数
-   - 数学计算
-   - 存储管理
+5. **Utility Layer** (`utils.js`)
+   - Common utility functions
+   - Mathematical calculations
+   - Storage management
 
-## 🎮 游戏循环
+## 🎮 Game Loop
 
-### 主循环结构
+### Main Loop Structure
 ```javascript
 function gameLoop(timestamp) {
-  // 1. 计算时间差
+  // 1. Calculate time delta
   const deltaTime = (timestamp - lastTime) / 1000
   
-  // 2. 更新游戏逻辑
+  // 2. Update game logic
   updateGameLogic(deltaTime)
   
-  // 3. 渲染场景
+  // 3. Render scene
   renderScene()
   
-  // 4. 请求下一帧
+  // 4. Request next frame
   requestAnimationFrame(gameLoop)
 }
 ```
 
-### 更新顺序
-1. **输入处理**：检测用户触摸输入
-2. **物理更新**：更新位置、速度、碰撞
-3. **动画更新**：插值计算、缓动函数
-4. **相机更新**：跟随目标、平滑移动
-5. **UI更新**：分数、状态显示
+### Update Order
+1. **Input Processing**: Detect user touch input
+2. **Physics Update**: Update position, velocity, collision
+3. **Animation Update**: Interpolation calculation, easing functions
+4. **Camera Update**: Follow target, smooth movement
+5. **UI Update**: Score, status display
 
-## 🎯 核心系统详解
+## 🎯 Core System Details
 
-### 1. 跳跃系统
+### 1. Jump System
 
-#### 蓄力机制
+#### Power Charging Mechanism
 ```javascript
-// 蓄力开始
+// Start charging
 startCharging() {
   this.chargingStartTime = Date.now()
   this.gameState = 'charging'
 }
 
-// 计算蓄力值
+// Calculate power value
 updatePower() {
   const elapsed = Date.now() - this.chargingStartTime
   const power = Math.min(elapsed / this.maxChargingTime, 1)
@@ -100,26 +101,26 @@ updatePower() {
 }
 ```
 
-#### 跳跃计算
+#### Jump Calculation
 ```javascript
-// 跳跃参数计算
+// Jump parameter calculation
 calculateJump(power) {
-  const distance = 2 + power * 6  // 距离：2-8
-  const height = 1 + power * 3    // 高度：1-4
-  const duration = 800           // 持续时间
+  const distance = 2 + power * 6  // Distance: 2-8
+  const height = 1 + power * 3    // Height: 1-4
+  const duration = 800           // Duration
   return { distance, height, duration }
 }
 ```
 
-#### 轨迹模拟
+#### Trajectory Simulation
 ```javascript
-// 抛物线运动
+// Parabolic motion
 updateJumpTrajectory(progress) {
-  // 水平移动（线性）
+  // Horizontal movement (linear)
   const x = lerp(startX, endX, progress)
   const z = lerp(startZ, endZ, progress)
   
-  // 垂直移动（抛物线）
+  // Vertical movement (parabolic)
   const jumpProgress = progress * 2
   let heightMultiplier
   if (jumpProgress <= 1) {
@@ -133,9 +134,9 @@ updateJumpTrajectory(progress) {
 }
 ```
 
-### 2. 碰撞检测系统
+### 2. Collision Detection System
 
-#### 圆形碰撞检测
+#### Circular Collision Detection
 ```javascript
 checkCollision(player, block) {
   const distance = Math.sqrt(
@@ -148,7 +149,7 @@ checkCollision(player, block) {
 }
 ```
 
-#### 落地判断
+#### Landing Judgment
 ```javascript
 checkLanding() {
   let closestBlock = null
@@ -162,7 +163,7 @@ checkLanding() {
     }
   })
   
-  // 判断是否成功落地
+  // Determine if landing is successful
   if (minDistance < 1.5) {
     return this.handleLanding(closestBlock, minDistance)
   } else {
@@ -171,73 +172,73 @@ checkLanding() {
 }
 ```
 
-### 3. 方块生成系统
+### 3. Block Generation System
 
-#### 随机生成算法
+#### Random Generation Algorithm
 ```javascript
 generateNextBlock() {
   const lastBlock = this.blocks[this.blocks.length - 1]
   
-  // 生成位置参数
-  const distance = 3 + Math.random() * 4      // 距离3-7
-  const angle = (Math.random() - 0.5) * Math.PI * 0.6  // 角度范围
+  // Generate position parameters
+  const distance = 3 + Math.random() * 4      // Distance 3-7
+  const angle = (Math.random() - 0.5) * Math.PI * 0.6  // Angle range
   
-  // 计算坐标
+  // Calculate coordinates
   const x = lastBlock.x + Math.sin(angle) * distance
   const z = lastBlock.z + Math.cos(angle) * distance
   
-  // 随机类型
+  // Random type
   const type = this.getRandomBlockType()
   
   return new Block(this.scene, x, 0, z, type)
 }
 ```
 
-#### 难度递增
+#### Difficulty Progression
 ```javascript
 getDifficultyMultiplier() {
   const score = this.score
   
-  // 每10分增加一点难度
+  // Increase difficulty every 10 points
   const difficultyLevel = Math.floor(score / 10)
   
-  // 增加方块间距
+  // Increase block spacing
   const distanceMultiplier = 1 + difficultyLevel * 0.1
   
-  // 增加小方块概率
+  // Increase small block probability
   const smallBlockChance = Math.min(0.3 + difficultyLevel * 0.05, 0.6)
   
   return { distanceMultiplier, smallBlockChance }
 }
 ```
 
-### 4. 动画系统
+### 4. Animation System
 
-#### 缓动函数应用
+#### Easing Function Application
 ```javascript
-// 四次方缓出 - 用于跳跃上升
+// Quartic ease-out - for jump ascent
 function easeOutQuart(t) {
   return 1 - Math.pow(1 - t, 4)
 }
 
-// 四次方缓入 - 用于跳跃下降
+// Quartic ease-in - for jump descent
 function easeInQuart(t) {
   return t * t * t * t
 }
 
-// 线性插值 - 用于位置过渡
+// Linear interpolation - for position transitions
 function lerp(start, end, factor) {
   return start + (end - start) * factor
 }
 ```
 
-#### 相机跟随
+#### Camera Following
 ```javascript
 updateCamera(deltaTime) {
   const target = this.player.position
   const offset = new THREE.Vector3(0, 8, 8)
   
-  // 平滑跟随
+  // Smooth following
   this.camera.position.x = lerp(
     this.camera.position.x, 
     target.x + offset.x, 
@@ -250,25 +251,25 @@ updateCamera(deltaTime) {
     deltaTime * 2
   )
   
-  // 始终看向玩家
+  // Always look at player
   this.camera.lookAt(target)
 }
 ```
 
-## 🎨 视觉效果实现
+## 🎨 Visual Effects Implementation
 
-### 1. 材质和光照
+### 1. Materials and Lighting
 
-#### 材质配置
+#### Material Configuration
 ```javascript
-// Lambert材质 - 适合游戏风格
+// Lambert material - suitable for game style
 const material = new THREE.MeshLambertMaterial({
   color: 0x4a90e2,
   transparent: false,
   opacity: 1.0
 })
 
-// 特殊效果材质
+// Special effect material
 const glowMaterial = new THREE.MeshLambertMaterial({
   color: 0x87ceeb,
   transparent: true,
@@ -276,26 +277,26 @@ const glowMaterial = new THREE.MeshLambertMaterial({
 })
 ```
 
-#### 光照设置
+#### Lighting Setup
 ```javascript
-// 环境光 - 整体照明
+// Ambient light - overall illumination
 const ambientLight = new THREE.AmbientLight(0x404040, 0.4)
 
-// 方向光 - 主要光源
+// Directional light - main light source
 const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8)
 directionalLight.position.set(10, 20, 10)
 directionalLight.castShadow = true
 
-// 阴影配置
+// Shadow configuration
 directionalLight.shadow.mapSize.width = 2048
 directionalLight.shadow.mapSize.height = 2048
 directionalLight.shadow.camera.near = 0.1
 directionalLight.shadow.camera.far = 100
 ```
 
-### 2. 粒子效果
+### 2. Particle Effects
 
-#### 完美落地效果
+#### Perfect Landing Effect
 ```javascript
 createPerfectLandingEffect() {
   const particleCount = 20
@@ -309,7 +310,7 @@ createPerfectLandingEffect() {
       })
     )
     
-    // 设置初始位置
+    // Set initial position
     const angle = (i / particleCount) * Math.PI * 2
     particle.position.set(
       this.position.x + Math.cos(angle) * 0.5,
@@ -321,17 +322,17 @@ createPerfectLandingEffect() {
     this.scene.add(particle)
   }
   
-  // 动画粒子
+  // Animate particles
   this.animateParticles(particles)
 }
 ```
 
-### 3. 动画过渡
+### 3. Animation Transitions
 
-#### 方块入场动画
+#### Block Entrance Animation
 ```javascript
 playEntranceAnimation() {
-  // 初始状态
+  // Initial state
   this.group.position.y = this.targetY - 2
   this.group.scale.set(0.1, 0.1, 0.1)
   
@@ -342,10 +343,10 @@ playEntranceAnimation() {
     const progress = Math.min((Date.now() - startTime) / duration, 1)
     const easeProgress = 1 - Math.pow(1 - progress, 3)
     
-    // 位置动画
+    // Position animation
     this.group.position.y = (this.targetY - 2) + easeProgress * 2
     
-    // 缩放动画
+    // Scale animation
     this.group.scale.setScalar(0.1 + easeProgress * 0.9)
     
     if (progress < 1) {
@@ -357,9 +358,9 @@ playEntranceAnimation() {
 }
 ```
 
-## 🔧 性能优化策略
+## 🔧 Performance Optimization Strategies
 
-### 1. 对象池管理
+### 1. Object Pool Management
 
 ```javascript
 class ObjectPool {
@@ -368,7 +369,7 @@ class ObjectPool {
     this.resetFn = resetFn
     this.pool = []
     
-    // 预创建对象
+    // Pre-create objects
     for (let i = 0; i < initialSize; i++) {
       this.pool.push(this.createFn())
     }
@@ -388,7 +389,7 @@ class ObjectPool {
   }
 }
 
-// 使用示例
+// Usage example
 const blockPool = new ObjectPool(
   () => new Block(),
   (block) => block.reset(),
@@ -396,10 +397,10 @@ const blockPool = new ObjectPool(
 )
 ```
 
-### 2. 渲染优化
+### 2. Render Optimization
 
 ```javascript
-// 视锥剔除
+// Frustum culling
 function frustumCull(camera, objects) {
   const frustum = new THREE.Frustum()
   const matrix = new THREE.Matrix4()
@@ -410,7 +411,7 @@ function frustumCull(camera, objects) {
   return objects.filter(obj => frustum.intersectsObject(obj))
 }
 
-// LOD系统
+// LOD system
 function updateLOD(camera, objects) {
   objects.forEach(obj => {
     const distance = camera.position.distanceTo(obj.position)
@@ -426,41 +427,41 @@ function updateLOD(camera, objects) {
 }
 ```
 
-### 3. 内存管理
+### 3. Memory Management
 
 ```javascript
-// 资源清理
+// Resource cleanup
 function cleanup() {
-  // 清理几何体
+  // Clean up geometry
   geometry.dispose()
   
-  // 清理材质
+  // Clean up material
   material.dispose()
   
-  // 清理纹理
+  // Clean up texture
   if (material.map) {
     material.map.dispose()
   }
   
-  // 从场景移除
+  // Remove from scene
   scene.remove(mesh)
 }
 
-// 定期垃圾回收
+// Periodic garbage collection
 setInterval(() => {
-  // 清理远离的方块
+  // Clean up distant blocks
   this.cleanupDistantBlocks()
   
-  // 强制垃圾回收（仅开发时使用）
+  // Force garbage collection (development only)
   if (typeof wx !== 'undefined' && wx.triggerGC) {
     wx.triggerGC()
   }
 }, 5000)
 ```
 
-## 🐛 调试技巧
+## 🐛 Debugging Techniques
 
-### 1. 性能监控
+### 1. Performance Monitoring
 
 ```javascript
 class PerformanceMonitor {
@@ -485,10 +486,10 @@ class PerformanceMonitor {
 }
 ```
 
-### 2. 可视化调试
+### 2. Visual Debugging
 
 ```javascript
-// 显示碰撞边界
+// Show collision bounds
 function showCollisionBounds(objects) {
   objects.forEach(obj => {
     const helper = new THREE.BoxHelper(obj, 0xff0000)
@@ -496,7 +497,7 @@ function showCollisionBounds(objects) {
   })
 }
 
-// 显示跳跃轨迹
+// Show jump trajectory
 function showJumpTrajectory(start, end, height) {
   const points = []
   for (let i = 0; i <= 20; i++) {
@@ -512,7 +513,7 @@ function showJumpTrajectory(start, end, height) {
 }
 ```
 
-### 3. 日志系统
+### 3. Logging System
 
 ```javascript
 class Logger {
@@ -550,58 +551,58 @@ class Logger {
 }
 ```
 
-## 📱 小程序特殊处理
+## 📱 Mini Program Specific Handling
 
-### 1. Canvas适配
+### 1. Canvas Adaptation
 
 ```javascript
-// 获取设备像素比
+// Get device pixel ratio
 const dpr = wx.getSystemInfoSync().pixelRatio
 
-// 设置Canvas尺寸
+// Set Canvas size
 canvas.width = canvasWidth * dpr
 canvas.height = canvasHeight * dpr
 
-// 设置WebGL视口
+// Set WebGL viewport
 gl.viewport(0, 0, canvas.width, canvas.height)
 ```
 
-### 2. 内存限制处理
+### 2. Memory Limit Handling
 
 ```javascript
-// 监听内存警告
+// Listen for memory warnings
 wx.onMemoryWarning(() => {
-  console.warn('内存不足，开始清理资源')
+  console.warn('Insufficient memory, starting resource cleanup')
   
-  // 清理不必要的资源
+  // Clean up unnecessary resources
   this.cleanupResources()
   
-  // 降低画质
+  // Reduce quality
   this.reduceQuality()
   
-  // 强制垃圾回收
+  // Force garbage collection
   wx.triggerGC()
 })
 ```
 
-### 3. 生命周期管理
+### 3. Lifecycle Management
 
 ```javascript
-// 页面显示时恢复游戏
+// Resume game when page is shown
 onShow() {
   if (this.gameEngine) {
     this.gameEngine.resume()
   }
 }
 
-// 页面隐藏时暂停游戏
+// Pause game when page is hidden
 onHide() {
   if (this.gameEngine) {
     this.gameEngine.pause()
   }
 }
 
-// 页面卸载时清理资源
+// Clean up resources when page is unloaded
 onUnload() {
   if (this.gameEngine) {
     this.gameEngine.destroy()
@@ -609,26 +610,26 @@ onUnload() {
 }
 ```
 
-## 🔄 版本迭代计划
+## 🔄 Version Iteration Plan
 
-### v1.1.0 计划功能
-- [ ] 音效系统完善
-- [ ] 更多方块类型
-- [ ] 道具系统
-- [ ] 成就系统
+### v1.1.0 Planned Features
+- [ ] Complete sound system
+- [ ] More block types
+- [ ] Item system
+- [ ] Achievement system
 
-### v1.2.0 计划功能
-- [ ] 多人对战模式
-- [ ] 排行榜系统
-- [ ] 皮肤系统
-- [ ] 关卡模式
+### v1.2.0 Planned Features
+- [ ] Multiplayer battle mode
+- [ ] Leaderboard system
+- [ ] Skin system
+- [ ] Level mode
 
-### v2.0.0 计划功能
-- [ ] 物理引擎升级
-- [ ] 更复杂的场景
-- [ ] 天气系统
-- [ ] 动态光照
+### v2.0.0 Planned Features
+- [ ] Physics engine upgrade
+- [ ] More complex scenes
+- [ ] Weather system
+- [ ] Dynamic lighting
 
 ---
 
-这份开发指南涵盖了跳一跳游戏的核心技术实现，可以帮助开发者理解和扩展游戏功能。
+This development guide covers the core technical implementation of the Jump Jump game and can help developers understand and extend game functionality.

@@ -1,118 +1,118 @@
-# 部署指南
+# Deployment Guide
 
-本文档说明如何将跳一跳游戏部署到微信小程序平台。
+This document explains how to deploy the Jump Jump game to the WeChat Mini Program platform.
 
-## 📋 部署前准备
+## 📋 Pre-deployment Preparation
 
-### 1. 微信小程序账号
-- 注册微信小程序账号：https://mp.weixin.qq.com/
-- 获取AppID（小程序ID）
-- 配置服务器域名（如果需要）
+### 1. WeChat Mini Program Account
+- Register a WeChat Mini Program account: https://mp.weixin.qq.com/
+- Obtain AppID (Mini Program ID)
+- Configure server domain names (if needed)
 
-### 2. 开发工具
-- 下载微信开发者工具：https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html
-- 安装并登录开发者工具
+### 2. Development Tools
+- Download WeChat Developer Tools: https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html
+- Install and log in to the developer tools
 
-### 3. 必需资源文件
+### 3. Required Resource Files
 
-#### Three.js库文件
-1. 访问 https://threejs.org/
-2. 下载最新版本的Three.js
-3. 将 `three.min.js` 文件复制到 `/pages/game/libs/` 目录
-4. 替换现有的模拟文件
+#### Three.js Library File
+1. Visit https://threejs.org/
+2. Download the latest version of Three.js
+3. Copy the `three.min.js` file to the `/pages/game/libs/` directory
+4. Replace the existing mock file
 
-#### 音效文件（可选）
-在 `/sounds/` 目录添加以下音效文件：
-- `jump.mp3` - 跳跃音效
-- `land.mp3` - 落地音效
-- `perfect.mp3` - 完美落地音效
-- `gameover.mp3` - 游戏结束音效
-- `score.mp3` - 得分音效
+#### Sound Effect Files (Optional)
+Add the following sound effect files to the `/sounds/` directory:
+- `jump.mp3` - Jump sound effect
+- `land.mp3` - Landing sound effect
+- `perfect.mp3` - Perfect landing sound effect
+- `gameover.mp3` - Game over sound effect
+- `score.mp3` - Score sound effect
 
-#### 图片资源（可选）
-在 `/images/` 目录添加以下图片文件：
-- `share.png` - 分享图片 (500x400px)
-- `icon.png` - 游戏图标 (144x144px)
+#### Image Resources (Optional)
+Add the following image files to the `/images/` directory:
+- `share.png` - Share image (500x400px)
+- `icon.png` - Game icon (144x144px)
 
-## 🚀 部署步骤
+## 🚀 Deployment Steps
 
-### 步骤1：项目配置
-1. 打开 `project.config.json`
-2. 修改 `appid` 字段为你的小程序AppID：
+### Step 1: Project Configuration
+1. Open `project.config.json`
+2. Modify the `appid` field to your Mini Program AppID:
    ```json
    {
-     "appid": "你的小程序AppID",
+     "appid": "your-mini-program-appid",
      "projectname": "jump-jump-game"
    }
    ```
 
-### 步骤2：导入项目
-1. 打开微信开发者工具
-2. 点击"导入项目"
-3. 选择项目根目录
-4. 输入项目名称和AppID
-5. 点击"导入"
+### Step 2: Import Project
+1. Open WeChat Developer Tools
+2. Click "Import Project"
+3. Select the project root directory
+4. Enter project name and AppID
+5. Click "Import"
 
-### 步骤3：本地调试
-1. 在开发者工具中点击"编译"
-2. 在模拟器中测试游戏功能
-3. 检查控制台是否有错误信息
-4. 调试游戏逻辑和性能
+### Step 3: Local Debugging
+1. Click "Compile" in the developer tools
+2. Test game functionality in the simulator
+3. Check console for error messages
+4. Debug game logic and performance
 
-### 步骤4：真机预览
-1. 点击"预览"按钮
-2. 使用微信扫描二维码
-3. 在真机上测试游戏性能
-4. 检查兼容性问题
+### Step 4: Real Device Preview
+1. Click the "Preview" button
+2. Use WeChat to scan the QR code
+3. Test game performance on real device
+4. Check compatibility issues
 
-### 步骤5：上传代码
-1. 确保所有功能正常
-2. 点击"上传"按钮
-3. 填写版本号和项目备注
-4. 点击"上传"
+### Step 5: Upload Code
+1. Ensure all functions work properly
+2. Click the "Upload" button
+3. Fill in version number and project notes
+4. Click "Upload"
 
-### 步骤6：提交审核
-1. 登录微信公众平台：https://mp.weixin.qq.com/
-2. 进入"开发管理" -> "开发版本"
-3. 找到刚上传的版本，点击"提交审核"
-4. 填写审核信息：
-   - 功能页面：pages/game/game
-   - 功能描述：跳一跳小游戏
-   - 测试帐号：提供测试账号（如需要）
+### Step 6: Submit for Review
+1. Log in to WeChat Official Accounts Platform: https://mp.weixin.qq.com/
+2. Go to "Development Management" -> "Development Version"
+3. Find the uploaded version and click "Submit for Review"
+4. Fill in review information:
+   - Function page: pages/game/game
+   - Function description: Jump Jump mini-game
+   - Test account: Provide test account (if needed)
 
-### 步骤7：发布上线
-1. 等待审核通过（通常1-7个工作日）
-2. 审核通过后，在"线上版本"中点击"发布"
-3. 游戏正式上线
+### Step 7: Release Online
+1. Wait for review approval (usually 1-7 business days)
+2. After review approval, click "Release" in "Online Version"
+3. Game officially goes live
 
-## ⚙️ 配置说明
+## ⚙️ Configuration Instructions
 
-### 小程序配置 (app.json)
+### Mini Program Configuration (app.json)
 ```json
 {
   "pages": [
     "pages/game/game"
   ],
   "window": {
-    "navigationBarTitleText": "跳一跳",
+    "navigationBarTitleText": "Jump Jump",
     "backgroundColor": "#87CEEB"
   }
 }
 ```
 
-### 页面配置 (game.json)
+### Page Configuration (game.json)
 ```json
 {
-  "navigationBarTitleText": "跳一跳",
+  "navigationBarTitleText": "Jump Jump",
   "navigationStyle": "custom",
   "disableScroll": true
 }
 ```
 
-### 项目配置 (project.config.json)
+### Project Configuration (project.config.json)
 ```json
 {
-  "appid": "你的AppID",
+  "appid": "your-appid",
   "projectname": "jump-jump-game",
   "libVersion": "2.19.4",
   "setting": {
@@ -123,86 +123,86 @@
 }
 ```
 
-## 🔍 常见问题
+## 🔍 Common Issues
 
-### Q1: Three.js库文件过大
-**解决方案：**
-- 使用压缩版本的Three.js
-- 只导入需要的模块
-- 考虑使用CDN加载
+### Q1: Three.js library file too large
+**Solution:**
+- Use compressed version of Three.js
+- Import only needed modules
+- Consider using CDN loading
 
-### Q2: 游戏性能不佳
-**解决方案：**
-- 降低模型复杂度
-- 减少粒子数量
-- 优化渲染循环
-- 使用对象池
+### Q2: Poor game performance
+**Solution:**
+- Reduce model complexity
+- Decrease particle count
+- Optimize render loop
+- Use object pools
 
-### Q3: 音效无法播放
-**解决方案：**
-- 检查音效文件格式（推荐MP3）
-- 确保文件大小合理（<500KB）
-- 使用wx.createInnerAudioContext()
+### Q3: Sound effects not playing
+**Solution:**
+- Check sound file format (recommend MP3)
+- Ensure reasonable file size (<500KB)
+- Use wx.createInnerAudioContext()
 
-### Q4: 真机上白屏
-**解决方案：**
-- 检查WebGL兼容性
-- 查看控制台错误信息
-- 降低渲染质量
-- 添加错误处理
+### Q4: White screen on real device
+**Solution:**
+- Check WebGL compatibility
+- View console error messages
+- Reduce render quality
+- Add error handling
 
-### Q5: 分享功能异常
-**解决方案：**
-- 检查分享图片路径
-- 确保图片尺寸正确
-- 测试分享回调函数
+### Q5: Share function abnormal
+**Solution:**
+- Check share image path
+- Ensure correct image dimensions
+- Test share callback functions
 
-## 📊 性能监控
+## 📊 Performance Monitoring
 
-### 性能指标
-- **FPS**：目标60fps，最低30fps
-- **内存使用**：<100MB
-- **包大小**：<2MB
-- **启动时间**：<3秒
+### Performance Metrics
+- **FPS**: Target 60fps, minimum 30fps
+- **Memory Usage**: <100MB
+- **Package Size**: <2MB
+- **Startup Time**: <3 seconds
 
-### 监控代码
+### Monitoring Code
 ```javascript
-// 在game.js中添加性能监控
+// Add performance monitoring in game.js
 const performanceMonitor = new PerformanceMonitor()
 
-// 在渲染循环中更新
+// Update in render loop
 performanceMonitor.update()
 
-// 定期输出性能数据
+// Output performance data periodically
 setInterval(() => {
   console.log('FPS:', performanceMonitor.getFPS())
   console.log('Memory:', wx.getMemoryInfo?.())
 }, 5000)
 ```
 
-## 🔒 安全注意事项
+## 🔒 Security Considerations
 
-1. **代码混淆**：上线前对关键代码进行混淆
-2. **资源保护**：重要资源文件进行加密
-3. **数据验证**：对用户输入进行验证
-4. **防作弊**：添加基础的防作弊机制
+1. **Code Obfuscation**: Obfuscate critical code before going live
+2. **Resource Protection**: Encrypt important resource files
+3. **Data Validation**: Validate user inputs
+4. **Anti-cheating**: Add basic anti-cheating mechanisms
 
-## 📈 运营建议
+## 📈 Operation Suggestions
 
-1. **数据统计**：接入小程序数据助手
-2. **用户反馈**：添加反馈入口
-3. **版本迭代**：定期更新游戏内容
-4. **社交传播**：优化分享功能
+1. **Data Analytics**: Integrate Mini Program Data Assistant
+2. **User Feedback**: Add feedback entry
+3. **Version Iteration**: Regularly update game content
+4. **Social Sharing**: Optimize sharing functionality
 
-## 🆘 技术支持
+## 🆘 Technical Support
 
-如遇到部署问题，可以通过以下方式获取帮助：
+If you encounter deployment issues, you can get help through:
 
-1. **官方文档**：https://developers.weixin.qq.com/miniprogram/dev/
-2. **开发者社区**：https://developers.weixin.qq.com/community/
-3. **GitHub Issues**：在项目仓库提交问题
-4. **技术群组**：加入相关技术交流群
+1. **Official Documentation**: https://developers.weixin.qq.com/miniprogram/dev/
+2. **Developer Community**: https://developers.weixin.qq.com/community/
+3. **GitHub Issues**: Submit issues in the project repository
+4. **Technical Groups**: Join relevant technical exchange groups
 
 ---
 
-按照这个指南，你应该能够成功将跳一跳游戏部署到微信小程序平台。祝你部署顺利！🎉
+Following this guide, you should be able to successfully deploy the Jump Jump game to the WeChat Mini Program platform. Good luck with your deployment! 🎉

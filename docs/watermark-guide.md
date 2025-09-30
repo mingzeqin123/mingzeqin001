@@ -1,66 +1,66 @@
-# 图片水印功能使用指南
+# Image Watermark Feature Usage Guide
 
-本项目为微信小程序添加了完整的图片水印功能，支持文字水印和图片水印，可以单张处理或批量处理。
+This project adds complete image watermark functionality to WeChat Mini Programs, supporting text watermarks and image watermarks, with single image processing or batch processing capabilities.
 
-## 功能特性
+## Features
 
-### 🎨 文字水印
-- ✅ 自定义水印文字内容
-- ✅ 可调节字体大小、颜色、透明度
-- ✅ 支持多种预设位置（左上、右上、左下、右下、居中）
-- ✅ 支持自定义精确坐标定位
-- ✅ 字体样式可配置
+### 🎨 Text Watermarks
+- ✅ Custom watermark text content
+- ✅ Adjustable font size, color, and opacity
+- ✅ Multiple preset positions (top-left, top-right, bottom-left, bottom-right, center)
+- ✅ Custom precise coordinate positioning support
+- ✅ Configurable font styles
 
-### 🖼️ 图片水印
-- ✅ 支持任意图片作为水印
-- ✅ 可调节水印大小和透明度
-- ✅ 支持多种预设位置
-- ✅ 支持自定义精确坐标定位
-- ✅ 自动保持图片比例
+### 🖼️ Image Watermarks
+- ✅ Support any image as watermark
+- ✅ Adjustable watermark size and opacity
+- ✅ Multiple preset positions support
+- ✅ Custom precise coordinate positioning support
+- ✅ Automatic image ratio preservation
 
-### 🚀 批量处理
-- ✅ 支持一次处理多张图片
-- ✅ 实时显示处理进度
-- ✅ 批量保存到相册
-- ✅ 错误处理和重试机制
+### 🚀 Batch Processing
+- ✅ Process multiple images at once
+- ✅ Real-time processing progress display
+- ✅ Batch save to album
+- ✅ Error handling and retry mechanism
 
-## 文件结构
+## File Structure
 
 ```
 ├── utils/
-│   └── watermark.js          # 水印工具类（核心功能）
+│   └── watermark.js          # Watermark utility class (core functionality)
 ├── pages/
 │   └── watermark/
-│       ├── watermark.js      # 水印页面逻辑
-│       ├── watermark.wxml    # 页面模板
-│       ├── watermark.wxss    # 页面样式
-│       └── watermark.json    # 页面配置
+│       ├── watermark.js      # Watermark page logic
+│       ├── watermark.wxml    # Page template
+│       ├── watermark.wxss    # Page styles
+│       └── watermark.json    # Page configuration
 ├── examples/
-│   └── watermark-examples.js # 使用示例
+│   └── watermark-examples.js # Usage examples
 └── docs/
-    └── watermark-guide.md    # 本文档
+    └── watermark-guide.md    # This document
 ```
 
-## 快速开始
+## Quick Start
 
-### 1. 导入工具类
+### 1. Import Utility Class
 
 ```javascript
 const WatermarkUtil = require('../../utils/watermark.js');
 ```
 
-### 2. 添加文字水印
+### 2. Add Text Watermark
 
 ```javascript
-// 基础用法
+// Basic usage
 const result = await WatermarkUtil.addTextWatermark('/path/to/image.jpg', {
-  text: '我的水印',
+  text: 'My Watermark',
   position: 'bottom-right'
 });
 
-// 高级配置
+// Advanced configuration
 const result = await WatermarkUtil.addTextWatermark('/path/to/image.jpg', {
-  text: '© 2024 版权所有',
+  text: '© 2024 All Rights Reserved',
   fontSize: 24,
   color: '#FFFFFF',
   opacity: 0.8,
@@ -68,12 +68,12 @@ const result = await WatermarkUtil.addTextWatermark('/path/to/image.jpg', {
 });
 ```
 
-### 3. 添加图片水印
+### 3. Add Image Watermark
 
 ```javascript
 const result = await WatermarkUtil.addImageWatermark(
-  '/path/to/image.jpg',           // 原图路径
-  '/path/to/watermark.png',       // 水印图片路径
+  '/path/to/image.jpg',           // Original image path
+  '/path/to/watermark.png',       // Watermark image path
   {
     width: 100,
     height: 100,
@@ -83,83 +83,83 @@ const result = await WatermarkUtil.addImageWatermark(
 );
 ```
 
-### 4. 批量处理
+### 4. Batch Processing
 
 ```javascript
 const results = await WatermarkUtil.batchAddWatermark(
-  ['/path/to/image1.jpg', '/path/to/image2.jpg'],  // 图片数组
+  ['/path/to/image1.jpg', '/path/to/image2.jpg'],  // Image array
   {
     type: 'text',
-    text: '批量水印',
+    text: 'Batch Watermark',
     position: 'bottom-right'
   },
   (progress) => {
-    console.log(`进度: ${progress.completed}/${progress.total}`);
+    console.log(`Progress: ${progress.completed}/${progress.total}`);
   }
 );
 ```
 
-## API 文档
+## API Documentation
 
 ### WatermarkUtil.addTextWatermark(imagePath, options)
 
-添加文字水印到图片
+Add text watermark to image
 
-**参数:**
-- `imagePath` (string): 原图片路径
-- `options` (object): 配置选项
-  - `text` (string): 水印文字，默认 '水印'
-  - `x` (number): X坐标，0-1为比例，>1为像素值
-  - `y` (number): Y坐标，0-1为比例，>1为像素值
-  - `position` (string): 预设位置，可选值：
-    - 'top-left' - 左上角
-    - 'top-right' - 右上角
-    - 'bottom-left' - 左下角
-    - 'bottom-right' - 右下角（默认）
-    - 'center' - 居中
-  - `fontSize` (number): 字体大小，默认 20
-  - `color` (string): 文字颜色，默认 '#FFFFFF'
-  - `opacity` (number): 透明度 0-1，默认 0.8
-  - `fontFamily` (string): 字体，默认 'Arial'
+**Parameters:**
+- `imagePath` (string): Original image path
+- `options` (object): Configuration options
+  - `text` (string): Watermark text, default 'Watermark'
+  - `x` (number): X coordinate, 0-1 for ratio, >1 for pixel value
+  - `y` (number): Y coordinate, 0-1 for ratio, >1 for pixel value
+  - `position` (string): Preset position, optional values:
+    - 'top-left' - Top left corner
+    - 'top-right' - Top right corner
+    - 'bottom-left' - Bottom left corner
+    - 'bottom-right' - Bottom right corner (default)
+    - 'center' - Center
+  - `fontSize` (number): Font size, default 20
+  - `color` (string): Text color, default '#FFFFFF'
+  - `opacity` (number): Opacity 0-1, default 0.8
+  - `fontFamily` (string): Font family, default 'Arial'
 
-**返回值:** Promise&lt;string&gt; - 处理后的图片临时路径
+**Return Value:** Promise&lt;string&gt; - Processed image temporary path
 
 ### WatermarkUtil.addImageWatermark(imagePath, watermarkPath, options)
 
-添加图片水印到图片
+Add image watermark to image
 
-**参数:**
-- `imagePath` (string): 原图片路径
-- `watermarkPath` (string): 水印图片路径
-- `options` (object): 配置选项
-  - `width` (number): 水印宽度
-  - `height` (number): 水印高度
-  - `x` (number): X坐标
-  - `y` (number): Y坐标
-  - `position` (string): 预设位置（同文字水印）
-  - `opacity` (number): 透明度 0-1，默认 0.8
+**Parameters:**
+- `imagePath` (string): Original image path
+- `watermarkPath` (string): Watermark image path
+- `options` (object): Configuration options
+  - `width` (number): Watermark width
+  - `height` (number): Watermark height
+  - `x` (number): X coordinate
+  - `y` (number): Y coordinate
+  - `position` (string): Preset position (same as text watermark)
+  - `opacity` (number): Opacity 0-1, default 0.8
 
-**返回值:** Promise&lt;string&gt; - 处理后的图片临时路径
+**Return Value:** Promise&lt;string&gt; - Processed image temporary path
 
 ### WatermarkUtil.batchAddWatermark(imagePaths, config, progressCallback)
 
-批量添加水印
+Batch add watermarks
 
-**参数:**
-- `imagePaths` (Array&lt;string&gt;): 图片路径数组
-- `config` (object): 水印配置
-  - `type` (string): 水印类型，'text' 或 'image'
-  - 其他配置项同单张处理
-- `progressCallback` (function): 进度回调函数
-  - 参数: `{completed, total, progress}`
+**Parameters:**
+- `imagePaths` (Array&lt;string&gt;): Image path array
+- `config` (object): Watermark configuration
+  - `type` (string): Watermark type, 'text' or 'image'
+  - Other configuration items same as single processing
+- `progressCallback` (function): Progress callback function
+  - Parameter: `{completed, total, progress}`
 
-**返回值:** Promise&lt;Array&gt; - 处理结果数组
+**Return Value:** Promise&lt;Array&gt; - Processing result array
 
-## 在页面中使用
+## Usage in Pages
 
-### 1. 页面配置
+### 1. Page Configuration
 
-在 `app.json` 中添加页面路由：
+Add page route in `app.json`:
 
 ```json
 {
@@ -169,16 +169,16 @@ const results = await WatermarkUtil.batchAddWatermark(
 }
 ```
 
-### 2. 页面跳转
+### 2. Page Navigation
 
 ```javascript
-// 跳转到水印页面
+// Navigate to watermark page
 wx.navigateTo({
   url: '/pages/watermark/watermark'
 });
 ```
 
-### 3. 在其他页面中集成
+### 3. Integration in Other Pages
 
 ```javascript
 Page({
@@ -192,7 +192,7 @@ Page({
     
     try {
       const result = await WatermarkUtil.addTextWatermark(this.data.selectedImage, {
-        text: '我的水印',
+        text: 'My Watermark',
         position: 'bottom-right'
       });
       
@@ -201,22 +201,22 @@ Page({
       });
       
       wx.showToast({
-        title: '水印添加成功',
+        title: 'Watermark added successfully',
         icon: 'success'
       });
     } catch (error) {
-      console.error('添加水印失败:', error);
+      console.error('Failed to add watermark:', error);
     }
   }
 });
 ```
 
-## 最佳实践
+## Best Practices
 
-### 1. 性能优化
+### 1. Performance Optimization
 
 ```javascript
-// 批量处理时控制并发数量
+// Control concurrency when batch processing
 const batchSize = 5;
 for (let i = 0; i < imagePaths.length; i += batchSize) {
   const batch = imagePaths.slice(i, i + batchSize);
@@ -224,72 +224,72 @@ for (let i = 0; i < imagePaths.length; i += batchSize) {
 }
 ```
 
-### 2. 错误处理
+### 2. Error Handling
 
 ```javascript
 try {
   const result = await WatermarkUtil.addTextWatermark(imagePath, options);
-  // 处理成功
+  // Processing successful
 } catch (error) {
-  console.error('水印处理失败:', error);
+  console.error('Watermark processing failed:', error);
   wx.showToast({
-    title: '处理失败，请重试',
+    title: 'Processing failed, please try again',
     icon: 'error'
   });
 }
 ```
 
-### 3. 内存管理
+### 3. Memory Management
 
 ```javascript
-// 及时清理临时文件
+// Clean up temporary files promptly
 wx.removeSavedFile({
   filePath: tempFilePath,
   success: () => {
-    console.log('临时文件清理成功');
+    console.log('Temporary file cleaned up successfully');
   }
 });
 ```
 
-## 注意事项
+## Notes
 
-1. **Canvas限制**: 小程序Canvas有尺寸限制，超大图片可能需要压缩处理
-2. **临时文件**: 处理后的图片为临时文件，需要及时保存到相册或服务器
-3. **权限申请**: 保存到相册需要用户授权 `scope.writePhotosAlbum`
-4. **性能考虑**: 批量处理大量图片时注意内存使用和处理时间
-5. **图片格式**: 支持常见格式（jpg, png, gif等），建议使用jpg格式以获得更好的性能
+1. **Canvas Limitations**: Mini Program Canvas has size limitations, very large images may need compression
+2. **Temporary Files**: Processed images are temporary files, need to be saved to album or server promptly
+3. **Permission Request**: Saving to album requires user authorization `scope.writePhotosAlbum`
+4. **Performance Considerations**: Pay attention to memory usage and processing time when batch processing many images
+5. **Image Formats**: Supports common formats (jpg, png, gif, etc.), recommend jpg format for better performance
 
-## 常见问题
+## Common Issues
 
-### Q: 水印位置不准确怎么办？
-A: 可以使用自定义坐标 `x` 和 `y` 参数进行精确定位。
+### Q: What if watermark position is inaccurate?
+A: Use custom coordinates `x` and `y` parameters for precise positioning.
 
-### Q: 如何实现半透明效果？
-A: 通过调整 `opacity` 参数（0-1之间的值）来控制透明度。
+### Q: How to achieve semi-transparent effects?
+A: Control transparency by adjusting the `opacity` parameter (value between 0-1).
 
-### Q: 批量处理失败怎么办？
-A: 检查图片路径是否正确，以及是否有足够的存储空间。
+### Q: What to do if batch processing fails?
+A: Check if image paths are correct and if there's sufficient storage space.
 
-### Q: 如何自定义字体？
-A: 通过 `fontFamily` 参数设置，但需要确保小程序支持该字体。
+### Q: How to customize fonts?
+A: Set through `fontFamily` parameter, but ensure the mini program supports that font.
 
-## 更新日志
+## Update Log
 
 - **v1.0.0** (2024-12-19)
-  - ✅ 实现基础文字水印功能
-  - ✅ 实现图片水印功能
-  - ✅ 支持批量处理
-  - ✅ 完整的UI界面
-  - ✅ 详细的使用文档
+  - ✅ Implemented basic text watermark functionality
+  - ✅ Implemented image watermark functionality
+  - ✅ Support for batch processing
+  - ✅ Complete UI interface
+  - ✅ Detailed usage documentation
 
-## 技术支持
+## Technical Support
 
-如有问题或建议，请通过以下方式联系：
+For questions or suggestions, please contact us through:
 
 - 📧 Email: support@example.com
-- 💬 微信群: 扫描二维码加入
-- 📱 QQ群: 123456789
+- 💬 WeChat Group: Scan QR code to join
+- 📱 QQ Group: 123456789
 
 ---
 
-*本文档最后更新时间: 2024-12-19*
+*This document was last updated: 2024-12-19*
