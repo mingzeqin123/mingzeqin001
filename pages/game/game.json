@@ -1,6 +1,6 @@
 {
   "usingComponents": {},
-  "navigationBarTitleText": "跳一跳",
+  "navigationBarTitleText": "Jump Game",
   "navigationStyle": "custom",
   "disableScroll": true
 }

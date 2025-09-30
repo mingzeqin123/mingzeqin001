@@ -9,43 +9,43 @@ class GameEngine {
     this.canvas = canvas
     this.ctx = ctx
     
-    // 游戏状态
+    // Game state
     this.isRunning = false
     this.isPaused = false
     this.score = 0
     this.gameState = 'waiting' // waiting, charging, jumping, falling
     
-    // 蓄力相关
+    // Charging related
     this.chargingStartTime = 0
-    this.maxChargingTime = 2000 // 最大蓄力时间2秒
+    this.maxChargingTime = 2000 // Maximum charging time 2 seconds
     this.currentPower = 0
     
-    // 回调函数
+    // Callback functions
     this.onScoreChange = null
     this.onGameOver = null
     this.onPowerChange = null
     
-    // 初始化Three.js场景
+    // Initialize Three.js scene
     this.initScene()
     this.initLighting()
     this.initCamera()
     
-    // 初始化游戏对象
+    // Initialize game objects
     this.initGameObjects()
     
-    // 绑定渲染循环
+    // Bind render loop
     this.render = this.render.bind(this)
   }
   
-  // 初始化场景
+  // Initialize scene
   initScene() {
     this.scene = new THREE.Scene()
-    this.scene.background = new THREE.Color(0x87CEEB) // 天蓝色背景
+    this.scene.background = new THREE.Color(0x87CEEB) // Sky blue background
     
-    // 添加雾效
+    // Add fog effect
     this.scene.fog = new THREE.Fog(0x87CEEB, 50, 200)
     
-    // WebGL渲染器
+    // WebGL renderer
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
       context: this.ctx,
@@ -57,18 +57,18 @@ class GameEngine {
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
   }
   
-  // 初始化光照
+  // Initialize lighting
   initLighting() {
-    // 环境光
+    // Ambient light
     const ambientLight = new THREE.AmbientLight(0x404040, 0.4)
     this.scene.add(ambientLight)
     
-    // 方向光（太阳光）
+    // Directional light (sunlight)
     this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.8)
     this.directionalLight.position.set(10, 20, 10)
     this.directionalLight.castShadow = true
     
-    // 设置阴影参数
+    // Set shadow parameters
     this.directionalLight.shadow.mapSize.width = 2048
     this.directionalLight.shadow.mapSize.height = 2048
     this.directionalLight.shadow.camera.near = 0.1
@@ -81,60 +81,60 @@ class GameEngine {
     this.scene.add(this.directionalLight)
   }
   
-  // 初始化相机
+  // Initialize camera
   initCamera() {
     const aspect = this.canvas.width / this.canvas.height
     this.camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000)
     
-    // 设置相机初始位置
+    // Set camera initial position
     this.camera.position.set(0, 8, 8)
     this.camera.lookAt(0, 0, 0)
     
-    // 相机跟随参数
+    // Camera follow parameters
     this.cameraTarget = new THREE.Vector3(0, 0, 0)
     this.cameraOffset = new THREE.Vector3(0, 8, 8)
   }
   
   // 初始化游戏对象
   initGameObjects() {
-    // 创建玩家
+    // Create player
     this.player = new Player(this.scene)
     
-    // 创建方块数组
+    // Create blocks array
     this.blocks = []
     this.currentBlockIndex = 0
     
-    // 创建初始方块
+    // Create initial blocks
     this.createInitialBlocks()
   }
   
-  // 创建初始方块
+  // Create initial blocks
   createInitialBlocks() {
-    // 起始方块
+    // Starting block
     const startBlock = new Block(this.scene, 0, 0, 0, 'start')
     this.blocks.push(startBlock)
     
-    // 生成前几个方块
+    // Generate first few blocks
     for (let i = 1; i < 5; i++) {
       this.generateNextBlock()
     }
     
-    // 玩家站在第一个方块上
+    // Player stands on first block
     this.player.setPosition(0, 1, 0)
   }
   
-  // 生成下一个方块
+  // Generate next block
   generateNextBlock() {
     const lastBlock = this.blocks[this.blocks.length - 1]
     
-    // 随机生成下一个方块的位置
-    const distance = 3 + Math.random() * 4 // 距离3-7之间
-    const angle = (Math.random() - 0.5) * Math.PI * 0.6 // 角度范围
+    // Randomly generate next block position
+    const distance = 3 + Math.random() * 4 // Distance between 3-7
+    const angle = (Math.random() - 0.5) * Math.PI * 0.6 // Angle range
     
     const x = lastBlock.position.x + Math.sin(angle) * distance
     const z = lastBlock.position.z + Math.cos(angle) * distance
     
-    // 随机方块类型
+    // Random block type
     const types = ['normal', 'small', 'tall', 'special']
     const type = types[Math.floor(Math.random() * types.length)]
     
@@ -142,7 +142,7 @@ class GameEngine {
     this.blocks.push(newBlock)
   }
   
-  // 开始游戏
+  // Start game
   startGame() {
     this.isRunning = true
     this.gameState = 'waiting'
@@ -154,28 +154,28 @@ class GameEngine {
     }
   }
   
-  // 重新开始游戏
+  // Restart game
   restart() {
-    // 清理现有方块
+    // Clear existing blocks
     this.blocks.forEach(block => block.destroy())
     this.blocks = []
     this.currentBlockIndex = 0
     this.score = 0
     
-    // 重置玩家
+    // Reset player
     this.player.reset()
     
-    // 重新创建方块
+    // Recreate blocks
     this.createInitialBlocks()
     
-    // 重置相机
+    // Reset camera
     this.cameraTarget.set(0, 0, 0)
     
-    // 开始游戏
+    // Start game
     this.startGame()
   }
   
-  // 开始蓄力
+  // Start charging
   startCharging() {
     if (this.gameState !== 'waiting') return
     
@@ -183,11 +183,11 @@ class GameEngine {
     this.chargingStartTime = Date.now()
     this.currentPower = 0
     
-    // 开始蓄力动画
+    // Start charging动画
     this.player.startCharging()
   }
   
-  // 跳跃
+  // Jump
   jump() {
     if (this.gameState !== 'charging') return
     
@@ -201,23 +201,23 @@ class GameEngine {
       this.onPowerChange(0)
     }
     
-    // 计算跳跃参数
-    const jumpDistance = 2 + power * 6 // 跳跃距离2-8
-    const jumpHeight = 1 + power * 3   // 跳跃高度1-4
+    // Calculate jump parameters
+    const jumpDistance = 2 + power * 6 // Jump distance 2-8
+    const jumpHeight = 1 + power * 3   // Jump高度1-4
     
-    // 执行跳跃
+    // Execute jump
     this.player.jump(jumpDistance, jumpHeight, () => {
       this.checkLanding()
     })
   }
   
-  // 检查落地
+  // Check landing
   checkLanding() {
     const playerPos = this.player.position
     let landedBlock = null
     let minDistance = Infinity
     
-    // 检查与所有方块的距离
+    // Check distance to all blocks
     this.blocks.forEach((block, index) => {
       const distance = Math.sqrt(
         Math.pow(playerPos.x - block.position.x, 2) +
@@ -230,7 +230,7 @@ class GameEngine {
       }
     })
     
-    // 判断是否成功落地
+    // Determine if landing is successful
     if (landedBlock && minDistance < 1.5) {
       this.handleSuccessfulLanding(landedBlock.index, minDistance)
     } else {
@@ -238,17 +238,17 @@ class GameEngine {
     }
   }
   
-  // 处理成功落地
+  // Handle successful landing
   handleSuccessfulLanding(blockIndex, distance) {
     this.gameState = 'waiting'
     
-    // 计算得分
+    // Calculate score
     let points = 1
     if (distance < 0.3) {
-      points = 5 // 完美落地
+      points = 5 // Perfect landing
       this.player.showPerfectEffect()
     } else if (distance < 0.8) {
-      points = 3 // 良好落地
+      points = 3 // Good landing
     }
     
     this.score += points
@@ -258,25 +258,25 @@ class GameEngine {
       this.onScoreChange(this.score)
     }
     
-    // 更新相机目标
+    // Update camera target
     const targetBlock = this.blocks[blockIndex]
     this.cameraTarget.copy(targetBlock.position)
     
-    // 生成新方块
+    // Generate new block
     if (this.blocks.length - blockIndex < 3) {
       this.generateNextBlock()
     }
     
-    // 清理远处的方块
+    // Clean up distant blocks
     this.cleanupDistantBlocks()
   }
   
-  // 处理游戏结束
+  // Handle game over
   handleGameOver() {
     this.gameState = 'falling'
     this.isRunning = false
     
-    // 播放坠落动画
+    // Play fall animation
     this.player.fall(() => {
       if (this.onGameOver) {
         this.onGameOver()
@@ -284,7 +284,7 @@ class GameEngine {
     })
   }
   
-  // 清理远处的方块
+  // Clean up distant blocks
   cleanupDistantBlocks() {
     const keepDistance = 20
     const playerPos = this.player.position
@@ -303,11 +303,11 @@ class GameEngine {
     })
   }
   
-  // 更新游戏逻辑
+  // Update game logic
   update(deltaTime) {
     if (!this.isRunning && this.gameState !== 'falling') return
     
-    // 更新蓄力
+    // Update charging
     if (this.gameState === 'charging') {
       const chargingTime = Date.now() - this.chargingStartTime
       this.currentPower = Math.min((chargingTime / this.maxChargingTime) * 100, 100)
@@ -317,29 +317,29 @@ class GameEngine {
       }
     }
     
-    // 更新玩家
+    // Update player
     this.player.update(deltaTime)
     
-    // 更新方块
+    // Update blocks
     this.blocks.forEach(block => {
       block.update(deltaTime)
     })
     
-    // 更新相机
+    // Update camera
     this.updateCamera(deltaTime)
   }
   
-  // 更新相机
+  // Update camera
   updateCamera(deltaTime) {
-    // 平滑跟随目标
+    // Smooth follow target
     this.camera.position.x = lerp(this.camera.position.x, this.cameraTarget.x + this.cameraOffset.x, deltaTime * 2)
     this.camera.position.z = lerp(this.camera.position.z, this.cameraTarget.z + this.cameraOffset.z, deltaTime * 2)
     
-    // 相机始终看向玩家
+    // Camera always looks at player
     this.camera.lookAt(this.player.position.x, this.player.position.y, this.player.position.z)
   }
   
-  // 渲染循环
+  // Render loop
   render(timestamp) {
     if (this.isPaused) {
       requestAnimationFrame(this.render)
@@ -349,22 +349,22 @@ class GameEngine {
     const deltaTime = (timestamp - (this.lastTime || timestamp)) / 1000
     this.lastTime = timestamp
     
-    // 更新游戏逻辑
+    // Update game logic
     this.update(deltaTime)
     
-    // 渲染场景
+    // Render scene
     this.renderer.render(this.scene, this.camera)
     
-    // 继续渲染循环
+    // Continue render loop
     requestAnimationFrame(this.render)
   }
   
-  // 开始渲染
+  // Start rendering
   start() {
     requestAnimationFrame(this.render)
   }
   
-  // 暂停游戏
+  // Pause game
   pause() {
     this.isPaused = true
   }

@@ -1,31 +1,31 @@
 <!--pages/watermark/watermark.wxml-->
 <view class="container">
   <view class="header">
-    <text class="title">图片水印工具</text>
-    <text class="subtitle">为图片添加文字或图片水印</text>
+    <text class="title">Image Watermark Tool</text>
+    <text class="subtitle">Add text or image watermarks to pictures</text>
   </view>
 
-  <!-- 模式切换 -->
+  <!-- Mode Switch -->
   <view class="mode-switch">
     <button 
       class="mode-btn {{!batchMode ? 'active' : ''}}" 
       bindtap="{{batchMode ? 'reset' : ''}}"
     >
-      单张处理
+      Single Process
     </button>
     <button 
       class="mode-btn {{batchMode ? 'active' : ''}}" 
       bindtap="selectBatchImages"
     >
-      批量处理
+      Batch Process
     </button>
   </view>
 
-  <!-- 单张图片处理 -->
+  <!-- Single Image Processing -->
   <view wx:if="{{!batchMode}}" class="single-mode">
-    <!-- 图片选择 -->
+    <!-- Image Selection -->
     <view class="section">
-      <view class="section-title">选择图片</view>
+      <view class="section-title">Select Image</view>
       <view class="image-selector" bindtap="selectImage">
         <image 
           wx:if="{{selectedImage}}" 
@@ -36,14 +36,14 @@
         />
         <view wx:else class="select-placeholder">
           <text class="iconfont">📷</text>
-          <text>点击选择图片</text>
+          <text>Tap to select image</text>
         </view>
       </view>
     </view>
 
-    <!-- 处理结果 -->
+    <!-- Processing Result -->
     <view wx:if="{{processedImage}}" class="section">
-      <view class="section-title">处理结果</view>
+      <view class="section-title">Processing Result</view>
       <view class="result-container">
         <image 
           src="{{processedImage}}" 
@@ -51,15 +51,15 @@
           data-src="{{processedImage}}"
           bindtap="previewImage"
         />
-        <button class="save-btn" bindtap="saveToAlbum">保存到相册</button>
+        <button class="save-btn" bindtap="saveToAlbum">Save to Album</button>
       </view>
     </view>
   </view>
 
-  <!-- 批量处理 -->
+  <!-- Batch Processing -->
   <view wx:if="{{batchMode}}" class="batch-mode">
     <view class="section">
-      <view class="section-title">已选择 {{selectedImages.length}} 张图片</view>
+      <view class="section-title">Selected {{selectedImages.length}} images</view>
       <view class="batch-images">
         <view 
           wx:for="{{selectedImages}}" 
@@ -87,38 +87,38 @@
     </view>
   </view>
 
-  <!-- 水印类型选择 -->
+  <!-- Watermark Type Selection -->
   <view class="section">
-    <view class="section-title">水印类型</view>
+    <view class="section-title">Watermark Type</view>
     <radio-group class="radio-group" bindchange="onWatermarkTypeChange">
       <label class="radio-item">
         <radio value="text" checked="{{watermarkType === 'text'}}" />
-        <text>文字水印</text>
+        <text>Text Watermark</text>
       </label>
       <label class="radio-item">
         <radio value="image" checked="{{watermarkType === 'image'}}" />
-        <text>图片水印</text>
+        <text>Image Watermark</text>
       </label>
     </radio-group>
   </view>
 
-  <!-- 文字水印配置 -->
+  <!-- Text Watermark Configuration -->
   <view wx:if="{{watermarkType === 'text'}}" class="section">
-    <view class="section-title">文字水印设置</view>
+    <view class="section-title">Text Watermark Settings</view>
     
     <view class="config-item">
-      <text class="config-label">水印文字</text>
+      <text class="config-label">Watermark Text</text>
       <input 
         class="config-input" 
         value="{{textConfig.text}}" 
         bindinput="onTextChange"
-        placeholder="请输入水印文字"
+        placeholder="Enter watermark text"
       />
     </view>
 
     <view class="config-item">
-      <text class="config-label">文字颜色</text>
-      <picker mode="selector" range="{{['白色', '黑色', '红色', '蓝色', '绿色']}}" range-key="" bindchange="onColorChange">
+      <text class="config-label">Text Color</text>
+      <picker mode="selector" range="{{['White', 'Black', 'Red', 'Blue', 'Green']}}" range-key="" bindchange="onColorChange">
         <view class="picker">
           <input 
             class="config-input color-input" 
@@ -130,7 +130,7 @@
     </view>
 
     <view class="config-item">
-      <text class="config-label">字体大小: {{textConfig.fontSize}}px</text>
+      <text class="config-label">Font Size: {{textConfig.fontSize}}px</text>
       <slider 
         min="12" 
         max="60" 
@@ -141,7 +141,7 @@
     </view>
 
     <view class="config-item">
-      <text class="config-label">透明度: {{textConfig.opacity * 100}}%</text>
+      <text class="config-label">Opacity: {{textConfig.opacity * 100}}%</text>
       <slider 
         min="10" 
         max="100" 
@@ -152,27 +152,27 @@
     </view>
 
     <view class="config-item">
-      <text class="config-label">位置</text>
+      <text class="config-label">Position</text>
       <picker 
         mode="selector" 
-        range="{{['右下角', '右上角', '左下角', '左上角', '居中']}}"
+        range="{{['Bottom Right', 'Top Right', 'Bottom Left', 'Top Left', 'Center']}}"
         range-key=""
         value="{{['bottom-right', 'top-right', 'bottom-left', 'top-left', 'center'].indexOf(textConfig.position)}}"
         bindchange="onPositionChange"
       >
         <view class="picker">
-          <text>{{['右下角', '右上角', '左下角', '左上角', '居中'][['bottom-right', 'top-right', 'bottom-left', 'top-left', 'center'].indexOf(textConfig.position)]}}</text>
+          <text>{{['Bottom Right', 'Top Right', 'Bottom Left', 'Top Left', 'Center'][['bottom-right', 'top-right', 'bottom-left', 'top-left', 'center'].indexOf(textConfig.position)]}}</text>
         </view>
       </picker>
     </view>
   </view>
 
-  <!-- 图片水印配置 -->
+  <!-- Image Watermark Configuration -->
   <view wx:if="{{watermarkType === 'image'}}" class="section">
-    <view class="section-title">图片水印设置</view>
+    <view class="section-title">Image Watermark Settings</view>
     
     <view class="config-item">
-      <text class="config-label">选择水印图片</text>
+      <text class="config-label">Select Watermark Image</text>
       <view class="watermark-image-selector" bindtap="selectWatermarkImage">
         <image 
           wx:if="{{imageConfig.watermarkImage}}" 
@@ -180,13 +180,13 @@
           class="watermark-image-preview"
         />
         <view wx:else class="watermark-placeholder">
-          <text>选择水印图片</text>
+          <text>Select watermark image</text>
         </view>
       </view>
     </view>
 
     <view class="config-item">
-      <text class="config-label">透明度: {{imageConfig.opacity * 100}}%</text>
+      <text class="config-label">Opacity: {{imageConfig.opacity * 100}}%</text>
       <slider 
         min="10" 
         max="100" 
@@ -197,7 +197,7 @@
     </view>
 
     <view class="config-item">
-      <text class="config-label">宽度: {{imageConfig.width}}px</text>
+      <text class="config-label">Width: {{imageConfig.width}}px</text>
       <slider 
         min="50" 
         max="300" 
@@ -209,7 +209,7 @@
     </view>
 
     <view class="config-item">
-      <text class="config-label">高度: {{imageConfig.height}}px</text>
+      <text class="config-label">Height: {{imageConfig.height}}px</text>
       <slider 
         min="50" 
         max="300" 
@@ -221,22 +221,22 @@
     </view>
 
     <view class="config-item">
-      <text class="config-label">位置</text>
+      <text class="config-label">Position</text>
       <picker 
         mode="selector" 
-        range="{{['右下角', '右上角', '左下角', '左上角', '居中']}}"
+        range="{{['Bottom Right', 'Top Right', 'Bottom Left', 'Top Left', 'Center']}}"
         range-key=""
         value="{{['bottom-right', 'top-right', 'bottom-left', 'top-left', 'center'].indexOf(imageConfig.position)}}"
         bindchange="onImagePositionChange"
       >
         <view class="picker">
-          <text>{{['右下角', '右上角', '左下角', '左上角', '居中'][['bottom-right', 'top-right', 'bottom-left', 'top-left', 'center'].indexOf(imageConfig.position)]}}</text>
+          <text>{{['Bottom Right', 'Top Right', 'Bottom Left', 'Top Left', 'Center'][['bottom-right', 'top-right', 'bottom-left', 'top-left', 'center'].indexOf(imageConfig.position)]}}</text>
         </view>
       </picker>
     </view>
   </view>
 
-  <!-- 操作按钮 -->
+  <!-- Action Buttons -->
   <view class="actions">
     <button 
       wx:if="{{!batchMode}}"
@@ -244,7 +244,7 @@
       bindtap="addWatermark"
       disabled="{{processing}}"
     >
-      {{processing ? '处理中...' : '添加水印'}}
+      {{processing ? 'Processing...' : 'Add Watermark'}}
     </button>
     
     <button 
@@ -253,16 +253,16 @@
       bindtap="batchAddWatermark"
       disabled="{{processing || selectedImages.length === 0}}"
     >
-      {{processing ? '批量处理中...' : '批量添加水印'}}
+      {{processing ? 'Batch Processing...' : 'Batch Add Watermark'}}
     </button>
 
     <button class="action-btn secondary" bindtap="reset">
-      重置
+      Reset
     </button>
   </view>
 </view>
 
-<!-- Canvas用于绘制水印 -->
+<!-- Canvas for drawing watermarks -->
 <canvas 
   canvas-id="watermark-canvas-{{timestamp}}" 
   class="watermark-canvas"

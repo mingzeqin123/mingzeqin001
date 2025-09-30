@@ -4,9 +4,9 @@ const WatermarkUtil = require('../../utils/watermark.js');
 Page({
   data: {
     selectedImage: '',
-    watermarkType: 'text', // 'text' 或 'image'
+    watermarkType: 'text', // 'text' or 'image'
     textConfig: {
-      text: '水印文字',
+      text: 'Watermark Text',
       color: '#FFFFFF',
       fontSize: 20,
       opacity: 0.8,
@@ -27,10 +27,10 @@ Page({
   },
 
   onLoad: function (options) {
-    console.log('水印页面加载');
+    console.log('Watermark page loaded');
   },
 
-  // 选择要添加水印的图片
+  // Select image to add watermark to
   selectImage: function() {
     wx.chooseImage({
       count: 1,
@@ -39,19 +39,19 @@ Page({
       success: (res) => {
         this.setData({
           selectedImage: res.tempFilePaths[0],
-          processedImage: '' // 清空之前的结果
+          processedImage: '' // Clear previous result
         });
       },
       fail: (err) => {
         wx.showToast({
-          title: '选择图片失败',
+          title: 'Failed to select image',
           icon: 'error'
         });
       }
     });
   },
 
-  // 批量选择图片
+  // Batch select images
   selectBatchImages: function() {
     wx.chooseImage({
       count: 9,
@@ -63,14 +63,14 @@ Page({
           batchMode: true
         });
         wx.showToast({
-          title: `已选择${res.tempFilePaths.length}张图片`,
+          title: `Selected ${res.tempFilePaths.length} images`,
           icon: 'success'
         });
       }
     });
   },
 
-  // 选择水印图片
+  // Select watermark image
   selectWatermarkImage: function() {
     wx.chooseImage({
       count: 1,
@@ -84,14 +84,14 @@ Page({
     });
   },
 
-  // 切换水印类型
+  // Switch watermark type
   onWatermarkTypeChange: function(e) {
     this.setData({
       watermarkType: e.detail.value
     });
   },
 
-  // 文字水印配置变更
+  // Text watermark configuration changes
   onTextChange: function(e) {
     this.setData({
       'textConfig.text': e.detail.value
@@ -122,7 +122,7 @@ Page({
     });
   },
 
-  // 图片水印配置变更
+  // Image watermark configuration changes
   onImageOpacityChange: function(e) {
     this.setData({
       'imageConfig.opacity': e.detail.value / 100
@@ -142,11 +142,11 @@ Page({
     });
   },
 
-  // 添加水印
+  // Add watermark
   addWatermark: function() {
     if (!this.data.selectedImage) {
       wx.showToast({
-        title: '请先选择图片',
+        title: 'Please select an image first',
         icon: 'error'
       });
       return;
@@ -154,7 +154,7 @@ Page({
 
     if (this.data.watermarkType === 'image' && !this.data.imageConfig.watermarkImage) {
       wx.showToast({
-        title: '请选择水印图片',
+        title: 'Please select a watermark image',
         icon: 'error'
       });
       return;
@@ -163,7 +163,7 @@ Page({
     this.setData({ processing: true });
 
     wx.showLoading({
-      title: '添加水印中...'
+      title: 'Adding watermark...'
     });
 
     const promise = this.data.watermarkType === 'text' 
@@ -181,25 +181,25 @@ Page({
       });
       wx.hideLoading();
       wx.showToast({
-        title: '水印添加成功',
+        title: 'Watermark added successfully',
         icon: 'success'
       });
     }).catch((error) => {
-      console.error('添加水印失败:', error);
+      console.error('Failed to add watermark:', error);
       this.setData({ processing: false });
       wx.hideLoading();
       wx.showToast({
-        title: '添加水印失败',
+        title: 'Failed to add watermark',
         icon: 'error'
       });
     });
   },
 
-  // 批量添加水印
+  // Batch add watermark
   batchAddWatermark: function() {
     if (this.data.selectedImages.length === 0) {
       wx.showToast({
-        title: '请先选择图片',
+        title: 'Please select images first',
         icon: 'error'
       });
       return;
@@ -208,7 +208,7 @@ Page({
     this.setData({ processing: true, batchProgress: 0 });
 
     wx.showLoading({
-      title: '批量处理中...'
+      title: 'Batch processing...'
     });
 
     const config = {
@@ -227,7 +227,7 @@ Page({
           batchProgress: Math.round(progress.progress * 100)
         });
         wx.showLoading({
-          title: `处理中 ${progress.completed}/${progress.total}`
+          title: `Processing ${progress.completed}/${progress.total}`
         });
       }
     ).then((results) => {
@@ -236,30 +236,30 @@ Page({
       
       const successCount = results.filter(r => r.success).length;
       wx.showModal({
-        title: '批量处理完成',
-        content: `成功处理 ${successCount}/${results.length} 张图片`,
+        title: 'Batch Processing Complete',
+        content: `Successfully processed ${successCount}/${results.length} images`,
         showCancel: false,
         success: () => {
-          // 可以在这里处理结果，比如保存到相册
+          // Can process results here, such as saving to album
           this.saveBatchResults(results.filter(r => r.success));
         }
       });
     }).catch((error) => {
-      console.error('批量处理失败:', error);
+      console.error('Batch processing failed:', error);
       this.setData({ processing: false });
       wx.hideLoading();
       wx.showToast({
-        title: '批量处理失败',
+        title: 'Batch processing failed',
         icon: 'error'
       });
     });
   },
 
-  // 保存批量处理结果
+  // Save batch processing results
   saveBatchResults: function(results) {
     wx.showModal({
-      title: '保存图片',
-      content: `是否将 ${results.length} 张处理后的图片保存到相册？`,
+      title: 'Save Images',
+      content: `Save ${results.length} processed images to album?`,
       success: (res) => {
         if (res.confirm) {
           this.saveImagesToAlbum(results.map(r => r.watermarked));
@@ -268,11 +268,11 @@ Page({
     });
   },
 
-  // 保存图片到相册
+  // Save image to album
   saveToAlbum: function() {
     if (!this.data.processedImage) {
       wx.showToast({
-        title: '没有可保存的图片',
+        title: 'No image to save',
         icon: 'error'
       });
       return;
@@ -282,15 +282,15 @@ Page({
       filePath: this.data.processedImage,
       success: () => {
         wx.showToast({
-          title: '保存成功',
+          title: 'Saved successfully',
           icon: 'success'
         });
       },
       fail: (error) => {
         if (error.errMsg.includes('auth')) {
           wx.showModal({
-            title: '需要授权',
-            content: '需要获取保存图片到相册的权限',
+            title: 'Authorization Required',
+            content: 'Need permission to save images to album',
             success: (res) => {
               if (res.confirm) {
                 wx.openSetting();
@@ -299,7 +299,7 @@ Page({
           });
         } else {
           wx.showToast({
-            title: '保存失败',
+            title: 'Save failed',
             icon: 'error'
           });
         }
@@ -307,20 +307,20 @@ Page({
     });
   },
 
-  // 批量保存图片到相册
+  // Batch save images to album
   saveImagesToAlbum: function(imagePaths) {
     let saved = 0;
     const total = imagePaths.length;
     
     wx.showLoading({
-      title: `保存中 0/${total}`
+      title: `Saving 0/${total}`
     });
 
     const saveNext = () => {
       if (saved >= total) {
         wx.hideLoading();
         wx.showToast({
-          title: `已保存${saved}张图片`,
+          title: `Saved ${saved} images`,
           icon: 'success'
         });
         return;
@@ -331,7 +331,7 @@ Page({
         success: () => {
           saved++;
           wx.showLoading({
-            title: `保存中 ${saved}/${total}`
+            title: `Saving ${saved}/${total}`
           });
           setTimeout(saveNext, 500);
         },
@@ -345,7 +345,7 @@ Page({
     saveNext();
   },
 
-  // 预览图片
+  // Preview image
   previewImage: function(e) {
     const src = e.currentTarget.dataset.src;
     wx.previewImage({
@@ -354,7 +354,7 @@ Page({
     });
   },
 
-  // 重置
+  // Reset
   reset: function() {
     this.setData({
       selectedImage: '',

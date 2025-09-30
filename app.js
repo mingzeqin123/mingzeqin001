@@ -1,14 +1,14 @@
 App({
   onLaunch() {
-    // 展示本地存储能力
+    // Demonstrate local storage capability
     const logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
 
-    // 登录
+    // Login
     wx.login({
       success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
+        // Send res.code to backend to exchange for openId, sessionKey, unionId
       }
     })
   },
@@ -18,7 +18,7 @@ App({
     bestScore: 0
   },
   
-  // 获取最高分
+  // Get best score
   getBestScore() {
     try {
       const score = wx.getStorageSync('bestScore') || 0
@@ -29,7 +29,7 @@ App({
     }
   },
   
-  // 保存最高分
+  // Save best score
   setBestScore(score) {
     try {
       if (score > this.globalData.bestScore) {
@@ -37,7 +37,7 @@ App({
         wx.setStorageSync('bestScore', score)
       }
     } catch (e) {
-      console.error('保存分数失败', e)
+      console.error('Failed to save score', e)
     }
   }
 })
