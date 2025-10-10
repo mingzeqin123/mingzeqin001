@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 /**
  * A simple JavaFX application for macOS
@@ -24,34 +25,89 @@ public class MacJavaApp extends Application {
 
     private TextArea outputArea;
     private Label statusLabel;
+    private I18nManager i18n;
+    private Label titleLabel;
+    private Label descLabel;
+    private Button helloButton;
+    private Button fileButton;
+    private Button systemInfoButton;
+    private Button clearButton;
+    private MenuBar menuBar;
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Mac Java Application v1.0");
+        // Initialize i18n manager
+        i18n = I18nManager.getInstance();
+        
+        // Create menu bar
+        createMenuBar(primaryStage);
+        
+        // Set window title
+        primaryStage.setTitle(i18n.getMessage("app.title"));
 
         // Create the main layout
         VBox root = new VBox(10);
         root.setPadding(new Insets(20));
         root.setAlignment(Pos.TOP_CENTER);
 
+        // Add menu bar
+        VBox mainContainer = new VBox();
+        mainContainer.getChildren().addAll(menuBar, root);
+
+        // Initialize UI components
+        initializeComponents();
+        
+        // Add components to root
+        HBox buttonPanel = new HBox(10);
+        buttonPanel.setAlignment(Pos.CENTER);
+        buttonPanel.getChildren().addAll(helloButton, fileButton, systemInfoButton, clearButton);
+        
+        root.getChildren().addAll(titleLabel, descLabel, buttonPanel, outputArea, statusLabel);
+
+        // Create scene
+        Scene scene = new Scene(mainContainer, 600, 550);
+        primaryStage.setScene(scene);
+        primaryStage.setResizable(true);
+        primaryStage.show();
+
+        // Initial welcome message
+        appendOutput(i18n.getMessage("app.startup.success"));
+        appendOutput(i18n.getMessage("app.current.time", 
+            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))));
+        updateStatus(i18n.getMessage("status.started"));
+    }
+    
+    private void createMenuBar(Stage primaryStage) {
+        menuBar = new MenuBar();
+        
+        // Language menu
+        Menu languageMenu = new Menu("Language / 语言");
+        
+        for (Locale locale : i18n.getSupportedLocales()) {
+            MenuItem menuItem = new MenuItem(i18n.getLocaleDisplayName(locale));
+            menuItem.setOnAction(e -> changeLanguage(locale, primaryStage));
+            languageMenu.getItems().add(menuItem);
+        }
+        
+        menuBar.getMenus().add(languageMenu);
+    }
+    
+    private void initializeComponents() {
         // Title
-        Label titleLabel = new Label("欢迎使用 Mac Java 应用程序");
+        titleLabel = new Label(i18n.getMessage("app.welcome"));
         titleLabel.setFont(Font.font("System", FontWeight.BOLD, 24));
         titleLabel.setTextFill(Color.DARKBLUE);
 
         // Description
-        Label descLabel = new Label("这是一个为macOS设计的Java应用程序示例");
+        descLabel = new Label(i18n.getMessage("app.description"));
         descLabel.setFont(Font.font("System", 14));
         descLabel.setTextFill(Color.GRAY);
 
-        // Button panel
-        HBox buttonPanel = new HBox(10);
-        buttonPanel.setAlignment(Pos.CENTER);
-
-        Button helloButton = new Button("问候消息");
-        Button fileButton = new Button("选择文件");
-        Button systemInfoButton = new Button("系统信息");
-        Button clearButton = new Button("清空输出");
+        // Buttons
+        helloButton = new Button(i18n.getMessage("button.greeting"));
+        fileButton = new Button(i18n.getMessage("button.selectFile"));
+        systemInfoButton = new Button(i18n.getMessage("button.systemInfo"));
+        clearButton = new Button(i18n.getMessage("button.clear"));
 
         // Style buttons
         String buttonStyle = "-fx-background-color: #007AFF; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 5;";
@@ -59,8 +115,6 @@ public class MacJavaApp extends Application {
         fileButton.setStyle(buttonStyle);
         systemInfoButton.setStyle(buttonStyle);
         clearButton.setStyle("-fx-background-color: #FF3B30; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 5;");
-
-        buttonPanel.getChildren().addAll(helloButton, fileButton, systemInfoButton, clearButton);
 
         // Output area
         outputArea = new TextArea();
@@ -70,80 +124,94 @@ public class MacJavaApp extends Application {
         outputArea.setStyle("-fx-font-family: 'Monaco', 'Consolas', monospace; -fx-font-size: 12px;");
 
         // Status bar
-        statusLabel = new Label("就绪");
+        statusLabel = new Label(i18n.getMessage("status.ready"));
         statusLabel.setStyle("-fx-background-color: #F0F0F0; -fx-padding: 5; -fx-font-size: 12px;");
 
         // Event handlers
         helloButton.setOnAction(e -> showGreeting());
-        fileButton.setOnAction(e -> selectFile(primaryStage));
+        fileButton.setOnAction(e -> selectFile((Stage) helloButton.getScene().getWindow()));
         systemInfoButton.setOnAction(e -> showSystemInfo());
         clearButton.setOnAction(e -> clearOutput());
-
-        // Add components to root
-        root.getChildren().addAll(titleLabel, descLabel, buttonPanel, outputArea, statusLabel);
-
-        // Create scene
-        Scene scene = new Scene(root, 600, 500);
-        primaryStage.setScene(scene);
-        primaryStage.setResizable(true);
-        primaryStage.show();
-
-        // Initial welcome message
-        appendOutput("应用程序启动成功！");
-        appendOutput("当前时间: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        updateStatus("应用程序已启动");
+    }
+    
+    private void changeLanguage(Locale locale, Stage primaryStage) {
+        i18n.setLocale(locale);
+        refreshUI(primaryStage);
+    }
+    
+    private void refreshUI(Stage primaryStage) {
+        // Update window title
+        primaryStage.setTitle(i18n.getMessage("app.title"));
+        
+        // Update all text components
+        titleLabel.setText(i18n.getMessage("app.welcome"));
+        descLabel.setText(i18n.getMessage("app.description"));
+        helloButton.setText(i18n.getMessage("button.greeting"));
+        fileButton.setText(i18n.getMessage("button.selectFile"));
+        systemInfoButton.setText(i18n.getMessage("button.systemInfo"));
+        clearButton.setText(i18n.getMessage("button.clear"));
+        
+        // Update status if it shows ready
+        if (statusLabel.getText().contains("Ready") || statusLabel.getText().contains("就绪")) {
+            statusLabel.setText(i18n.getMessage("status.ready"));
+        }
+        
+        appendOutput("Language changed to: " + i18n.getCurrentLocale().getDisplayName());
     }
 
     private void showGreeting() {
-        String greeting = "你好！欢迎使用这个Java应用程序！\n" +
-                         "这个程序演示了:\n" +
-                         "• JavaFX GUI界面\n" +
-                         "• 文件选择功能\n" +
-                         "• 系统信息显示\n" +
-                         "• macOS集成";
-        appendOutput(greeting);
-        updateStatus("显示问候消息");
+        StringBuilder greeting = new StringBuilder();
+        greeting.append(i18n.getMessage("greeting.hello")).append("\n");
+        greeting.append(i18n.getMessage("greeting.features")).append("\n");
+        greeting.append(i18n.getMessage("greeting.feature1")).append("\n");
+        greeting.append(i18n.getMessage("greeting.feature2")).append("\n");
+        greeting.append(i18n.getMessage("greeting.feature3")).append("\n");
+        greeting.append(i18n.getMessage("greeting.feature4"));
+        
+        appendOutput(greeting.toString());
+        updateStatus(i18n.getMessage("status.greeting"));
     }
 
     private void selectFile(Stage stage) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("选择文件");
+        fileChooser.setTitle(i18n.getMessage("file.chooser.title"));
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("所有文件", "*.*"),
-                new FileChooser.ExtensionFilter("文本文件", "*.txt"),
-                new FileChooser.ExtensionFilter("图片文件", "*.png", "*.jpg", "*.gif")
+                new FileChooser.ExtensionFilter(i18n.getMessage("file.chooser.allFiles"), "*.*"),
+                new FileChooser.ExtensionFilter(i18n.getMessage("file.chooser.textFiles"), "*.txt"),
+                new FileChooser.ExtensionFilter(i18n.getMessage("file.chooser.imageFiles"), "*.png", "*.jpg", "*.gif")
         );
 
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
-            appendOutput("选择的文件: " + selectedFile.getAbsolutePath());
-            appendOutput("文件大小: " + selectedFile.length() + " 字节");
-            appendOutput("文件可读: " + (selectedFile.canRead() ? "是" : "否"));
-            updateStatus("文件已选择: " + selectedFile.getName());
+            appendOutput(i18n.getMessage("file.selected", selectedFile.getAbsolutePath()));
+            appendOutput(i18n.getMessage("file.size", selectedFile.length()));
+            String readableText = selectedFile.canRead() ? i18n.getMessage("file.yes") : i18n.getMessage("file.no");
+            appendOutput(i18n.getMessage("file.readable", readableText));
+            updateStatus(i18n.getMessage("status.fileSelected", selectedFile.getName()));
         } else {
-            updateStatus("文件选择已取消");
+            updateStatus(i18n.getMessage("status.fileCancelled"));
         }
     }
 
     private void showSystemInfo() {
-        appendOutput("=== 系统信息 ===");
-        appendOutput("操作系统: " + System.getProperty("os.name"));
-        appendOutput("系统版本: " + System.getProperty("os.version"));
-        appendOutput("系统架构: " + System.getProperty("os.arch"));
-        appendOutput("Java版本: " + System.getProperty("java.version"));
-        appendOutput("Java供应商: " + System.getProperty("java.vendor"));
-        appendOutput("用户名: " + System.getProperty("user.name"));
-        appendOutput("用户主目录: " + System.getProperty("user.home"));
-        appendOutput("工作目录: " + System.getProperty("user.dir"));
-        appendOutput("可用处理器: " + Runtime.getRuntime().availableProcessors());
-        appendOutput("最大内存: " + Runtime.getRuntime().maxMemory() / 1024 / 1024 + " MB");
-        appendOutput("已用内存: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024 + " MB");
-        updateStatus("系统信息已显示");
+        appendOutput("=== " + i18n.getMessage("system.info.title") + " ===");
+        appendOutput(i18n.getMessage("system.os", System.getProperty("os.name")));
+        appendOutput(i18n.getMessage("system.version", System.getProperty("os.version")));
+        appendOutput(i18n.getMessage("system.arch", System.getProperty("os.arch")));
+        appendOutput(i18n.getMessage("system.java.version", System.getProperty("java.version")));
+        appendOutput(i18n.getMessage("system.java.vendor", System.getProperty("java.vendor")));
+        appendOutput(i18n.getMessage("system.user.name", System.getProperty("user.name")));
+        appendOutput(i18n.getMessage("system.user.home", System.getProperty("user.home")));
+        appendOutput(i18n.getMessage("system.user.dir", System.getProperty("user.dir")));
+        appendOutput(i18n.getMessage("system.processors", Runtime.getRuntime().availableProcessors()));
+        appendOutput(i18n.getMessage("system.memory.max", Runtime.getRuntime().maxMemory() / 1024 / 1024));
+        appendOutput(i18n.getMessage("system.memory.used", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024));
+        updateStatus(i18n.getMessage("status.systemInfo"));
     }
 
     private void clearOutput() {
         outputArea.clear();
-        updateStatus("输出已清空");
+        updateStatus(i18n.getMessage("status.outputCleared"));
     }
 
     private void appendOutput(String text) {
@@ -152,7 +220,7 @@ public class MacJavaApp extends Application {
     }
 
     private void updateStatus(String status) {
-        statusLabel.setText("状态: " + status);
+        statusLabel.setText(status);
     }
 
     public static void main(String[] args) {
