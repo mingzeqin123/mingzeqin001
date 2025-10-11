@@ -1,0 +1,31 @@
+{
+  "name": "oss-batch-uploader",
+  "version": "1.0.0", 
+  "description": "批量上传文件到阿里云OSS，支持自动文件类型识别",
+  "main": "utils/ossUploader.js",
+  "scripts": {
+    "test": "node examples/oss-upload-examples.js",
+    "example": "node examples/oss-upload-examples.js"
+  },
+  "dependencies": {
+    "ali-oss": "^6.17.1",
+    "mime-types": "^2.1.35"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0"
+  },
+  "keywords": [
+    "oss", 
+    "upload",
+    "batch",
+    "file-type-detection",
+    "aliyun",
+    "云存储"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "your-repository-url"
+  }
+}
