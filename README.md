@@ -1,177 +1,122 @@
-# 微信小程序跳一跳游戏
+# OSS批量上传工具安装和使用指南
 
-一个基于微信小程序平台开发的3D跳一跳小游戏，使用Three.js渲染引擎实现3D效果。
+## 快速安装
 
-## 🎮 游戏特色
-
-- **3D视觉效果**：使用Three.js渲染引擎，呈现精美的3D场景
-- **物理引擎**：真实的跳跃物理模拟和碰撞检测
-- **多样方块**：普通、小型、高型、特殊等多种方块类型
-- **蓄力系统**：长按蓄力，控制跳跃距离和高度
-- **分数系统**：完美落地获得额外分数，挑战最高纪录
-- **视觉特效**：粒子效果、动画过渡、阴影系统
-- **音效支持**：跳跃、落地、完美、游戏结束等音效
-- **社交分享**：支持微信好友和朋友圈分享
-
-## 🚀 快速开始
-
-### 环境要求
-- 微信开发者工具 1.05.0 或更高版本
-- 小程序基础库 2.9.0 或更高版本
-
-### 安装步骤
-
-1. **克隆项目**
-   ```bash
-   git clone [项目地址]
-   cd jump-jump-game
-   ```
-
-2. **导入项目**
-   - 打开微信开发者工具
-   - 选择"导入项目"
-   - 选择项目目录
-   - 填入AppID（测试可使用测试号）
-
-3. **添加资源文件**
-   - 将Three.js完整库文件放入 `/pages/game/libs/three.min.js`
-   - 添加音效文件到 `/sounds/` 目录
-   - 添加图片资源到 `/images/` 目录
-
-4. **编译运行**
-   - 点击"编译"按钮
-   - 在模拟器或真机上预览
-
-## 📁 项目结构
-
-```
-jump-jump-game/
-├── app.js                 # 小程序入口文件
-├── app.json               # 小程序配置文件
-├── app.wxss              # 全局样式文件
-├── sitemap.json          # 站点地图配置
-├── project.config.json   # 项目配置文件
-├── pages/
-│   └── game/             # 游戏页面
-│       ├── game.js       # 页面逻辑
-│       ├── game.json     # 页面配置
-│       ├── game.wxml     # 页面结构
-│       ├── game.wxss     # 页面样式
-│       ├── gameEngine.js # 游戏引擎核心
-│       ├── player.js     # 玩家角色类
-│       ├── block.js      # 方块类
-│       ├── utils.js      # 工具函数
-│       └── libs/
-│           └── three.min.js # Three.js库
-├── images/               # 图片资源
-│   └── README.md        # 图片说明
-├── sounds/               # 音效资源
-│   └── README.md        # 音效说明
-└── README.md            # 项目说明
+1. **安装依赖包**
+```bash
+npm install ali-oss mime-types
 ```
 
-## 🎯 游戏玩法
+2. **配置OSS信息**
+创建 `config/oss.config.js` 文件:
+```javascript
+module.exports = {
+  region: 'oss-cn-beijing', // 你的OSS区域
+  accessKeyId: 'your-access-key-id', // 替换为你的AccessKey ID
+  accessKeySecret: 'your-access-key-secret', // 替换为你的AccessKey Secret
+  bucket: 'your-bucket-name' // 替换为你的存储桶名称
+}
+```
 
-1. **开始游戏**：点击"开始游戏"按钮
-2. **蓄力跳跃**：长按屏幕蓄力，右侧显示蓄力条
-3. **释放跳跃**：松开手指，角色跳向下一个方块
-4. **获得分数**：
-   - 成功落地：+1分
-   - 良好落地：+3分
-   - 完美落地：+5分（中心位置）
-5. **游戏结束**：跳跃失败掉落时游戏结束
-6. **分享成绩**：可分享到微信好友或朋友圈
+3. **基本使用**
+```javascript
+const OSSUploader = require('./utils/ossUploader')
+const ossConfig = require('./config/oss.config')
 
-## 🔧 核心技术
+const uploader = new OSSUploader(ossConfig)
 
-### 渲染引擎
-- **Three.js**：3D场景渲染
-- **WebGL**：硬件加速渲染
-- **阴影系统**：实时阴影计算
-- **光照系统**：环境光+方向光
+// 上传单个文件
+uploader.addFiles('./my-file.jpg')
+const result = await uploader.startUpload()
+```
 
-### 物理系统
-- **跳跃轨迹**：抛物线运动模拟
-- **碰撞检测**：圆形碰撞检测算法
-- **重力模拟**：自然下落效果
+## 常用场景
 
-### 动画系统
-- **缓动函数**：平滑的动画过渡
-- **骨骼动画**：角色动作表现
-- **粒子效果**：特殊效果展示
-- **相机跟随**：平滑的视角切换
+### 场景1: 网站资源批量上传
+```bash
+# 上传网站所有静态资源
+node -e "
+const uploader = require('./utils/ossUploader');
+const config = require('./config/oss.config');
+const u = new uploader(config);
+u.addDirectory('./assets', {recursive: true, prefix: 'website'});
+u.startUpload();
+"
+```
 
-## 🎨 自定义配置
+### 场景2: 备份整个项目
+```javascript
+// backup-script.js
+const uploader = new OSSUploader(config)
 
-### 游戏参数调整
-在 `gameEngine.js` 中可以调整：
-- `maxChargingTime`：最大蓄力时间
-- 跳跃距离和高度计算公式
-- 方块生成间距和角度
+uploader.addDirectory('./', {
+  recursive: true,
+  excludePattern: /(node_modules|\.git|dist|build)/i,
+  prefix: `backup/${new Date().toISOString().slice(0, 10)}`
+})
 
-### 视觉效果
-在各个类文件中可以调整：
-- 方块颜色和材质
-- 光照强度和位置
-- 动画持续时间和缓动函数
+await uploader.startUpload()
+```
 
-### 音效配置
-在 `utils.js` 的 `AudioManager` 类中：
-- 添加新的音效类型
-- 调整音量和播放逻辑
+### 场景3: 图片批量处理上传
+```javascript
+const uploader = new OSSUploader(config)
 
-## 📱 兼容性
+// 只上传图片文件，按类型整理
+uploader.addDirectory('./photos', {
+  includePattern: /\.(jpg|jpeg|png|gif|webp)$/i,
+  useCategory: true,
+  prefix: 'gallery'
+})
+```
 
-- **iOS**：iOS 10.0+
-- **Android**：Android 5.0+
-- **微信版本**：7.0.0+
-- **小程序基础库**：2.9.0+
+## 配置说明
 
-## 🔍 性能优化
+### OSS配置参数
+- `region`: OSS区域，如 'oss-cn-beijing'
+- `accessKeyId`: 阿里云AccessKey ID  
+- `accessKeySecret`: 阿里云AccessKey Secret
+- `bucket`: OSS存储桶名称
 
-1. **渲染优化**
-   - 对象池管理，减少GC
-   - 视锥剔除，只渲染可见对象
-   - LOD系统，距离越远细节越少
+### 上传选项参数
+- `prefix`: OSS路径前缀
+- `useCategory`: 是否按文件类型分类 (默认: true)
+- `useDate`: 是否按日期分类 (默认: true) 
+- `preserveStructure`: 是否保持原目录结构 (默认: false)
+- `recursive`: 是否递归扫描子目录 (默认: true)
+- `includePattern`: 包含文件的正则表达式
+- `excludePattern`: 排除文件的正则表达式  
+- `maxSize`: 最大文件大小限制（字节）
 
-2. **内存管理**
-   - 及时销毁不需要的对象
-   - 纹理和几何体复用
-   - 音效资源预加载
+## 注意事项
 
-3. **帧率优化**
-   - 固定时间步长更新
-   - 动画插值平滑
-   - 避免在渲染循环中创建对象
+1. **权限配置**: 确保OSS AccessKey有相应的读写权限
+2. **网络环境**: 大文件上传建议在稳定网络环境下进行
+3. **费用控制**: 注意OSS存储和流量费用，避免重复上传
+4. **安全考虑**: 不要将AccessKey信息提交到代码仓库
 
-## 🐛 已知问题
+## 故障排除
 
-1. 在部分低端Android设备上可能出现卡顿
-2. Three.js库文件较大，首次加载时间较长
-3. WebGL兼容性问题，部分老设备不支持
+### 常见错误
 
-## 🔄 更新日志
+1. **AccessDenied错误**
+   - 检查AccessKey权限
+   - 确认bucket名称正确
 
-### v1.0.0 (2024-01-15)
-- 基础游戏功能实现
-- 3D渲染和物理引擎
-- 完整的游戏流程
-- 分数系统和社交分享
+2. **文件不存在错误**
+   - 检查文件路径是否正确
+   - 确认文件是否存在
 
-## 📄 许可证
+3. **网络超时**
+   - 减少并发数量: `uploader.setConcurrency(2)`
+   - 检查网络连接
 
-本项目采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
+4. **内存不足**
+   - 分批上传大量文件
+   - 避免同时上传过多大文件
 
-## 🤝 贡献
+### 获取帮助
 
-欢迎提交 Issue 和 Pull Request 来改进这个项目！
-
-## 📞 联系方式
-
-如有问题或建议，请通过以下方式联系：
-- GitHub Issues
-- 邮箱：[your-email@example.com]
-
----
-
-⭐ 如果这个项目对你有帮助，请给个星星支持一下！
+- 查看详细文档: `docs/oss-uploader-guide.md`
+- 运行示例: `node examples/oss-upload-examples.js`
+- 检查代码: `utils/ossUploader.js`
