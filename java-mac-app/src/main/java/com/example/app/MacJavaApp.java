@@ -1,5 +1,8 @@
 package com.example.app;
 
+import com.example.app.service.SmsService;
+import com.example.app.service.SmsService.SmsResult;
+import com.example.app.service.SmsRateLimiter.SmsStats;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,6 +18,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * A simple JavaFX application for macOS
@@ -24,10 +28,21 @@ public class MacJavaApp extends Application {
 
     private TextArea outputArea;
     private Label statusLabel;
+    private SmsService smsService;
+    
+    // SMS相关控件
+    private TextField phoneNumberField;
+    private TextArea smsContentArea;
+    private Button sendSmsButton;
+    private Button checkStatsButton;
+    private Button showAllStatsButton;
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Mac Java Application v1.0");
+        primaryStage.setTitle("Mac Java Application v1.0 - SMS管理");
+        
+        // 初始化SMS服务
+        smsService = new SmsService();
 
         // Create the main layout
         VBox root = new VBox(10);
@@ -35,32 +50,31 @@ public class MacJavaApp extends Application {
         root.setAlignment(Pos.TOP_CENTER);
 
         // Title
-        Label titleLabel = new Label("欢迎使用 Mac Java 应用程序");
+        Label titleLabel = new Label("SMS短信管理系统");
         titleLabel.setFont(Font.font("System", FontWeight.BOLD, 24));
         titleLabel.setTextFill(Color.DARKBLUE);
 
         // Description
-        Label descLabel = new Label("这是一个为macOS设计的Java应用程序示例");
+        Label descLabel = new Label("支持短信频率限制：10分钟内不重复发送，每日最多10条");
         descLabel.setFont(Font.font("System", 14));
         descLabel.setTextFill(Color.GRAY);
 
+        // SMS输入区域
+        VBox smsInputArea = createSmsInputArea();
+        
         // Button panel
         HBox buttonPanel = new HBox(10);
         buttonPanel.setAlignment(Pos.CENTER);
 
-        Button helloButton = new Button("问候消息");
-        Button fileButton = new Button("选择文件");
         Button systemInfoButton = new Button("系统信息");
         Button clearButton = new Button("清空输出");
 
         // Style buttons
         String buttonStyle = "-fx-background-color: #007AFF; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 5;";
-        helloButton.setStyle(buttonStyle);
-        fileButton.setStyle(buttonStyle);
         systemInfoButton.setStyle(buttonStyle);
         clearButton.setStyle("-fx-background-color: #FF3B30; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 5;");
 
-        buttonPanel.getChildren().addAll(helloButton, fileButton, systemInfoButton, clearButton);
+        buttonPanel.getChildren().addAll(systemInfoButton, clearButton);
 
         // Output area
         outputArea = new TextArea();
@@ -74,55 +88,186 @@ public class MacJavaApp extends Application {
         statusLabel.setStyle("-fx-background-color: #F0F0F0; -fx-padding: 5; -fx-font-size: 12px;");
 
         // Event handlers
-        helloButton.setOnAction(e -> showGreeting());
-        fileButton.setOnAction(e -> selectFile(primaryStage));
         systemInfoButton.setOnAction(e -> showSystemInfo());
         clearButton.setOnAction(e -> clearOutput());
 
         // Add components to root
-        root.getChildren().addAll(titleLabel, descLabel, buttonPanel, outputArea, statusLabel);
+        root.getChildren().addAll(titleLabel, descLabel, smsInputArea, buttonPanel, outputArea, statusLabel);
 
         // Create scene
-        Scene scene = new Scene(root, 600, 500);
+        Scene scene = new Scene(root, 800, 700);
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
         primaryStage.show();
 
         // Initial welcome message
-        appendOutput("应用程序启动成功！");
+        appendOutput("SMS短信管理系统启动成功！");
         appendOutput("当前时间: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        updateStatus("应用程序已启动");
+        appendOutput("系统限制：10分钟内不重复发送，每日最多10条短信");
+        updateStatus("SMS管理系统已启动");
+    }
+    
+    /**
+     * 创建SMS输入区域
+     */
+    private VBox createSmsInputArea() {
+        VBox smsArea = new VBox(10);
+        smsArea.setPadding(new Insets(15));
+        smsArea.setStyle("-fx-background-color: #F8F9FA; -fx-border-color: #DEE2E6; -fx-border-width: 1; -fx-border-radius: 5;");
+        
+        // 标题
+        Label smsTitle = new Label("短信发送");
+        smsTitle.setFont(Font.font("System", FontWeight.BOLD, 16));
+        smsTitle.setTextFill(Color.DARKBLUE);
+        
+        // 手机号输入
+        HBox phoneRow = new HBox(10);
+        phoneRow.setAlignment(Pos.CENTER_LEFT);
+        Label phoneLabel = new Label("手机号:");
+        phoneLabel.setMinWidth(80);
+        phoneNumberField = new TextField();
+        phoneNumberField.setPromptText("请输入手机号，如：13800138000");
+        phoneNumberField.setPrefWidth(200);
+        phoneRow.getChildren().addAll(phoneLabel, phoneNumberField);
+        
+        // 短信内容输入
+        VBox contentRow = new VBox(5);
+        Label contentLabel = new Label("短信内容:");
+        smsContentArea = new TextArea();
+        smsContentArea.setPromptText("请输入短信内容...");
+        smsContentArea.setPrefRowCount(3);
+        smsContentArea.setWrapText(true);
+        contentRow.getChildren().addAll(contentLabel, smsContentArea);
+        
+        // 按钮区域
+        HBox buttonRow = new HBox(10);
+        buttonRow.setAlignment(Pos.CENTER);
+        
+        sendSmsButton = new Button("发送短信");
+        checkStatsButton = new Button("查看统计");
+        showAllStatsButton = new Button("查看所有统计");
+        
+        String smsButtonStyle = "-fx-background-color: #28A745; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 8 16 8 16; -fx-background-radius: 4;";
+        String infoButtonStyle = "-fx-background-color: #17A2B8; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 8 16 8 16; -fx-background-radius: 4;";
+        
+        sendSmsButton.setStyle(smsButtonStyle);
+        checkStatsButton.setStyle(infoButtonStyle);
+        showAllStatsButton.setStyle(infoButtonStyle);
+        
+        buttonRow.getChildren().addAll(sendSmsButton, checkStatsButton, showAllStatsButton);
+        
+        // 事件处理
+        sendSmsButton.setOnAction(e -> sendSms());
+        checkStatsButton.setOnAction(e -> checkSmsStats());
+        showAllStatsButton.setOnAction(e -> showAllSmsStats());
+        
+        smsArea.getChildren().addAll(smsTitle, phoneRow, contentRow, buttonRow);
+        return smsArea;
     }
 
-    private void showGreeting() {
-        String greeting = "你好！欢迎使用这个Java应用程序！\n" +
-                         "这个程序演示了:\n" +
-                         "• JavaFX GUI界面\n" +
-                         "• 文件选择功能\n" +
-                         "• 系统信息显示\n" +
-                         "• macOS集成";
-        appendOutput(greeting);
-        updateStatus("显示问候消息");
-    }
-
-    private void selectFile(Stage stage) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("选择文件");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("所有文件", "*.*"),
-                new FileChooser.ExtensionFilter("文本文件", "*.txt"),
-                new FileChooser.ExtensionFilter("图片文件", "*.png", "*.jpg", "*.gif")
-        );
-
-        File selectedFile = fileChooser.showOpenDialog(stage);
-        if (selectedFile != null) {
-            appendOutput("选择的文件: " + selectedFile.getAbsolutePath());
-            appendOutput("文件大小: " + selectedFile.length() + " 字节");
-            appendOutput("文件可读: " + (selectedFile.canRead() ? "是" : "否"));
-            updateStatus("文件已选择: " + selectedFile.getName());
-        } else {
-            updateStatus("文件选择已取消");
+    /**
+     * 发送短信
+     */
+    private void sendSms() {
+        String phoneNumber = phoneNumberField.getText().trim();
+        String content = smsContentArea.getText().trim();
+        
+        if (phoneNumber.isEmpty()) {
+            appendOutput("错误：请输入手机号");
+            updateStatus("发送失败：手机号为空");
+            return;
         }
+        
+        if (content.isEmpty()) {
+            appendOutput("错误：请输入短信内容");
+            updateStatus("发送失败：内容为空");
+            return;
+        }
+        
+        // 检查手机号格式
+        if (!isValidPhoneNumber(phoneNumber)) {
+            appendOutput("错误：手机号格式不正确，请输入11位数字");
+            updateStatus("发送失败：手机号格式错误");
+            return;
+        }
+        
+        updateStatus("正在发送短信...");
+        sendSmsButton.setDisable(true);
+        
+        // 在新线程中发送短信，避免阻塞UI
+        new Thread(() -> {
+            try {
+                SmsResult result = smsService.sendSms(phoneNumber, content);
+                
+                // 在UI线程中更新界面
+                javafx.application.Platform.runLater(() -> {
+                    if (result.isSuccess()) {
+                        appendOutput("✓ " + result.toString());
+                        phoneNumberField.clear();
+                        smsContentArea.clear();
+                        updateStatus("短信发送成功");
+                    } else {
+                        appendOutput("✗ " + result.toString());
+                        updateStatus("短信发送失败");
+                    }
+                    sendSmsButton.setDisable(false);
+                });
+            } catch (Exception e) {
+                javafx.application.Platform.runLater(() -> {
+                    appendOutput("✗ 发送异常: " + e.getMessage());
+                    updateStatus("发送异常");
+                    sendSmsButton.setDisable(false);
+                });
+            }
+        }).start();
+    }
+    
+    /**
+     * 检查手机号格式
+     */
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        // 简单的手机号验证：11位数字
+        return phoneNumber.matches("^1[3-9]\\d{9}$");
+    }
+    
+    /**
+     * 查看指定手机号的统计信息
+     */
+    private void checkSmsStats() {
+        String phoneNumber = phoneNumberField.getText().trim();
+        if (phoneNumber.isEmpty()) {
+            appendOutput("错误：请输入要查询的手机号");
+            return;
+        }
+        
+        if (!isValidPhoneNumber(phoneNumber)) {
+            appendOutput("错误：手机号格式不正确");
+            return;
+        }
+        
+        SmsStats stats = smsService.getSmsStats(phoneNumber);
+        appendOutput("=== 手机号统计信息 ===");
+        appendOutput(stats.toString());
+        updateStatus("统计信息已显示");
+    }
+    
+    /**
+     * 显示所有手机号的统计信息
+     */
+    private void showAllSmsStats() {
+        List<SmsStats> allStats = smsService.getAllSmsStats();
+        
+        if (allStats.isEmpty()) {
+            appendOutput("暂无短信发送记录");
+            updateStatus("无统计信息");
+            return;
+        }
+        
+        appendOutput("=== 所有手机号统计信息 ===");
+        for (SmsStats stats : allStats) {
+            appendOutput(stats.toString());
+        }
+        updateStatus("所有统计信息已显示");
     }
 
     private void showSystemInfo() {
@@ -155,11 +300,20 @@ public class MacJavaApp extends Application {
         statusLabel.setText("状态: " + status);
     }
 
+    @Override
+    public void stop() throws Exception {
+        // 关闭SMS服务
+        if (smsService != null) {
+            smsService.shutdown();
+        }
+        super.stop();
+    }
+
     public static void main(String[] args) {
         // Set system properties for better macOS integration
         System.setProperty("apple.laf.useScreenMenuBar", "true");
-        System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Mac Java App");
-        System.setProperty("apple.awt.application.name", "Mac Java App");
+        System.setProperty("com.apple.mrj.application.apple.menu.about.name", "SMS管理系统");
+        System.setProperty("apple.awt.application.name", "SMS管理系统");
 
         launch(args);
     }
