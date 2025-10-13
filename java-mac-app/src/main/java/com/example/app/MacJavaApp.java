@@ -12,6 +12,8 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import com.example.app.sms.SmsTestApp;
+
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -51,6 +53,7 @@ public class MacJavaApp extends Application {
         Button helloButton = new Button("问候消息");
         Button fileButton = new Button("选择文件");
         Button systemInfoButton = new Button("系统信息");
+        Button smsTestButton = new Button("SMS测试");
         Button clearButton = new Button("清空输出");
 
         // Style buttons
@@ -58,9 +61,10 @@ public class MacJavaApp extends Application {
         helloButton.setStyle(buttonStyle);
         fileButton.setStyle(buttonStyle);
         systemInfoButton.setStyle(buttonStyle);
+        smsTestButton.setStyle("-fx-background-color: #34C759; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 5;");
         clearButton.setStyle("-fx-background-color: #FF3B30; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 5;");
 
-        buttonPanel.getChildren().addAll(helloButton, fileButton, systemInfoButton, clearButton);
+        buttonPanel.getChildren().addAll(helloButton, fileButton, systemInfoButton, smsTestButton, clearButton);
 
         // Output area
         outputArea = new TextArea();
@@ -77,6 +81,7 @@ public class MacJavaApp extends Application {
         helloButton.setOnAction(e -> showGreeting());
         fileButton.setOnAction(e -> selectFile(primaryStage));
         systemInfoButton.setOnAction(e -> showSystemInfo());
+        smsTestButton.setOnAction(e -> openSmsTestApp());
         clearButton.setOnAction(e -> clearOutput());
 
         // Add components to root
@@ -153,6 +158,19 @@ public class MacJavaApp extends Application {
 
     private void updateStatus(String status) {
         statusLabel.setText("状态: " + status);
+    }
+
+    private void openSmsTestApp() {
+        try {
+            Stage smsStage = new Stage();
+            SmsTestApp smsApp = new SmsTestApp();
+            smsApp.start(smsStage);
+            appendOutput("SMS频率控制测试窗口已打开");
+            updateStatus("SMS测试窗口已打开");
+        } catch (Exception e) {
+            appendOutput("打开SMS测试窗口失败: " + e.getMessage());
+            updateStatus("SMS测试窗口打开失败");
+        }
     }
 
     public static void main(String[] args) {
