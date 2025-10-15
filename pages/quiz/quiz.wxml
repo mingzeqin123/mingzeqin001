@@ -1,0 +1,119 @@
+<!--quiz.wxml-->
+<view class="quiz-container">
+  <!-- 考试未开始 -->
+  <view wx:if="{{!quizStarted}}" class="quiz-start">
+    <view class="start-header">
+      <text class="title">在线答题系统</text>
+      <text class="subtitle">支持单选、多选、判断题自动评分</text>
+    </view>
+    
+    <view class="quiz-info">
+      <view class="info-item">
+        <text class="info-label">题目数量：</text>
+        <text class="info-value">{{questions.length}}题</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">题目类型：</text>
+        <text class="info-value">单选、多选、判断</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">考试时间：</text>
+        <text class="info-value">不限时</text>
+      </view>
+    </view>
+    
+    <button class="start-btn" bindtap="startQuiz">开始答题</button>
+    <button class="history-btn" bindtap="showHistory">查看历史</button>
+  </view>
+
+  <!-- 考试进行中 -->
+  <view wx:elif="{{quizStarted && !quizFinished}}" class="quiz-content">
+    <!-- 进度条 -->
+    <view class="progress-bar">
+      <view class="progress-info">
+        <text>第{{currentQuestionIndex + 1}}题 / 共{{questions.length}}题</text>
+      </view>
+      <view class="progress-track">
+        <view class="progress-fill" style="width: {{(currentQuestionIndex + 1) / questions.length * 100}}%"></view>
+      </view>
+    </view>
+
+    <!-- 题目内容 -->
+    <view wx:if="{{currentQuestion}}" class="question-content">
+      <view class="question-header">
+        <text class="question-type">{{questionTypeMap[currentQuestion.type]}}</text>
+        <text class="question-number">题目{{currentQuestionIndex + 1}}</text>
+      </view>
+      
+      <view class="question-text">{{currentQuestion.question}}</view>
+      
+      <!-- 选项列表 -->
+      <view class="options-list">
+        <view wx:for="{{currentQuestion.options}}" wx:key="index" class="option-item">
+          <!-- 单选题和判断题 -->
+          <view wx:if="{{currentQuestion.type !== 'multiple'}}" 
+                class="option-single {{selectedAnswers.indexOf(index) > -1 ? 'selected' : ''}}"
+                bindtap="selectSingleAnswer"
+                data-index="{{index}}">
+            <view class="option-radio">
+              <view wx:if="{{selectedAnswers.indexOf(index) > -1}}" class="radio-checked"></view>
+            </view>
+            <text class="option-text">{{item}}</text>
+          </view>
+          
+          <!-- 多选题 -->
+          <view wx:else 
+                class="option-multiple {{selectedAnswers.indexOf(index) > -1 ? 'selected' : ''}}"
+                bindtap="selectMultipleAnswer"
+                data-index="{{index}}">
+            <view class="option-checkbox">
+              <view wx:if="{{selectedAnswers.indexOf(index) > -1}}" class="checkbox-checked">✓</view>
+            </view>
+            <text class="option-text">{{item}}</text>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 提交按钮 -->
+      <button class="submit-btn" bindtap="submitAnswer">
+        {{currentQuestionIndex + 1 === questions.length ? '完成答题' : '下一题'}}
+      </button>
+    </view>
+  </view>
+
+  <!-- 考试结果 -->
+  <view wx:elif="{{showResult}}" class="quiz-result">
+    <view class="result-header">
+      <text class="result-title">答题完成</text>
+      <view class="score-circle">
+        <text class="score-text">{{result.score}}</text>
+        <text class="score-unit">分</text>
+      </view>
+    </view>
+    
+    <view class="result-details">
+      <view class="detail-item">
+        <text class="detail-label">总题数：</text>
+        <text class="detail-value">{{result.totalQuestions}}题</text>
+      </view>
+      <view class="detail-item">
+        <text class="detail-label">正确：</text>
+        <text class="detail-value correct">{{result.correctAnswers}}题</text>
+      </view>
+      <view class="detail-item">
+        <text class="detail-label">错误：</text>
+        <text class="detail-value wrong">{{result.wrongAnswers}}题</text>
+      </view>
+      <view class="detail-item">
+        <text class="detail-label">正确率：</text>
+        <text class="detail-value">{{result.accuracy}}%</text>
+      </view>
+    </view>
+    
+    <view class="result-actions">
+      <button class="action-btn primary" bindtap="showAnswerDetail">查看解析</button>
+      <button class="action-btn" bindtap="restartQuiz">重新答题</button>
+      <button class="action-btn" bindtap="goHome">返回首页</button>
+    </view>
+  </view>
+</view>

@@ -135,6 +135,13 @@ Page({
     })
   },
 
+  // 跳转到答题页面
+  goToQuiz() {
+    wx.navigateTo({
+      url: '/pages/quiz/quiz'
+    })
+  },
+
   // 触摸开始
   onTouchStart(e) {
     if (this.data.gameState !== 'playing') return

@@ -1,0 +1,279 @@
+/* quiz-result.wxss */
+.result-container {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding: 20rpx;
+}
+
+/* 结果概览 */
+.result-summary {
+  background: white;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.summary-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.score-display {
+  display: flex;
+  align-items: baseline;
+}
+
+.score {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #667eea;
+}
+
+.score-unit {
+  font-size: 24rpx;
+  color: #666;
+  margin-left: 8rpx;
+}
+
+.summary-stats {
+  display: flex;
+  justify-content: space-around;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.stat-value.correct {
+  color: #28a745;
+}
+
+.stat-value.wrong {
+  color: #dc3545;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 答题详情 */
+.answer-details {
+  margin-bottom: 30rpx;
+}
+
+.details-header {
+  padding: 20rpx 0;
+}
+
+.details-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.answer-item {
+  margin-bottom: 30rpx;
+}
+
+.question-card {
+  background: white;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+  border-left: 8rpx solid #28a745;
+}
+
+.question-card.wrong {
+  border-left-color: #dc3545;
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.question-info {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.question-type {
+  background: #667eea;
+  color: white;
+  padding: 6rpx 16rpx;
+  border-radius: 16rpx;
+  font-size: 22rpx;
+}
+
+.question-number {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.result-icon {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-correct {
+  color: #28a745;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.icon-wrong {
+  color: #dc3545;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.question-content {
+  margin-bottom: 30rpx;
+}
+
+.question-text {
+  font-size: 30rpx;
+  line-height: 1.6;
+  color: #333;
+  font-weight: 500;
+}
+
+/* 选项显示 */
+.options-display {
+  margin-bottom: 30rpx;
+}
+
+.option-display {
+  margin-bottom: 16rpx;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 20rpx;
+  border-radius: 12rpx;
+  background: #f8f9fa;
+  position: relative;
+}
+
+.option-item.user-selected {
+  background: rgba(220, 53, 69, 0.1);
+  border: 2rpx solid #dc3545;
+}
+
+.option-item.correct-answer {
+  background: rgba(40, 167, 69, 0.1);
+  border: 2rpx solid #28a745;
+}
+
+.option-item.user-selected.correct-answer {
+  background: rgba(40, 167, 69, 0.15);
+  border: 2rpx solid #28a745;
+}
+
+.option-label {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #666;
+  margin-right: 16rpx;
+  min-width: 40rpx;
+}
+
+.option-text {
+  font-size: 28rpx;
+  color: #333;
+  flex: 1;
+}
+
+.option-icons {
+  display: flex;
+  gap: 12rpx;
+}
+
+.user-choice-icon {
+  background: #dc3545;
+  color: white;
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+  font-size: 20rpx;
+}
+
+.correct-icon {
+  background: #28a745;
+  color: white;
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+  font-size: 20rpx;
+}
+
+/* 答案解析 */
+.explanation {
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  border-left: 4rpx solid #667eea;
+}
+
+.explanation-header {
+  margin-bottom: 16rpx;
+}
+
+.explanation-title {
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #667eea;
+}
+
+.explanation-text {
+  font-size: 26rpx;
+  line-height: 1.6;
+  color: #666;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  gap: 20rpx;
+  padding: 20rpx 0;
+}
+
+.action-btn {
+  flex: 1;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  border: 2rpx solid #e9ecef;
+  background: white;
+  color: #666;
+}
+
+.action-btn.primary {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+}
