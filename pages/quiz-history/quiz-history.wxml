@@ -1,0 +1,82 @@
+<!--quiz-history.wxml-->
+<view class="history-container">
+  <!-- 页面头部 -->
+  <view class="header">
+    <text class="header-title">答题历史</text>
+    <text class="header-subtitle">查看您的答题记录</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{isEmpty}}" class="empty-state">
+    <view class="empty-icon">📝</view>
+    <text class="empty-title">暂无答题记录</text>
+    <text class="empty-subtitle">开始您的第一次答题吧！</text>
+    <button class="start-quiz-btn" bindtap="startNewQuiz">开始答题</button>
+  </view>
+
+  <!-- 历史记录列表 -->
+  <view wx:else class="history-list">
+    <!-- 操作栏 -->
+    <view class="action-bar">
+      <button class="clear-btn" bindtap="clearAllHistory">清空记录</button>
+      <button class="new-quiz-btn" bindtap="startNewQuiz">新答题</button>
+    </view>
+
+    <!-- 记录项 -->
+    <view wx:for="{{historyList}}" wx:key="timestamp" class="history-item">
+      <view class="item-content" bindtap="viewHistoryDetail" data-index="{{index}}">
+        <!-- 左侧信息 -->
+        <view class="item-left">
+          <view class="score-circle">
+            <text class="score-text">{{item.score}}</text>
+          </view>
+          <view class="item-info">
+            <text class="item-title">第{{index + 1}}次答题</text>
+            <text class="item-time">{{formatTime(item.timestamp)}}</text>
+          </view>
+        </view>
+
+        <!-- 右侧统计 -->
+        <view class="item-right">
+          <view class="stats">
+            <view class="stat-row">
+              <text class="stat-label">总题数：</text>
+              <text class="stat-value">{{item.totalQuestions}}</text>
+            </view>
+            <view class="stat-row">
+              <text class="stat-label">正确：</text>
+              <text class="stat-value correct">{{item.correctAnswers}}</text>
+            </view>
+            <view class="stat-row">
+              <text class="stat-label">错误：</text>
+              <text class="stat-value wrong">{{item.wrongAnswers}}</text>
+            </view>
+            <view class="stat-row">
+              <text class="stat-label">正确率：</text>
+              <text class="stat-value">{{item.accuracy}}%</text>
+            </view>
+          </view>
+          
+          <!-- 删除按钮 -->
+          <view class="delete-btn" bindtap="deleteHistory" data-index="{{index}}" catchtap="true">
+            <text class="delete-icon">🗑️</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 成绩等级标识 -->
+      <view class="grade-badge">
+        <text wx:if="{{item.score >= 90}}" class="grade excellent">优秀</text>
+        <text wx:elif="{{item.score >= 80}}" class="grade good">良好</text>
+        <text wx:elif="{{item.score >= 70}}" class="grade fair">中等</text>
+        <text wx:elif="{{item.score >= 60}}" class="grade pass">及格</text>
+        <text wx:else class="grade fail">不及格</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作 -->
+  <view wx:if="{{!isEmpty}}" class="bottom-actions">
+    <button class="action-btn" bindtap="goHome">返回首页</button>
+  </view>
+</view>

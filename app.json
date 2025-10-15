@@ -1,7 +1,10 @@
 {
   "pages": [
     "pages/game/game",
-    "pages/watermark/watermark"
+    "pages/watermark/watermark",
+    "pages/quiz/quiz",
+    "pages/quiz-result/quiz-result",
+    "pages/quiz-history/quiz-history"
   ],
   "window": {
     "backgroundTextStyle": "light",
