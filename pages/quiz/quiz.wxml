@@ -1,0 +1,182 @@
+<!--pages/quiz/quiz.wxml-->
+<view class="quiz-container">
+  <!-- 准备界面 -->
+  <view class="ready-screen" wx:if="{{quizState === 'ready'}}">
+    <view class="quiz-title">知识测验</view>
+    <view class="quiz-info">
+      <text class="question-count">共 {{questions.length}} 道题</text>
+      <text class="time-limit">每题限时 1 分钟</text>
+    </view>
+    <view class="quiz-types">
+      <view class="type-item">
+        <text class="type-icon">📝</text>
+        <text class="type-name">单选题</text>
+      </view>
+      <view class="type-item">
+        <text class="type-icon">☑️</text>
+        <text class="type-name">多选题</text>
+      </view>
+      <view class="type-item">
+        <text class="type-icon">✓</text>
+        <text class="type-name">判断题</text>
+      </view>
+    </view>
+    <button class="start-btn" bindtap="startQuiz">开始测验</button>
+  </view>
+
+  <!-- 答题界面 -->
+  <view class="quiz-screen" wx:if="{{quizState === 'taking'}}">
+    <!-- 顶部信息栏 -->
+    <view class="quiz-header">
+      <view class="progress-info">
+        <text class="question-number">第 {{currentQuestionIndex + 1}} 题</text>
+        <text class="total-questions">/ {{questions.length}}</text>
+      </view>
+      <view class="time-info">
+        <text class="time-left">{{timeLeftFormatted}}</text>
+      </view>
+    </view>
+
+    <!-- 进度条 -->
+    <view class="progress-bar">
+      <view class="progress-fill" style="width: {{progress}}%"></view>
+    </view>
+
+    <!-- 题目内容 -->
+    <view class="question-content" wx:if="{{questions[currentQuestionIndex]}}">
+      <view class="question-type">
+        <text wx:if="{{questions[currentQuestionIndex].type === 'single'}}">单选题</text>
+        <text wx:elif="{{questions[currentQuestionIndex].type === 'multiple'}}">多选题</text>
+        <text wx:else>判断题</text>
+      </view>
+      
+      <view class="question-text">{{questions[currentQuestionIndex].question}}</view>
+
+      <!-- 单选题选项 -->
+      <view class="options" wx:if="{{questions[currentQuestionIndex].type === 'single'}}">
+        <view 
+          class="option-item {{userAnswers[questions[currentQuestionIndex].id] === index ? 'selected' : ''}}"
+          wx:for="{{questions[currentQuestionIndex].options}}"
+          wx:key="index"
+          bindtap="selectSingleAnswer"
+          data-answer="{{index}}"
+        >
+          <text class="option-label">{{index + 1}}.</text>
+          <text class="option-text">{{item}}</text>
+        </view>
+      </view>
+
+      <!-- 多选题选项 -->
+      <view class="options" wx:if="{{questions[currentQuestionIndex].type === 'multiple'}}">
+        <view 
+          class="option-item multiple {{userAnswers[questions[currentQuestionIndex].id] && userAnswers[questions[currentQuestionIndex].id].includes(index) ? 'selected' : ''}}"
+          wx:for="{{questions[currentQuestionIndex].options}}"
+          wx:key="index"
+          bindtap="selectMultipleAnswer"
+          data-answer="{{index}}"
+        >
+          <text class="option-checkbox">{{userAnswers[questions[currentQuestionIndex].id] && userAnswers[questions[currentQuestionIndex].id].includes(index) ? '☑️' : '☐'}}</text>
+          <text class="option-text">{{item}}</text>
+        </view>
+      </view>
+
+      <!-- 判断题选项 -->
+      <view class="options" wx:if="{{questions[currentQuestionIndex].type === 'truefalse'}}">
+        <view 
+          class="option-item truefalse {{userAnswers[questions[currentQuestionIndex].id] === true ? 'selected' : ''}}"
+          bindtap="selectTrueFalse"
+          data-answer="true"
+        >
+          <text class="option-text">✓ 正确</text>
+        </view>
+        <view 
+          class="option-item truefalse {{userAnswers[questions[currentQuestionIndex].id] === false ? 'selected' : ''}}"
+          bindtap="selectTrueFalse"
+          data-answer="false"
+        >
+          <text class="option-text">✗ 错误</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 答案显示 -->
+    <view class="answer-display" wx:if="{{showAnswer}}">
+      <view class="answer-title">正确答案：</view>
+      <view class="correct-answer">
+        <text wx:if="{{questions[currentQuestionIndex].type === 'single'}}">
+          {{questions[currentQuestionIndex].options[questions[currentQuestionIndex].correctAnswer]}}
+        </text>
+        <text wx:elif="{{questions[currentQuestionIndex].type === 'multiple'}}">
+          {{questions[currentQuestionIndex].correctAnswer.map(i => questions[currentQuestionIndex].options[i]).join(', ')}}
+        </text>
+        <text wx:else>
+          {{questions[currentQuestionIndex].correctAnswer ? '正确' : '错误'}}
+        </text>
+      </view>
+      <view class="explanation">{{questions[currentQuestionIndex].explanation}}</view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="quiz-actions">
+      <button 
+        class="action-btn prev-btn" 
+        bindtap="prevQuestion"
+        disabled="{{currentQuestionIndex === 0}}"
+      >
+        上一题
+      </button>
+      
+      <button 
+        class="action-btn show-answer-btn" 
+        bindtap="showAnswer"
+        wx:if="{{!showAnswer}}"
+      >
+        查看答案
+      </button>
+      
+      <button 
+        class="action-btn next-btn" 
+        bindtap="nextQuestion"
+        wx:if="{{currentQuestionIndex < questions.length - 1}}"
+      >
+        下一题
+      </button>
+      
+      <button 
+        class="action-btn submit-btn" 
+        bindtap="submitQuiz"
+        wx:if="{{currentQuestionIndex === questions.length - 1}}"
+      >
+        提交测验
+      </button>
+    </view>
+  </view>
+
+  <!-- 完成界面 -->
+  <view class="completed-screen" wx:if="{{quizState === 'completed'}}">
+    <view class="result-title">测验完成！</view>
+    
+    <view class="score-display">
+      <view class="score-circle">
+        <text class="score-value">{{gradeResult.percentage}}%</text>
+        <text class="score-label">正确率</text>
+      </view>
+    </view>
+    
+    <view class="result-details">
+      <view class="detail-item">
+        <text class="detail-label">答对题数：</text>
+        <text class="detail-value">{{gradeResult.correctCount}} / {{gradeResult.totalQuestions}}</text>
+      </view>
+      <view class="detail-item">
+        <text class="detail-label">评价：</text>
+        <text class="detail-value">{{gradeResult.evaluation}}</text>
+      </view>
+    </view>
+
+    <view class="result-actions">
+      <button class="action-btn view-details-btn" bindtap="viewResults">查看详情</button>
+      <button class="action-btn restart-btn" bindtap="restartQuiz">重新测验</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,31 @@
+<!--pages/index/index.wxml-->
+<view class="home-container">
+  <view class="header">
+    <text class="app-title">多功能小程序</text>
+    <text class="app-subtitle">集合多种实用功能于一体</text>
+  </view>
+
+  <view class="features-grid">
+    <view 
+      class="feature-card"
+      wx:for="{{features}}"
+      wx:key="id"
+      bindtap="navigateToFeature"
+      data-path="{{item.path}}"
+      style="border-left-color: {{item.color}}"
+    >
+      <view class="feature-icon" style="background: {{item.color}}">
+        <text class="icon-text">{{item.icon}}</text>
+      </view>
+      <view class="feature-content">
+        <text class="feature-title">{{item.title}}</text>
+        <text class="feature-desc">{{item.desc}}</text>
+      </view>
+      <view class="feature-arrow">></view>
+    </view>
+  </view>
+
+  <view class="footer">
+    <text class="footer-text">选择功能开始使用</text>
+  </view>
+</view>

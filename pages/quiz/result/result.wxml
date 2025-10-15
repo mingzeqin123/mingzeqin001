@@ -1,0 +1,116 @@
+<!--pages/quiz/result/result.wxml-->
+<view class="result-container">
+  <!-- 统计概览 -->
+  <view class="statistics-section">
+    <view class="section-title">测验统计</view>
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-value">{{statistics.totalQuizzes}}</text>
+        <text class="stat-label">总测验次数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{statistics.averageScore}}%</text>
+        <text class="stat-label">平均正确率</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{statistics.bestScore}}%</text>
+        <text class="stat-label">最高正确率</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 历史记录 -->
+  <view class="history-section">
+    <view class="section-header">
+      <text class="section-title">历史记录</text>
+      <button class="clear-btn" bindtap="clearHistory" wx:if="{{results.length > 0}}">清空</button>
+    </view>
+    
+    <view class="result-list" wx:if="{{results.length > 0}}">
+      <view 
+        class="result-item"
+        wx:for="{{results}}"
+        wx:key="timestamp"
+        bindtap="viewDetails"
+        data-index="{{index}}"
+      >
+        <view class="result-header">
+          <text class="result-date">{{formatTime(item.timestamp)}}</text>
+          <text class="result-score" style="color: {{getEvaluationColor(item.percentage)}}">{{item.percentage}}%</text>
+        </view>
+        <view class="result-info">
+          <text class="result-detail">{{item.correctCount}}/{{item.totalQuestions}} 题正确</text>
+          <text class="result-evaluation">{{item.evaluation}}</text>
+        </view>
+        <view class="result-arrow">></view>
+      </view>
+    </view>
+    
+    <view class="empty-state" wx:else>
+      <text class="empty-icon">📝</text>
+      <text class="empty-text">暂无测验记录</text>
+      <button class="start-quiz-btn" bindtap="restartQuiz">开始测验</button>
+    </view>
+  </view>
+
+  <!-- 详细结果弹窗 -->
+  <view class="detail-modal" wx:if="{{showDetails}}">
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">测验详情</text>
+        <text class="close-btn" bindtap="closeDetails">×</text>
+      </view>
+      
+      <view class="modal-body" wx:if="{{currentResult}}">
+        <!-- 总体结果 -->
+        <view class="overall-result">
+          <view class="score-display">
+            <text class="score-value" style="color: {{getEvaluationColor(currentResult.percentage)}}">{{currentResult.percentage}}%</text>
+            <text class="score-label">正确率</text>
+          </view>
+          <view class="result-summary">
+            <text class="summary-text">{{currentResult.correctCount}}/{{currentResult.totalQuestions}} 题正确</text>
+            <text class="summary-evaluation">{{currentResult.evaluation}}</text>
+          </view>
+        </view>
+
+        <!-- 题目详情 -->
+        <view class="questions-detail">
+          <view class="detail-title">题目详情</view>
+          <view 
+            class="question-detail-item"
+            wx:for="{{currentResult.results}}"
+            wx:key="questionId"
+          >
+            <view class="question-header">
+              <text class="question-type-icon">{{getTypeIcon(item.type)}}</text>
+              <text class="question-text">{{item.question}}</text>
+              <text class="question-status {{item.isCorrect ? 'correct' : 'incorrect'}}">
+                {{item.isCorrect ? '✓' : '✗'}}
+              </text>
+            </view>
+            
+            <view class="answer-details">
+              <view class="user-answer">
+                <text class="answer-label">你的答案：</text>
+                <text class="answer-text">{{item.userAnswer}}</text>
+              </view>
+              <view class="correct-answer">
+                <text class="answer-label">正确答案：</text>
+                <text class="answer-text">{{item.correctAnswer}}</text>
+              </view>
+              <view class="explanation" wx:if="{{item.explanation}}">
+                <text class="explanation-text">{{item.explanation}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <view class="modal-footer">
+        <button class="modal-btn" bindtap="closeDetails">关闭</button>
+        <button class="modal-btn primary" bindtap="restartQuiz">重新测验</button>
+      </view>
+    </view>
+  </view>
+</view>
