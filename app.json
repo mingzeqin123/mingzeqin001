@@ -1,14 +1,44 @@
 {
   "pages": [
+    "pages/index/index",
     "pages/game/game",
-    "pages/watermark/watermark"
+    "pages/watermark/watermark",
+    "pages/quiz/quiz",
+    "pages/quiz/result/result",
+    "pages/quiz/manage/manage"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "跳一跳",
-    "navigationBarTextStyle": "black",
-    "backgroundColor": "#87CEEB"
+    "navigationBarBackgroundColor": "#667eea",
+    "navigationBarTitleText": "知识测验",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f8f9fa"
+  },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#667eea",
+    "backgroundColor": "#fff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/game/game",
+        "text": "跳一跳",
+        "iconPath": "images/game-icon.png",
+        "selectedIconPath": "images/game-icon-active.png"
+      },
+      {
+        "pagePath": "pages/quiz/quiz",
+        "text": "知识测验",
+        "iconPath": "images/quiz-icon.png",
+        "selectedIconPath": "images/quiz-icon-active.png"
+      },
+      {
+        "pagePath": "pages/watermark/watermark",
+        "text": "水印工具",
+        "iconPath": "images/watermark-icon.png",
+        "selectedIconPath": "images/watermark-icon-active.png"
+      }
+    ]
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",
