@@ -1,5 +1,6 @@
 package com.example.app;
 
+import com.example.app.mj.MJParameterController;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -24,11 +25,47 @@ public class MacJavaApp extends Application {
 
     private TextArea outputArea;
     private Label statusLabel;
+    private MJParameterController mjController;
+    private TabPane mainTabPane;
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Mac Java Application v1.0");
+        primaryStage.setTitle("Mac Java Application v2.0 - 集成 Midjourney 参数构建器");
 
+        // Initialize MJ parameter controller
+        mjController = new MJParameterController();
+
+        // Create main tab pane
+        mainTabPane = new TabPane();
+        mainTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+
+        // Create original application tab
+        Tab originalTab = createOriginalApplicationTab(primaryStage);
+        
+        // Create MJ parameter builder tab
+        Tab mjTab = createMJParameterTab();
+
+        // Add tabs to main pane
+        mainTabPane.getTabs().addAll(originalTab, mjTab);
+
+        // Create scene
+        Scene scene = new Scene(mainTabPane, 900, 700);
+        primaryStage.setScene(scene);
+        primaryStage.setResizable(true);
+        primaryStage.show();
+
+        // Initial welcome message
+        appendOutput("应用程序启动成功！");
+        appendOutput("当前时间: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        updateStatus("应用程序已启动");
+    }
+
+    /**
+     * Create the original application tab
+     */
+    private Tab createOriginalApplicationTab(Stage primaryStage) {
+        Tab originalTab = new Tab("原始应用");
+        
         // Create the main layout
         VBox root = new VBox(10);
         root.setPadding(new Insets(20));
@@ -81,17 +118,30 @@ public class MacJavaApp extends Application {
 
         // Add components to root
         root.getChildren().addAll(titleLabel, descLabel, buttonPanel, outputArea, statusLabel);
+        
+        originalTab.setContent(root);
+        return originalTab;
+    }
 
-        // Create scene
-        Scene scene = new Scene(root, 600, 500);
-        primaryStage.setScene(scene);
-        primaryStage.setResizable(true);
-        primaryStage.show();
-
-        // Initial welcome message
-        appendOutput("应用程序启动成功！");
-        appendOutput("当前时间: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        updateStatus("应用程序已启动");
+    /**
+     * Create the MJ parameter builder tab
+     */
+    private Tab createMJParameterTab() {
+        Tab mjTab = new Tab("Midjourney 参数构建器");
+        
+        // Create scroll pane for the MJ parameter interface
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        
+        // Get the MJ parameter interface
+        VBox mjInterface = mjController.createParameterInterface();
+        scrollPane.setContent(mjInterface);
+        
+        mjTab.setContent(scrollPane);
+        return mjTab;
     }
 
     private void showGreeting() {
