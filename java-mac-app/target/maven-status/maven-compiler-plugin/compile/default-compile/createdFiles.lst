@@ -1,2 +1,8 @@
-com/example/app/MacJavaApp.class
+com/example/app/mj/MJParameterService.class
+com/example/app/mj/MJParameterController.class
+com/example/app/mj/MJParameterExample.class
 module-info.class
+com/example/app/mj/MJParameterBuilder.class
+com/example/app/MacJavaApp.class
+com/example/app/mj/MJParameter.class
+com/example/app/mj/MJPrompt.class
