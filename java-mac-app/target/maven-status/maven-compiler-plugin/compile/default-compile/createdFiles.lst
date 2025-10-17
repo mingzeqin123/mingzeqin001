@@ -1,2 +1,9 @@
+com/example/app/payment/WeChatPayConfig.class
+com/example/app/WeChatPayDemo.class
+com/example/app/payment/WeChatPayUtils.class
+com/example/app/payment/model/UnifiedOrderRequest.class
+com/example/app/payment/controller/PaymentController.class
+com/example/app/payment/model/UnifiedOrderResponse.class
 com/example/app/MacJavaApp.class
-module-info.class
+com/example/app/payment/service/WeChatPayService.class
+com/example/app/payment/model/PaymentResult.class
