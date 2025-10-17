@@ -1,177 +1,329 @@
-# 微信小程序跳一跳游戏
+# 优惠券系统
 
-一个基于微信小程序平台开发的3D跳一跳小游戏，使用Three.js渲染引擎实现3D效果。
+一套完整的优惠券系统，支持优惠券的发放、领取、使用、付款、退款等核心功能。
 
-## 🎮 游戏特色
+## 功能特性
 
-- **3D视觉效果**：使用Three.js渲染引擎，呈现精美的3D场景
-- **物理引擎**：真实的跳跃物理模拟和碰撞检测
-- **多样方块**：普通、小型、高型、特殊等多种方块类型
-- **蓄力系统**：长按蓄力，控制跳跃距离和高度
-- **分数系统**：完美落地获得额外分数，挑战最高纪录
-- **视觉特效**：粒子效果、动画过渡、阴影系统
-- **音效支持**：跳跃、落地、完美、游戏结束等音效
-- **社交分享**：支持微信好友和朋友圈分享
+### 核心功能
+- **优惠券管理**: 创建、查询、更新、删除优惠券
+- **用户优惠券**: 用户领取、查询、使用优惠券
+- **订单管理**: 创建订单、使用优惠券、计算价格
+- **支付处理**: 支付记录、支付状态管理
+- **退款处理**: 退款申请、退款处理、优惠券退款
 
-## 🚀 快速开始
+### 优惠券类型
+- **固定金额**: 满减优惠券（如：满100减20）
+- **百分比折扣**: 按比例折扣（如：8折优惠，最高减50元）
+- **免运费**: 满足条件免运费
 
-### 环境要求
-- 微信开发者工具 1.05.0 或更高版本
-- 小程序基础库 2.9.0 或更高版本
+### 业务规则
+- 优惠券有效期管理
+- 每用户领取限制
+- 订单金额门槛
+- 库存管理
+- 退款时间限制
 
-### 安装步骤
+## 技术栈
 
-1. **克隆项目**
-   ```bash
-   git clone [项目地址]
-   cd jump-jump-game
-   ```
+- **后端框架**: FastAPI
+- **数据库**: SQLAlchemy (支持SQLite/MySQL/PostgreSQL)
+- **数据验证**: Pydantic
+- **API文档**: 自动生成Swagger文档
 
-2. **导入项目**
-   - 打开微信开发者工具
-   - 选择"导入项目"
-   - 选择项目目录
-   - 填入AppID（测试可使用测试号）
+## 快速开始
 
-3. **添加资源文件**
-   - 将Three.js完整库文件放入 `/pages/game/libs/three.min.js`
-   - 添加音效文件到 `/sounds/` 目录
-   - 添加图片资源到 `/images/` 目录
+### 1. 安装依赖
 
-4. **编译运行**
-   - 点击"编译"按钮
-   - 在模拟器或真机上预览
-
-## 📁 项目结构
-
-```
-jump-jump-game/
-├── app.js                 # 小程序入口文件
-├── app.json               # 小程序配置文件
-├── app.wxss              # 全局样式文件
-├── sitemap.json          # 站点地图配置
-├── project.config.json   # 项目配置文件
-├── pages/
-│   └── game/             # 游戏页面
-│       ├── game.js       # 页面逻辑
-│       ├── game.json     # 页面配置
-│       ├── game.wxml     # 页面结构
-│       ├── game.wxss     # 页面样式
-│       ├── gameEngine.js # 游戏引擎核心
-│       ├── player.js     # 玩家角色类
-│       ├── block.js      # 方块类
-│       ├── utils.js      # 工具函数
-│       └── libs/
-│           └── three.min.js # Three.js库
-├── images/               # 图片资源
-│   └── README.md        # 图片说明
-├── sounds/               # 音效资源
-│   └── README.md        # 音效说明
-└── README.md            # 项目说明
+```bash
+pip install -r requirements.txt
 ```
 
-## 🎯 游戏玩法
+### 2. 配置数据库
 
-1. **开始游戏**：点击"开始游戏"按钮
-2. **蓄力跳跃**：长按屏幕蓄力，右侧显示蓄力条
-3. **释放跳跃**：松开手指，角色跳向下一个方块
-4. **获得分数**：
-   - 成功落地：+1分
-   - 良好落地：+3分
-   - 完美落地：+5分（中心位置）
-5. **游戏结束**：跳跃失败掉落时游戏结束
-6. **分享成绩**：可分享到微信好友或朋友圈
+默认使用SQLite数据库，如需使用其他数据库，请修改 `database.py` 中的 `DATABASE_URL`。
 
-## 🔧 核心技术
+```python
+# 使用MySQL
+DATABASE_URL = "mysql+pymysql://user:password@localhost/coupon_system"
 
-### 渲染引擎
-- **Three.js**：3D场景渲染
-- **WebGL**：硬件加速渲染
-- **阴影系统**：实时阴影计算
-- **光照系统**：环境光+方向光
+# 使用PostgreSQL
+DATABASE_URL = "postgresql://user:password@localhost/coupon_system"
+```
 
-### 物理系统
-- **跳跃轨迹**：抛物线运动模拟
-- **碰撞检测**：圆形碰撞检测算法
-- **重力模拟**：自然下落效果
+### 3. 启动服务
 
-### 动画系统
-- **缓动函数**：平滑的动画过渡
-- **骨骼动画**：角色动作表现
-- **粒子效果**：特殊效果展示
-- **相机跟随**：平滑的视角切换
+```bash
+python api.py
+```
 
-## 🎨 自定义配置
+服务将在 `http://localhost:8000` 启动。
 
-### 游戏参数调整
-在 `gameEngine.js` 中可以调整：
-- `maxChargingTime`：最大蓄力时间
-- 跳跃距离和高度计算公式
-- 方块生成间距和角度
+### 4. 查看API文档
 
-### 视觉效果
-在各个类文件中可以调整：
-- 方块颜色和材质
-- 光照强度和位置
-- 动画持续时间和缓动函数
+访问 `http://localhost:8000/docs` 查看自动生成的API文档。
 
-### 音效配置
-在 `utils.js` 的 `AudioManager` 类中：
-- 添加新的音效类型
-- 调整音量和播放逻辑
+## API接口
 
-## 📱 兼容性
+### 优惠券管理
 
-- **iOS**：iOS 10.0+
-- **Android**：Android 5.0+
-- **微信版本**：7.0.0+
-- **小程序基础库**：2.9.0+
+#### 创建优惠券
+```http
+POST /coupons/
+Content-Type: application/json
 
-## 🔍 性能优化
+{
+    "name": "新用户专享优惠券",
+    "description": "新用户注册即可领取，满100减20",
+    "type": "fixed_amount",
+    "discount_value": 20.00,
+    "min_order_amount": 100.00,
+    "total_quantity": 1000,
+    "per_user_limit": 1,
+    "valid_from": "2024-01-01T00:00:00",
+    "valid_until": "2024-01-31T23:59:59"
+}
+```
 
-1. **渲染优化**
-   - 对象池管理，减少GC
-   - 视锥剔除，只渲染可见对象
-   - LOD系统，距离越远细节越少
+#### 查询优惠券列表
+```http
+GET /coupons/?status=active&page=1&page_size=20
+```
 
-2. **内存管理**
-   - 及时销毁不需要的对象
-   - 纹理和几何体复用
-   - 音效资源预加载
+#### 更新优惠券
+```http
+PUT /coupons/{coupon_id}
+Content-Type: application/json
 
-3. **帧率优化**
-   - 固定时间步长更新
-   - 动画插值平滑
-   - 避免在渲染循环中创建对象
+{
+    "name": "更新后的优惠券名称",
+    "status": "inactive"
+}
+```
 
-## 🐛 已知问题
+### 用户优惠券
 
-1. 在部分低端Android设备上可能出现卡顿
-2. Three.js库文件较大，首次加载时间较长
-3. WebGL兼容性问题，部分老设备不支持
+#### 领取优惠券
+```http
+POST /users/{user_id}/coupons/claim?coupon_code=COUPON123
+```
 
-## 🔄 更新日志
+#### 查询用户优惠券
+```http
+GET /users/{user_id}/coupons/?status=available&page=1&page_size=20
+```
 
-### v1.0.0 (2024-01-15)
-- 基础游戏功能实现
-- 3D渲染和物理引擎
-- 完整的游戏流程
-- 分数系统和社交分享
+#### 查询可用优惠券
+```http
+GET /users/{user_id}/coupons/available?order_amount=150.00
+```
 
-## 📄 许可证
+### 订单管理
 
-本项目采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
+#### 创建订单
+```http
+POST /orders/
+Content-Type: application/json
 
-## 🤝 贡献
+{
+    "user_id": 1001,
+    "items": [
+        {
+            "product_id": 1001,
+            "product_name": "iPhone 15",
+            "quantity": 1,
+            "unit_price": 5999.00
+        }
+    ],
+    "user_coupon_id": 123
+}
+```
 
-欢迎提交 Issue 和 Pull Request 来改进这个项目！
+#### 查询订单
+```http
+GET /orders/{order_id}
+```
 
-## 📞 联系方式
+#### 取消订单
+```http
+POST /orders/{order_id}/cancel?user_id=1001
+```
 
-如有问题或建议，请通过以下方式联系：
-- GitHub Issues
-- 邮箱：[your-email@example.com]
+### 支付处理
 
----
+#### 创建支付
+```http
+POST /payments/
+Content-Type: application/json
 
-⭐ 如果这个项目对你有帮助，请给个星星支持一下！
+{
+    "order_id": 123,
+    "payment_method": "alipay",
+    "payment_channel": "web"
+}
+```
+
+#### 处理支付成功
+```http
+POST /payments/{payment_id}/success?transaction_id=ALIPAY_123456
+```
+
+#### 处理支付失败
+```http
+POST /payments/{payment_id}/failure?failure_reason=余额不足
+```
+
+### 退款处理
+
+#### 创建退款申请
+```http
+POST /refunds/
+Content-Type: application/json
+
+{
+    "order_id": 123,
+    "refund_type": "full",
+    "reason": "商品质量问题，要求退款",
+    "refund_method": "alipay"
+}
+```
+
+#### 处理退款
+```http
+POST /refunds/{refund_id}/process?transaction_id=REFUND_123456
+```
+
+#### 拒绝退款
+```http
+POST /refunds/{refund_id}/reject?reason=不符合退款条件
+```
+
+## 数据库模型
+
+### 核心表结构
+
+#### coupons (优惠券表)
+- `id`: 主键
+- `code`: 优惠券代码（唯一）
+- `name`: 优惠券名称
+- `type`: 优惠券类型（fixed_amount/percentage/free_shipping）
+- `discount_value`: 折扣值
+- `min_order_amount`: 最低订单金额
+- `max_discount_amount`: 最大折扣金额
+- `total_quantity`: 总发放数量
+- `used_quantity`: 已使用数量
+- `per_user_limit`: 每用户限领数量
+- `valid_from`: 有效期开始
+- `valid_until`: 有效期结束
+- `status`: 优惠券状态
+
+#### user_coupons (用户优惠券表)
+- `id`: 主键
+- `user_id`: 用户ID
+- `coupon_id`: 优惠券ID
+- `status`: 用户优惠券状态
+- `used_at`: 使用时间
+- `order_id`: 使用的订单ID
+
+#### orders (订单表)
+- `id`: 主键
+- `order_no`: 订单号（唯一）
+- `user_id`: 用户ID
+- `subtotal`: 商品小计
+- `discount_amount`: 优惠金额
+- `shipping_fee`: 运费
+- `total_amount`: 订单总金额
+- `status`: 订单状态
+
+#### payments (支付记录表)
+- `id`: 主键
+- `payment_no`: 支付单号（唯一）
+- `order_id`: 订单ID
+- `amount`: 支付金额
+- `payment_method`: 支付方式
+- `status`: 支付状态
+
+#### refunds (退款记录表)
+- `id`: 主键
+- `refund_no`: 退款单号（唯一）
+- `payment_id`: 支付ID
+- `refund_amount`: 退款金额
+- `refund_reason`: 退款原因
+- `status`: 退款状态
+
+## 业务规则
+
+### 优惠券规则
+- 优惠券有效期最长1年
+- 每用户每种优惠券最多领取10张
+- 固定金额优惠券最大折扣10000元
+- 百分比优惠券必须设置最大折扣金额
+
+### 订单规则
+- 订单金额最大100万元
+- 订单创建后30分钟内可取消
+- 订单商品数量最大100个
+
+### 支付规则
+- 支付超时时间30分钟
+- 支持支付宝、微信、银行卡、余额支付
+
+### 退款规则
+- 支付后7天内可申请退款
+- 退款原因不能超过500字符
+- 每天最多申请5次退款
+
+## 使用示例
+
+运行示例代码：
+
+```bash
+python example_usage.py
+```
+
+示例包含：
+- 优惠券创建和管理
+- 用户优惠券领取和使用
+- 订单创建和支付
+- 退款申请和处理
+- 业务规则验证
+
+## 部署建议
+
+### 生产环境配置
+1. 使用MySQL或PostgreSQL数据库
+2. 配置Redis缓存
+3. 设置数据库连接池
+4. 配置日志记录
+5. 添加监控和告警
+
+### 安全考虑
+1. 添加用户认证和授权
+2. 实现API限流
+3. 敏感数据加密
+4. 输入验证和SQL注入防护
+
+### 性能优化
+1. 数据库索引优化
+2. 查询优化
+3. 缓存热点数据
+4. 异步处理耗时操作
+
+## 扩展功能
+
+### 可扩展的功能
+- 优惠券模板系统
+- 批量发放优惠券
+- 优惠券使用统计
+- 营销活动管理
+- 积分系统集成
+- 消息通知系统
+
+### 监控和运维
+- 系统健康检查
+- 性能监控
+- 错误日志收集
+- 自动化部署
+
+## 许可证
+
+MIT License
