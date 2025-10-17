@@ -1,0 +1,76 @@
+{
+  "name": "wechat-miniprogram-order-system",
+  "version": "1.0.0",
+  "description": "微信小程序订单管理系统",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "dev": "npm run test:watch",
+    "build": "echo 'Building miniprogram...'",
+    "deploy": "echo 'Deploying to production...'"
+  },
+  "keywords": [
+    "wechat",
+    "miniprogram",
+    "order",
+    "ecommerce",
+    "shopping-cart"
+  ],
+  "author": "Order System Developer",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "eslint": "^8.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "models/**/*.js",
+      "services/**/*.js",
+      "api/**/*.js",
+      "!**/node_modules/**"
+    ],
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ],
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ]
+  },
+  "eslintConfig": {
+    "env": {
+      "node": true,
+      "jest": true,
+      "es6": true
+    },
+    "extends": [
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2020,
+      "sourceType": "module"
+    },
+    "rules": {
+      "no-console": "warn",
+      "no-unused-vars": "error",
+      "semi": ["error", "never"],
+      "quotes": ["error", "single"]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/wechat-miniprogram-order-system.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/wechat-miniprogram-order-system/issues"
+  },
+  "homepage": "https://github.com/your-username/wechat-miniprogram-order-system#readme"
+}
