@@ -1,0 +1,26 @@
+# 微信支付配置文件示例
+# 请复制此文件为 wechat-pay.properties 并填入真实的配置信息
+
+# 微信支付商户号
+wechat.pay.merchant.id=YOUR_MERCHANT_ID
+
+# 应用ID (公众号或小程序的AppId)
+wechat.pay.app.id=YOUR_APP_ID
+
+# 商户私钥文件路径
+wechat.pay.private.key.path=path/to/your/apiclient_key.pem
+
+# 商户证书序列号
+wechat.pay.merchant.serial.number=YOUR_MERCHANT_SERIAL_NUMBER
+
+# 微信支付平台证书路径 (可选，SDK会自动下载)
+wechat.pay.certificate.path=path/to/wechatpay_certificate.pem
+
+# API密钥v3
+wechat.pay.api.v3.key=YOUR_API_V3_KEY
+
+# 支付通知回调地址
+wechat.pay.notify.url=https://your-domain.com/wechat/pay/notify
+
+# 微信支付API域名 (默认为官方域名)
+wechat.pay.domain=https://api.mch.weixin.qq.com
