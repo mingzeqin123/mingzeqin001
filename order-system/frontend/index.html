@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单管理系统</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-shopping-cart"></i>
+                <span>订单管理系统</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="#home" class="nav-link active" data-section="home">
+                    <i class="fas fa-home"></i> 首页
+                </a>
+                <a href="#products" class="nav-link" data-section="products">
+                    <i class="fas fa-box"></i> 商品管理
+                </a>
+                <a href="#orders" class="nav-link" data-section="orders">
+                    <i class="fas fa-file-invoice"></i> 订单管理
+                </a>
+                <a href="#cart" class="nav-link" data-section="cart">
+                    <i class="fas fa-shopping-cart"></i> 购物车
+                </a>
+                <div class="nav-user" id="navUser">
+                    <div class="user-info" id="userInfo" style="display: none;">
+                        <span id="userName"></span>
+                        <button class="btn btn-outline" onclick="logout()">退出</button>
+                    </div>
+                    <div class="login-section" id="loginSection">
+                        <button class="btn btn-primary" onclick="showLoginModal()">登录</button>
+                        <button class="btn btn-outline" onclick="showRegisterModal()">注册</button>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        <!-- 首页 -->
+        <section id="home" class="section active">
+            <div class="container">
+                <div class="hero">
+                    <h1>欢迎使用订单管理系统</h1>
+                    <p>高效管理您的商品和订单，提供完整的电商解决方案</p>
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <i class="fas fa-box"></i>
+                            <h3 id="totalProducts">0</h3>
+                            <p>商品总数</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-file-invoice"></i>
+                            <h3 id="totalOrders">0</h3>
+                            <p>订单总数</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-users"></i>
+                            <h3 id="totalUsers">0</h3>
+                            <p>用户总数</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-dollar-sign"></i>
+                            <h3 id="totalRevenue">¥0</h3>
+                            <p>总收入</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 商品管理 -->
+        <section id="products" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>商品管理</h2>
+                    <div class="section-actions">
+                        <div class="search-box">
+                            <input type="text" id="productSearch" placeholder="搜索商品...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <select id="categoryFilter">
+                            <option value="">所有分类</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="showAddProductModal()">
+                            <i class="fas fa-plus"></i> 添加商品
+                        </button>
+                    </div>
+                </div>
+                <div class="products-grid" id="productsGrid">
+                    <!-- 商品列表将在这里动态加载 -->
+                </div>
+                <div class="pagination" id="productsPagination">
+                    <!-- 分页控件将在这里动态加载 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 订单管理 -->
+        <section id="orders" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>订单管理</h2>
+                    <div class="section-actions">
+                        <select id="orderStatusFilter">
+                            <option value="">所有状态</option>
+                            <option value="pending">待确认</option>
+                            <option value="confirmed">已确认</option>
+                            <option value="processing">处理中</option>
+                            <option value="shipped">已发货</option>
+                            <option value="delivered">已送达</option>
+                            <option value="cancelled">已取消</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="refreshOrders()">
+                            <i class="fas fa-refresh"></i> 刷新
+                        </button>
+                    </div>
+                </div>
+                <div class="orders-table-container">
+                    <table class="orders-table" id="ordersTable">
+                        <thead>
+                            <tr>
+                                <th>订单号</th>
+                                <th>客户</th>
+                                <th>金额</th>
+                                <th>状态</th>
+                                <th>创建时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <!-- 订单列表将在这里动态加载 -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="ordersPagination">
+                    <!-- 分页控件将在这里动态加载 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 购物车 -->
+        <section id="cart" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>购物车</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-danger" onclick="clearCart()">
+                            <i class="fas fa-trash"></i> 清空购物车
+                        </button>
+                    </div>
+                </div>
+                <div class="cart-container" id="cartContainer">
+                    <!-- 购物车内容将在这里动态加载 -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 登录模态框 -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>用户登录</h3>
+                <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">邮箱</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">密码</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">登录</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 注册模态框 -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>用户注册</h3>
+                <span class="close" onclick="closeModal('registerModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="registerUsername">用户名</label>
+                        <input type="text" id="registerUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">邮箱</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">密码</label>
+                        <input type="password" id="registerPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerFullName">姓名</label>
+                        <input type="text" id="registerFullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPhone">电话</label>
+                        <input type="tel" id="registerPhone">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">注册</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加商品模态框 -->
+    <div id="addProductModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加商品</h3>
+                <span class="close" onclick="closeModal('addProductModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="addProductForm">
+                    <div class="form-group">
+                        <label for="productName">商品名称</label>
+                        <input type="text" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productDescription">商品描述</label>
+                        <textarea id="productDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productPrice">价格</label>
+                            <input type="number" id="productPrice" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productStock">库存</label>
+                            <input type="number" id="productStock" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productCategory">分类</label>
+                            <select id="productCategory">
+                                <option value="">选择分类</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="productSku">SKU</label>
+                            <input type="text" id="productSku">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="productImageUrl">图片URL</label>
+                        <input type="url" id="productImageUrl">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">添加商品</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 订单详情模态框 -->
+    <div id="orderDetailModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>订单详情</h3>
+                <span class="close" onclick="closeModal('orderDetailModal')">&times;</span>
+            </div>
+            <div class="modal-body" id="orderDetailContent">
+                <!-- 订单详情内容将在这里动态加载 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载提示 -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>加载中...</p>
+        </div>
+    </div>
+
+    <!-- 消息提示 -->
+    <div id="messageContainer" class="message-container"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/orders.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
