@@ -1,2 +1,8 @@
+/workspace/java-mac-app/src/main/java/com/example/app/model/PaymentRequest.java
+/workspace/java-mac-app/src/main/java/com/example/app/config/WeChatPayConfig.java
+/workspace/java-mac-app/src/main/java/com/example/app/model/PaymentResponse.java
+/workspace/java-mac-app/src/main/java/com/example/app/controller/PaymentController.java
+/workspace/java-mac-app/src/main/java/com/example/app/service/WeChatPayServiceSimple.java
+/workspace/java-mac-app/src/main/java/com/example/app/util/WeChatPayUtil.java
 /workspace/java-mac-app/src/main/java/com/example/app/MacJavaApp.java
-/workspace/java-mac-app/src/main/java/module-info.java
+/workspace/java-mac-app/src/main/java/com/example/app/model/QRCodePaymentRequest.java
