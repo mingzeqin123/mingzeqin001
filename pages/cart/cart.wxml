@@ -1,0 +1,150 @@
+<!--购物车页面-->
+<view class="cart-page">
+  <!-- 头部操作栏 -->
+  <view class="header-bar" wx:if="{{cartItems.length > 0}}">
+    <view class="select-all" bindtap="onToggleSelectAll">
+      <icon class="select-icon {{selectAll ? 'selected' : ''}}" />
+      <text class="select-text">全选</text>
+    </view>
+    <view class="edit-btn" bindtap="onToggleEdit">
+      <text>{{editing ? '完成' : '编辑'}}</text>
+    </view>
+  </view>
+
+  <!-- 购物车列表 -->
+  <scroll-view class="cart-scroll" scroll-y="true" wx:if="{{cartItems.length > 0}}">
+    <view class="cart-container">
+      <view 
+        class="cart-item"
+        wx:for="{{cartItems}}" 
+        wx:key="id"
+      >
+        <!-- 选择框 -->
+        <view 
+          class="item-select"
+          data-product-id="{{item.productId}}"
+          data-sku-id="{{item.skuId}}"
+          bindtap="onToggleSelect"
+        >
+          <icon class="select-icon {{item.selected ? 'selected' : ''}}" />
+        </view>
+
+        <!-- 商品信息 -->
+        <view class="item-content">
+          <image class="product-image" src="{{item.productImage}}" mode="aspectFill" />
+          
+          <view class="product-info">
+            <text class="product-name">{{item.productName}}</text>
+            
+            <!-- 规格信息 -->
+            <view class="product-specs" wx:if="{{item.specifications.length > 0}}">
+              <text 
+                class="spec-item"
+                wx:for="{{item.specifications}}" 
+                wx:for-item="spec"
+                wx:key="name"
+              >
+                {{spec.name}}：{{spec.value}}
+              </text>
+            </view>
+            
+            <!-- 价格和数量 -->
+            <view class="price-quantity">
+              <text class="product-price">¥{{formatPrice(item.price)}}</text>
+              
+              <!-- 数量控制器 -->
+              <view class="quantity-control">
+                <view 
+                  class="quantity-btn decrease {{item.quantity <= 1 ? 'disabled' : ''}}"
+                  data-product-id="{{item.productId}}"
+                  data-sku-id="{{item.skuId}}"
+                  data-action="decrease"
+                  bindtap="onUpdateQuantity"
+                >
+                  <text>-</text>
+                </view>
+                <input 
+                  class="quantity-input"
+                  type="number"
+                  value="{{item.quantity}}"
+                  disabled="true"
+                />
+                <view 
+                  class="quantity-btn increase"
+                  data-product-id="{{item.productId}}"
+                  data-sku-id="{{item.skuId}}"
+                  data-action="increase"
+                  bindtap="onUpdateQuantity"
+                >
+                  <text>+</text>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <!-- 删除按钮 -->
+          <view 
+            class="delete-btn"
+            data-product-id="{{item.productId}}"
+            data-sku-id="{{item.skuId}}"
+            data-product-name="{{item.productName}}"
+            bindtap="onRemoveItem"
+          >
+            <icon class="delete-icon" />
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 空购物车 -->
+  <view class="empty-cart" wx:if="{{cartItems.length === 0 && !loading}}">
+    <image class="empty-image" src="/images/empty-cart.png" />
+    <text class="empty-text">购物车还是空的</text>
+    <text class="empty-desc">快去挑选心仪的商品吧</text>
+    <button class="go-shopping-btn" bindtap="onGoShopping">去逛逛</button>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar" wx:if="{{cartItems.length > 0}}">
+    <view class="select-all-bottom" bindtap="onToggleSelectAll">
+      <icon class="select-icon {{selectAll ? 'selected' : ''}}" />
+      <text class="select-text">全选</text>
+    </view>
+
+    <!-- 非编辑模式 -->
+    <view class="checkout-section" wx:if="{{!editing}}">
+      <view class="total-info">
+        <text class="total-label">合计：</text>
+        <text class="total-amount">¥{{formatPrice(summary.totalAmount)}}</text>
+      </view>
+      <button 
+        class="checkout-btn {{summary.selectedItems > 0 ? 'active' : 'disabled'}}"
+        bindtap="onCheckout"
+      >
+        结算({{summary.selectedItems}})
+      </button>
+    </view>
+
+    <!-- 编辑模式 -->
+    <view class="edit-actions" wx:if="{{editing}}">
+      <button 
+        class="action-btn favorite-btn"
+        bindtap="onFavoriteSelected"
+      >
+        移入收藏夹
+      </button>
+      <button 
+        class="action-btn delete-btn"
+        bindtap="onDeleteSelected"
+      >
+        删除
+      </button>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>

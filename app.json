@@ -1,14 +1,42 @@
 {
   "pages": [
     "pages/game/game",
-    "pages/watermark/watermark"
+    "pages/watermark/watermark",
+    "pages/orders/orders",
+    "pages/cart/cart"
   ],
+  "tabBar": {
+    "color": "#666666",
+    "selectedColor": "#ff4444",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/game/game",
+        "text": "游戏",
+        "iconPath": "images/tab-game.png",
+        "selectedIconPath": "images/tab-game-active.png"
+      },
+      {
+        "pagePath": "pages/orders/orders",
+        "text": "订单",
+        "iconPath": "images/tab-order.png",
+        "selectedIconPath": "images/tab-order-active.png"
+      },
+      {
+        "pagePath": "pages/cart/cart",
+        "text": "购物车",
+        "iconPath": "images/tab-cart.png",
+        "selectedIconPath": "images/tab-cart-active.png"
+      }
+    ]
+  },
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "跳一跳",
+    "navigationBarTitleText": "订单管理系统",
     "navigationBarTextStyle": "black",
-    "backgroundColor": "#87CEEB"
+    "backgroundColor": "#f5f5f5"
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",
