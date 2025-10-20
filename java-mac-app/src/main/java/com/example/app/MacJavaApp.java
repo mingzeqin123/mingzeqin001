@@ -1,5 +1,7 @@
 package com.example.app;
 
+import com.example.app.captcha.SliderCaptchaUI;
+import com.example.app.captcha.CaptchaImageGenerator;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -24,11 +26,43 @@ public class MacJavaApp extends Application {
 
     private TextArea outputArea;
     private Label statusLabel;
+    private SliderCaptchaUI captchaUI;
+    private TabPane tabPane;
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Mac Java Application v1.0");
+        primaryStage.setTitle("Mac Java Application v1.0 - 集成滑块验证码");
 
+        // Create tab pane
+        tabPane = new TabPane();
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+
+        // Main application tab
+        Tab mainTab = createMainTab(primaryStage);
+        
+        // Captcha tab
+        Tab captchaTab = createCaptchaTab();
+
+        tabPane.getTabs().addAll(mainTab, captchaTab);
+
+        // Create scene
+        Scene scene = new Scene(tabPane, 800, 600);
+        primaryStage.setScene(scene);
+        primaryStage.setResizable(true);
+        primaryStage.show();
+
+        // Initial welcome message
+        appendOutput("应用程序启动成功！");
+        appendOutput("当前时间: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        updateStatus("应用程序已启动");
+    }
+
+    /**
+     * 创建主应用标签页
+     */
+    private Tab createMainTab(Stage primaryStage) {
+        Tab tab = new Tab("主应用");
+        
         // Create the main layout
         VBox root = new VBox(10);
         root.setPadding(new Insets(20));
@@ -40,7 +74,7 @@ public class MacJavaApp extends Application {
         titleLabel.setTextFill(Color.DARKBLUE);
 
         // Description
-        Label descLabel = new Label("这是一个为macOS设计的Java应用程序示例");
+        Label descLabel = new Label("这是一个为macOS设计的Java应用程序示例，现已集成滑块验证码功能");
         descLabel.setFont(Font.font("System", 14));
         descLabel.setTextFill(Color.GRAY);
 
@@ -51,6 +85,7 @@ public class MacJavaApp extends Application {
         Button helloButton = new Button("问候消息");
         Button fileButton = new Button("选择文件");
         Button systemInfoButton = new Button("系统信息");
+        Button captchaExampleButton = new Button("生成验证码示例");
         Button clearButton = new Button("清空输出");
 
         // Style buttons
@@ -58,9 +93,10 @@ public class MacJavaApp extends Application {
         helloButton.setStyle(buttonStyle);
         fileButton.setStyle(buttonStyle);
         systemInfoButton.setStyle(buttonStyle);
+        captchaExampleButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 5;");
         clearButton.setStyle("-fx-background-color: #FF3B30; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 5;");
 
-        buttonPanel.getChildren().addAll(helloButton, fileButton, systemInfoButton, clearButton);
+        buttonPanel.getChildren().addAll(helloButton, fileButton, systemInfoButton, captchaExampleButton, clearButton);
 
         // Output area
         outputArea = new TextArea();
@@ -77,21 +113,45 @@ public class MacJavaApp extends Application {
         helloButton.setOnAction(e -> showGreeting());
         fileButton.setOnAction(e -> selectFile(primaryStage));
         systemInfoButton.setOnAction(e -> showSystemInfo());
+        captchaExampleButton.setOnAction(e -> generateCaptchaExample());
         clearButton.setOnAction(e -> clearOutput());
 
         // Add components to root
         root.getChildren().addAll(titleLabel, descLabel, buttonPanel, outputArea, statusLabel);
+        
+        tab.setContent(root);
+        return tab;
+    }
 
-        // Create scene
-        Scene scene = new Scene(root, 600, 500);
-        primaryStage.setScene(scene);
-        primaryStage.setResizable(true);
-        primaryStage.show();
+    /**
+     * 创建滑块验证码标签页
+     */
+    private Tab createCaptchaTab() {
+        Tab tab = new Tab("滑块验证码");
+        
+        // 创建滑块验证码UI
+        captchaUI = new SliderCaptchaUI(new SliderCaptchaUI.CaptchaCallback() {
+            @Override
+            public void onSuccess() {
+                appendOutput("滑块验证码验证成功！");
+                updateStatus("验证码验证成功");
+            }
 
-        // Initial welcome message
-        appendOutput("应用程序启动成功！");
-        appendOutput("当前时间: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        updateStatus("应用程序已启动");
+            @Override
+            public void onFailure() {
+                appendOutput("滑块验证码验证失败，请重试");
+                updateStatus("验证码验证失败");
+            }
+
+            @Override
+            public void onRefresh() {
+                appendOutput("滑块验证码已刷新");
+                updateStatus("验证码已刷新");
+            }
+        });
+        
+        tab.setContent(captchaUI);
+        return tab;
     }
 
     private void showGreeting() {
@@ -139,6 +199,18 @@ public class MacJavaApp extends Application {
         appendOutput("最大内存: " + Runtime.getRuntime().maxMemory() / 1024 / 1024 + " MB");
         appendOutput("已用内存: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024 + " MB");
         updateStatus("系统信息已显示");
+    }
+
+    private void generateCaptchaExample() {
+        try {
+            appendOutput("正在生成验证码示例...");
+            CaptchaImageGenerator.createCaptchaExample();
+            appendOutput("验证码示例已生成并保存到桌面");
+            updateStatus("验证码示例已生成");
+        } catch (Exception e) {
+            appendOutput("生成验证码示例失败: " + e.getMessage());
+            updateStatus("生成失败");
+        }
     }
 
     private void clearOutput() {
