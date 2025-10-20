@@ -1,2 +1,10 @@
-com/example/app/MacJavaApp.class
+com/example/app/MacJavaApp$2.class
+com/example/captcha/CaptchaUtils.class
+com/example/captcha/AdvancedSliderCaptcha$CaptchaVerificationListener.class
 module-info.class
+com/example/captcha/CaptchaUtils$PuzzlePosition.class
+com/example/captcha/SliderCaptcha$CaptchaVerificationListener.class
+com/example/app/MacJavaApp.class
+com/example/captcha/AdvancedSliderCaptcha.class
+com/example/app/MacJavaApp$1.class
+com/example/captcha/SliderCaptcha.class

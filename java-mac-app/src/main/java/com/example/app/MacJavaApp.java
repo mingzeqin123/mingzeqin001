@@ -1,5 +1,7 @@
 package com.example.app;
 
+import com.example.captcha.SliderCaptcha;
+import com.example.captcha.AdvancedSliderCaptcha;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -10,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -51,16 +54,32 @@ public class MacJavaApp extends Application {
         Button helloButton = new Button("问候消息");
         Button fileButton = new Button("选择文件");
         Button systemInfoButton = new Button("系统信息");
+        Button captchaButton = new Button("基础验证码");
+        Button advancedCaptchaButton = new Button("高级验证码");
         Button clearButton = new Button("清空输出");
 
         // Style buttons
-        String buttonStyle = "-fx-background-color: #007AFF; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 5;";
+        String buttonStyle = "-fx-background-color: #007AFF; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 8 16 8 16; -fx-background-radius: 5;";
         helloButton.setStyle(buttonStyle);
         fileButton.setStyle(buttonStyle);
         systemInfoButton.setStyle(buttonStyle);
-        clearButton.setStyle("-fx-background-color: #FF3B30; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20 10 20; -fx-background-radius: 5;");
+        captchaButton.setStyle("-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 8 16 8 16; -fx-background-radius: 5;");
+        advancedCaptchaButton.setStyle("-fx-background-color: #17a2b8; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 8 16 8 16; -fx-background-radius: 5;");
+        clearButton.setStyle("-fx-background-color: #FF3B30; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 8 16 8 16; -fx-background-radius: 5;");
 
-        buttonPanel.getChildren().addAll(helloButton, fileButton, systemInfoButton, clearButton);
+        // Create two rows of buttons for better layout
+        VBox buttonContainer = new VBox(10);
+        HBox topButtonRow = new HBox(10);
+        HBox bottomButtonRow = new HBox(10);
+        
+        topButtonRow.setAlignment(Pos.CENTER);
+        bottomButtonRow.setAlignment(Pos.CENTER);
+        
+        topButtonRow.getChildren().addAll(helloButton, fileButton, systemInfoButton);
+        bottomButtonRow.getChildren().addAll(captchaButton, advancedCaptchaButton, clearButton);
+        
+        buttonContainer.getChildren().addAll(topButtonRow, bottomButtonRow);
+        buttonContainer.setAlignment(Pos.CENTER);
 
         // Output area
         outputArea = new TextArea();
@@ -77,13 +96,15 @@ public class MacJavaApp extends Application {
         helloButton.setOnAction(e -> showGreeting());
         fileButton.setOnAction(e -> selectFile(primaryStage));
         systemInfoButton.setOnAction(e -> showSystemInfo());
+        captchaButton.setOnAction(e -> showCaptchaDialog(primaryStage));
+        advancedCaptchaButton.setOnAction(e -> showAdvancedCaptchaDialog(primaryStage));
         clearButton.setOnAction(e -> clearOutput());
 
         // Add components to root
-        root.getChildren().addAll(titleLabel, descLabel, buttonPanel, outputArea, statusLabel);
+        root.getChildren().addAll(titleLabel, descLabel, buttonContainer, outputArea, statusLabel);
 
         // Create scene
-        Scene scene = new Scene(root, 600, 500);
+        Scene scene = new Scene(root, 750, 550);
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
         primaryStage.show();
@@ -100,7 +121,12 @@ public class MacJavaApp extends Application {
                          "• JavaFX GUI界面\n" +
                          "• 文件选择功能\n" +
                          "• 系统信息显示\n" +
-                         "• macOS集成";
+                         "• 基础滑块验证码组件\n" +
+                         "• 高级滑块验证码 (包含反机器人检测)\n" +
+                         "• macOS集成\n\n" +
+                         "🔒 验证码特性:\n" +
+                         "  - 基础版本: 简单的拖拽验证\n" +
+                         "  - 高级版本: 时间检测、尝试次数限制、视觉效果";
         appendOutput(greeting);
         updateStatus("显示问候消息");
     }
@@ -141,6 +167,160 @@ public class MacJavaApp extends Application {
         updateStatus("系统信息已显示");
     }
 
+    private void showCaptchaDialog(Stage parentStage) {
+        Stage captchaStage = new Stage();
+        captchaStage.initModality(Modality.APPLICATION_MODAL);
+        captchaStage.initOwner(parentStage);
+        captchaStage.setTitle("滑块验证码演示");
+        captchaStage.setResizable(false);
+        
+        VBox dialogRoot = new VBox(20);
+        dialogRoot.setPadding(new Insets(20));
+        dialogRoot.setAlignment(Pos.CENTER);
+        
+        // 标题
+        Label titleLabel = new Label("安全验证");
+        titleLabel.setFont(Font.font("System", FontWeight.BOLD, 18));
+        titleLabel.setTextFill(Color.DARKBLUE);
+        
+        // 创建滑块验证码
+        SliderCaptcha captcha = new SliderCaptcha();
+        
+        // 按钮面板
+        HBox buttonPanel = new HBox(10);
+        buttonPanel.setAlignment(Pos.CENTER);
+        
+        Button refreshButton = new Button("刷新验证码");
+        Button closeButton = new Button("关闭");
+        
+        refreshButton.setStyle("-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 8 16 8 16; -fx-background-radius: 4;");
+        closeButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 8 16 8 16; -fx-background-radius: 4;");
+        
+        buttonPanel.getChildren().addAll(refreshButton, closeButton);
+        
+        // 事件处理
+        refreshButton.setOnAction(e -> {
+            captcha.refresh();
+            appendOutput("验证码已刷新");
+        });
+        
+        closeButton.setOnAction(e -> captchaStage.close());
+        
+        // 验证结果监听
+        captcha.setVerificationListener(new SliderCaptcha.CaptchaVerificationListener() {
+            @Override
+            public void onVerificationSuccess() {
+                appendOutput("✅ 滑块验证码验证成功！");
+                updateStatus("验证码验证通过");
+                
+                // 延迟关闭对话框
+                javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(1.5));
+                pause.setOnFinished(event -> captchaStage.close());
+                pause.play();
+            }
+            
+            @Override
+            public void onVerificationFailed() {
+                appendOutput("❌ 滑块验证码验证失败，请重试");
+                updateStatus("验证码验证失败");
+            }
+        });
+        
+        dialogRoot.getChildren().addAll(titleLabel, captcha, buttonPanel);
+        
+        Scene dialogScene = new Scene(dialogRoot);
+        captchaStage.setScene(dialogScene);
+        captchaStage.showAndWait();
+        
+        appendOutput("打开滑块验证码对话框");
+        updateStatus("显示验证码界面");
+    }
+    
+    private void showAdvancedCaptchaDialog(Stage parentStage) {
+        Stage captchaStage = new Stage();
+        captchaStage.initModality(Modality.APPLICATION_MODAL);
+        captchaStage.initOwner(parentStage);
+        captchaStage.setTitle("高级滑块验证码演示");
+        captchaStage.setResizable(false);
+        
+        VBox dialogRoot = new VBox(20);
+        dialogRoot.setPadding(new Insets(20));
+        dialogRoot.setAlignment(Pos.CENTER);
+        dialogRoot.setStyle("-fx-background-color: #ffffff;");
+        
+        // 标题
+        Label titleLabel = new Label("🔒 高级安全验证");
+        titleLabel.setFont(Font.font("System", FontWeight.BOLD, 20));
+        titleLabel.setTextFill(Color.DARKBLUE);
+        
+        // 描述
+        Label descLabel = new Label("此验证码包含反机器人检测、时间验证和多重安全特性");
+        descLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #6c757d;");
+        
+        // 创建高级滑块验证码
+        AdvancedSliderCaptcha captcha = new AdvancedSliderCaptcha();
+        
+        // 按钮面板
+        HBox buttonPanel = new HBox(10);
+        buttonPanel.setAlignment(Pos.CENTER);
+        
+        Button refreshButton = new Button("🔄 刷新");
+        Button closeButton = new Button("❌ 关闭");
+        
+        refreshButton.setStyle("-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 8 16 8 16; -fx-background-radius: 4;");
+        closeButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-size: 12px; -fx-padding: 8 16 8 16; -fx-background-radius: 4;");
+        
+        buttonPanel.getChildren().addAll(refreshButton, closeButton);
+        
+        // 事件处理
+        refreshButton.setOnAction(e -> {
+            captcha.refresh();
+            appendOutput("🔄 高级验证码已刷新");
+        });
+        
+        closeButton.setOnAction(e -> captchaStage.close());
+        
+        // 验证结果监听
+        captcha.setVerificationListener(new AdvancedSliderCaptcha.CaptchaVerificationListener() {
+            @Override
+            public void onVerificationSuccess() {
+                appendOutput("✅ 高级滑块验证码验证成功！安全级别: 高");
+                updateStatus("高级验证码验证通过");
+                
+                // 延迟关闭对话框
+                javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(2));
+                pause.setOnFinished(event -> captchaStage.close());
+                pause.play();
+            }
+            
+            @Override
+            public void onVerificationFailed() {
+                appendOutput("❌ 高级验证码验证失败 (尝试 " + captcha.getAttemptCount() + "/3)");
+                updateStatus("高级验证码验证失败");
+            }
+            
+            @Override
+            public void onMaxAttemptsReached() {
+                appendOutput("🚫 验证失败次数过多，已锁定验证码");
+                updateStatus("验证码已锁定");
+                
+                // 5秒后自动关闭
+                javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(3));
+                pause.setOnFinished(event -> captchaStage.close());
+                pause.play();
+            }
+        });
+        
+        dialogRoot.getChildren().addAll(titleLabel, descLabel, captcha, buttonPanel);
+        
+        Scene dialogScene = new Scene(dialogRoot);
+        captchaStage.setScene(dialogScene);
+        captchaStage.showAndWait();
+        
+        appendOutput("打开高级滑块验证码对话框");
+        updateStatus("显示高级验证码界面");
+    }
+    
     private void clearOutput() {
         outputArea.clear();
         updateStatus("输出已清空");
