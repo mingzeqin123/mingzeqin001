@@ -1,0 +1,23 @@
+{
+    "nginx_config_template": "/etc/nginx-ip-monitor/nginx.conf.template",
+    "nginx_config_path": "/etc/nginx/nginx.conf",
+    "nginx_config_backup": "/etc/nginx-ip-monitor/nginx.conf.backup",
+    "check_interval": 60,
+    "ip_check_services": [
+        "https://api.ipify.org",
+        "https://ipv4.icanhazip.com",
+        "https://checkip.amazonaws.com"
+    ],
+    "log_file": "/var/log/nginx-ip-monitor.log",
+    "log_level": "INFO",
+    "restart_nginx_on_change": true,
+    "test_nginx_config": true,
+    "email_notifications": {
+        "enabled": false,
+        "smtp_server": "",
+        "smtp_port": 587,
+        "username": "",
+        "password": "",
+        "to_addresses": []
+    }
+}
