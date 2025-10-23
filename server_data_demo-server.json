@@ -1,0 +1,236 @@
+{
+  "server_name": "demo-server",
+  "metrics": [
+    {
+      "server_name": "demo-server",
+      "timestamp": "2025-10-23T02:23:24.827621",
+      "cpu": {
+        "total_usage": 0.3,
+        "core_count": 4,
+        "per_core_usage": [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        "frequency": {
+          "current": 2400.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      },
+      "memory": {
+        "total": 15.64,
+        "available": 14.92,
+        "used": 0.72,
+        "usage_percent": 4.6,
+        "swap": {
+          "total": 0.0,
+          "used": 0.0,
+          "free": 0.0,
+          "usage_percent": 0.0
+        }
+      },
+      "disk": [
+        {
+          "device": "/dev/root",
+          "mountpoint": "/etc/resolv.conf",
+          "fstype": "ext4",
+          "total": 125.87,
+          "used": 6.42,
+          "free": 113.04,
+          "usage_percent": 5.1
+        },
+        {
+          "device": "/dev/root",
+          "mountpoint": "/etc/hostname",
+          "fstype": "ext4",
+          "total": 125.87,
+          "used": 6.42,
+          "free": 113.04,
+          "usage_percent": 5.1
+        },
+        {
+          "device": "/dev/root",
+          "mountpoint": "/etc/hosts",
+          "fstype": "ext4",
+          "total": 125.87,
+          "used": 6.42,
+          "free": 113.04,
+          "usage_percent": 5.1
+        }
+      ],
+      "network": {
+        "bytes_sent": 1600522032,
+        "bytes_recv": 2020655512,
+        "packets_sent": 106480,
+        "packets_recv": 1174429,
+        "connections": 11
+      },
+      "system": {
+        "platform": "Linux",
+        "platform_version": "#1 SMP PREEMPT_DYNAMIC Tue Aug  5 21:01:56 UTC 2025",
+        "architecture": "x86_64",
+        "processor": "x86_64",
+        "boot_time": "2025-10-22T20:45:09",
+        "uptime_seconds": 20297.83,
+        "uptime_hours": 5.64,
+        "uptime_days": 0.23
+      }
+    },
+    {
+      "server_name": "demo-server",
+      "timestamp": "2025-10-23T02:23:36.834097",
+      "cpu": {
+        "total_usage": 0.3,
+        "core_count": 4,
+        "per_core_usage": [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        "frequency": {
+          "current": 2400.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      },
+      "memory": {
+        "total": 15.64,
+        "available": 14.92,
+        "used": 0.72,
+        "usage_percent": 4.6,
+        "swap": {
+          "total": 0.0,
+          "used": 0.0,
+          "free": 0.0,
+          "usage_percent": 0.0
+        }
+      },
+      "disk": [
+        {
+          "device": "/dev/root",
+          "mountpoint": "/etc/resolv.conf",
+          "fstype": "ext4",
+          "total": 125.87,
+          "used": 6.42,
+          "free": 113.04,
+          "usage_percent": 5.1
+        },
+        {
+          "device": "/dev/root",
+          "mountpoint": "/etc/hostname",
+          "fstype": "ext4",
+          "total": 125.87,
+          "used": 6.42,
+          "free": 113.04,
+          "usage_percent": 5.1
+        },
+        {
+          "device": "/dev/root",
+          "mountpoint": "/etc/hosts",
+          "fstype": "ext4",
+          "total": 125.87,
+          "used": 6.42,
+          "free": 113.04,
+          "usage_percent": 5.1
+        }
+      ],
+      "network": {
+        "bytes_sent": 1600522032,
+        "bytes_recv": 2020655512,
+        "packets_sent": 106480,
+        "packets_recv": 1174429,
+        "connections": 11
+      },
+      "system": {
+        "platform": "Linux",
+        "platform_version": "#1 SMP PREEMPT_DYNAMIC Tue Aug  5 21:01:56 UTC 2025",
+        "architecture": "x86_64",
+        "processor": "x86_64",
+        "boot_time": "2025-10-22T20:45:09",
+        "uptime_seconds": 20309.84,
+        "uptime_hours": 5.64,
+        "uptime_days": 0.24
+      }
+    },
+    {
+      "server_name": "demo-server",
+      "timestamp": "2025-10-23T02:23:48.837953",
+      "cpu": {
+        "total_usage": 0.5,
+        "core_count": 4,
+        "per_core_usage": [
+          0.0,
+          0.0,
+          2.0,
+          0.0
+        ],
+        "frequency": {
+          "current": 2400.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      },
+      "memory": {
+        "total": 15.64,
+        "available": 14.92,
+        "used": 0.72,
+        "usage_percent": 4.6,
+        "swap": {
+          "total": 0.0,
+          "used": 0.0,
+          "free": 0.0,
+          "usage_percent": 0.0
+        }
+      },
+      "disk": [
+        {
+          "device": "/dev/root",
+          "mountpoint": "/etc/resolv.conf",
+          "fstype": "ext4",
+          "total": 125.87,
+          "used": 6.42,
+          "free": 113.04,
+          "usage_percent": 5.1
+        },
+        {
+          "device": "/dev/root",
+          "mountpoint": "/etc/hostname",
+          "fstype": "ext4",
+          "total": 125.87,
+          "used": 6.42,
+          "free": 113.04,
+          "usage_percent": 5.1
+        },
+        {
+          "device": "/dev/root",
+          "mountpoint": "/etc/hosts",
+          "fstype": "ext4",
+          "total": 125.87,
+          "used": 6.42,
+          "free": 113.04,
+          "usage_percent": 5.1
+        }
+      ],
+      "network": {
+        "bytes_sent": 1600522032,
+        "bytes_recv": 2020655512,
+        "packets_sent": 106480,
+        "packets_recv": 1174429,
+        "connections": 11
+      },
+      "system": {
+        "platform": "Linux",
+        "platform_version": "#1 SMP PREEMPT_DYNAMIC Tue Aug  5 21:01:56 UTC 2025",
+        "architecture": "x86_64",
+        "processor": "x86_64",
+        "boot_time": "2025-10-22T20:45:09",
+        "uptime_seconds": 20321.84,
+        "uptime_hours": 5.64,
+        "uptime_days": 0.24
+      }
+    }
+  ]
+}
