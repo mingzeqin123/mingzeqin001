@@ -1,0 +1,31 @@
+[Unit]
+Description=Nginx IP Monitor Service
+Documentation=https://github.com/your-repo/nginx-ip-monitor
+After=network.target nginx.service
+Wants=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/usr/local/bin/nginx-ip-monitor.py --daemon --config /etc/nginx-ip-monitor/config.json
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nginx-ip-monitor
+
+# 安全设置
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log /tmp /etc/nginx-ip-monitor
+
+# 资源限制
+LimitNOFILE=65536
+MemoryMax=256M
+
+[Install]
+WantedBy=multi-user.target
