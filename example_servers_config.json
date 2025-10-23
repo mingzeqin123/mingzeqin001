@@ -1,0 +1,66 @@
+{
+  "servers": {
+    "web-server-01": {
+      "name": "Web服务器01",
+      "host": "192.168.1.100",
+      "port": 5000,
+      "enabled": true,
+      "description": "主要的Web服务器",
+      "tags": [
+        "web",
+        "production"
+      ],
+      "thresholds": {
+        "cpu_warning": 70,
+        "cpu_critical": 90,
+        "memory_warning": 80,
+        "memory_critical": 95,
+        "disk_warning": 80,
+        "disk_critical": 95
+      }
+    },
+    "db-server-01": {
+      "name": "数据库服务器01",
+      "host": "192.168.1.101",
+      "port": 5000,
+      "enabled": true,
+      "description": "主数据库服务器",
+      "tags": [
+        "database",
+        "production"
+      ],
+      "thresholds": {
+        "cpu_warning": 60,
+        "cpu_critical": 85,
+        "memory_warning": 75,
+        "memory_critical": 90,
+        "disk_warning": 70,
+        "disk_critical": 90
+      }
+    },
+    "cache-server-01": {
+      "name": "缓存服务器01",
+      "host": "192.168.1.102",
+      "port": 5000,
+      "enabled": true,
+      "description": "Redis缓存服务器",
+      "tags": [
+        "cache",
+        "production"
+      ],
+      "thresholds": {
+        "cpu_warning": 80,
+        "cpu_critical": 95,
+        "memory_warning": 85,
+        "memory_critical": 98,
+        "disk_warning": 90,
+        "disk_critical": 98
+      }
+    }
+  },
+  "global_settings": {
+    "update_interval": 10,
+    "history_limit": 100,
+    "auto_refresh": true
+  }
+}

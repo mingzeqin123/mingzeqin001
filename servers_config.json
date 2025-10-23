@@ -1,0 +1,28 @@
+{
+  "servers": {
+    "local": {
+      "name": "本地服务器",
+      "host": "localhost",
+      "port": 5000,
+      "enabled": true,
+      "description": "本地监控服务器",
+      "tags": [
+        "local",
+        "primary"
+      ],
+      "thresholds": {
+        "cpu_warning": 70,
+        "cpu_critical": 90,
+        "memory_warning": 80,
+        "memory_critical": 95,
+        "disk_warning": 80,
+        "disk_critical": 95
+      }
+    }
+  },
+  "global_settings": {
+    "update_interval": 10,
+    "history_limit": 100,
+    "auto_refresh": true
+  }
+}
