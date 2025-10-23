@@ -1,0 +1,28 @@
+{
+  "check_interval": 300,
+  "nginx_config_path": "/etc/nginx/sites-available/default",
+  "nginx_config_template": "/etc/nginx/sites-available/default.template",
+  "ip_check_urls": [
+    "https://api.ipify.org",
+    "https://icanhazip.com",
+    "https://ifconfig.me/ip"
+  ],
+  "log_file": "/var/log/nginx_ip_monitor.log",
+  "log_level": "INFO",
+  "backup_config": true,
+  "test_nginx_config": true,
+  "restart_nginx": true,
+  "server_name_placeholder": "SERVER_IP",
+  "notification": {
+    "enabled": false,
+    "webhook_url": "",
+    "email": {
+      "enabled": false,
+      "smtp_server": "smtp.gmail.com",
+      "smtp_port": 587,
+      "username": "your-email@gmail.com",
+      "password": "your-app-password",
+      "to_email": "admin@example.com"
+    }
+  }
+}
