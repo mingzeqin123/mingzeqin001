@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务器监控大屏</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- 头部 -->
+        <header class="header">
+            <h1>服务器监控大屏</h1>
+            <div class="status-info">
+                <span id="server-name">加载中...</span>
+                <span id="last-update">最后更新: --</span>
+                <div class="status-indicator" id="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>在线</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主要指标卡片 -->
+        <div class="metrics-grid">
+            <!-- CPU使用率卡片 -->
+            <div class="metric-card cpu-card">
+                <div class="card-header">
+                    <h3>CPU使用率</h3>
+                    <div class="metric-icon">💻</div>
+                </div>
+                <div class="card-content">
+                    <div class="metric-value" id="cpu-usage">0%</div>
+                    <div class="metric-details">
+                        <div class="detail-item">
+                            <span>物理核心:</span>
+                            <span id="cpu-cores">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>逻辑核心:</span>
+                            <span id="cpu-logical">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>频率:</span>
+                            <span id="cpu-freq">-- MHz</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill cpu-progress" id="cpu-progress"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 内存使用率卡片 -->
+            <div class="metric-card memory-card">
+                <div class="card-header">
+                    <h3>内存使用率</h3>
+                    <div class="metric-icon">🧠</div>
+                </div>
+                <div class="card-content">
+                    <div class="metric-value" id="memory-usage">0%</div>
+                    <div class="metric-details">
+                        <div class="detail-item">
+                            <span>总内存:</span>
+                            <span id="memory-total">-- GB</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>已使用:</span>
+                            <span id="memory-used">-- GB</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>可用:</span>
+                            <span id="memory-available">-- GB</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill memory-progress" id="memory-progress"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 磁盘使用率卡片 -->
+            <div class="metric-card disk-card">
+                <div class="card-header">
+                    <h3>磁盘使用率</h3>
+                    <div class="metric-icon">💾</div>
+                </div>
+                <div class="card-content">
+                    <div id="disk-list">
+                        <!-- 磁盘信息将动态加载 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 网络统计卡片 -->
+            <div class="metric-card network-card">
+                <div class="card-header">
+                    <h3>网络统计</h3>
+                    <div class="metric-icon">🌐</div>
+                </div>
+                <div class="card-content">
+                    <div class="metric-details">
+                        <div class="detail-item">
+                            <span>发送:</span>
+                            <span id="network-sent">-- MB</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>接收:</span>
+                            <span id="network-recv">-- MB</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>发送包:</span>
+                            <span id="packets-sent">--</span>
+                        </div>
+                        <div class="detail-item">
+                            <span>接收包:</span>
+                            <span id="packets-recv">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图表区域 -->
+        <div class="charts-section">
+            <div class="chart-container">
+                <h3>CPU和内存使用率趋势</h3>
+                <canvas id="usage-chart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>磁盘使用情况</h3>
+                <canvas id="disk-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- 系统信息 -->
+        <div class="system-info">
+            <h3>系统信息</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">主机名:</span>
+                    <span id="hostname">--</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">操作系统:</span>
+                    <span id="platform">--</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">处理器:</span>
+                    <span id="processor">--</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">启动时间:</span>
+                    <span id="boot-time">--</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">运行时间:</span>
+                    <span id="uptime">-- 小时</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
