@@ -1,0 +1,82 @@
+[
+  {
+    "title": "苹果发布M3芯片，AI性能提升60%",
+    "link": "https://example.com/apple-m3",
+    "publish_time": "今天 09:15",
+    "summary": "苹果在最新发布会上推出M3芯片，专为AI和机器学习任务优化",
+    "source": "模拟数据",
+    "heat_score": 9.6
+  },
+  {
+    "title": "OpenAI发布GPT-4 Turbo，性能提升显著",
+    "link": "https://example.com/gpt4-turbo",
+    "publish_time": "今天 10:30",
+    "summary": "OpenAI宣布推出GPT-4 Turbo版本，在保持高质量输出的同时大幅提升了处理速度",
+    "source": "模拟数据",
+    "heat_score": 8.64
+  },
+  {
+    "title": "ChatGPT用户突破1亿，AI应用进入爆发期",
+    "link": "https://example.com/chatgpt-users",
+    "publish_time": "昨天 11:00",
+    "summary": "ChatGPT月活用户突破1亿，标志着AI应用进入大规模普及阶段",
+    "source": "模拟数据",
+    "heat_score": 6.66
+  },
+  {
+    "title": "特斯拉FSD Beta 12版本开始推送",
+    "link": "https://example.com/tesla-fsd",
+    "publish_time": "今天 08:45",
+    "summary": "特斯拉开始向部分用户推送完全自动驾驶Beta 12版本",
+    "source": "模拟数据",
+    "heat_score": 5.52
+  },
+  {
+    "title": "量子计算突破：IBM展示1000量子比特处理器",
+    "link": "https://example.com/ibm-quantum",
+    "publish_time": "昨天 14:30",
+    "summary": "IBM在量子计算领域取得重大突破，展示了1000量子比特处理器",
+    "source": "模拟数据",
+    "heat_score": 4.5
+  },
+  {
+    "title": "谷歌Bard升级，支持多模态AI交互",
+    "link": "https://example.com/google-bard",
+    "publish_time": "3天前 10:20",
+    "summary": "谷歌Bard AI助手升级，新增图像和语音交互功能",
+    "source": "模拟数据",
+    "heat_score": 4.46
+  },
+  {
+    "title": "微软Copilot正式商用，企业AI助手时代来临",
+    "link": "https://example.com/microsoft-copilot",
+    "publish_time": "昨天 16:20",
+    "summary": "微软宣布Copilot AI助手正式商用，将改变企业办公方式",
+    "source": "模拟数据",
+    "heat_score": 4.32
+  },
+  {
+    "title": "OpenAI acquires Sky.app",
+    "link": "https://openai.com/index/openai-acquires-software-applications-incorporated",
+    "publish_time": "",
+    "summary": "Score: 190 points",
+    "source": "Hacker News",
+    "heat_score": 3.84
+  },
+  {
+    "title": "亚马逊AWS推出Bedrock AI服务",
+    "link": "https://example.com/aws-bedrock",
+    "publish_time": "4天前 16:00",
+    "summary": "亚马逊AWS推出Bedrock AI服务，提供多种大语言模型选择",
+    "source": "模拟数据",
+    "heat_score": 3.6
+  },
+  {
+    "title": "英伟达H200 GPU发布，AI训练速度提升2倍",
+    "link": "https://example.com/nvidia-h200",
+    "publish_time": "2天前 15:30",
+    "summary": "英伟达发布H200 GPU，专为AI训练和推理优化",
+    "source": "模拟数据",
+    "heat_score": 2.88
+  }
+]
