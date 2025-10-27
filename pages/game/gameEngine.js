@@ -100,12 +100,52 @@ class GameEngine {
     // 创建玩家
     this.player = new Player(this.scene)
     
-    // 创建方块数组
+    // 创建方块数组和对象池
     this.blocks = []
+    this.blockPool = [] // 方块对象池
     this.currentBlockIndex = 0
+    
+    // 预分配一些方块到对象池
+    this.preAllocateBlocks()
     
     // 创建初始方块
     this.createInitialBlocks()
+  }
+  
+  // 预分配方块到对象池
+  preAllocateBlocks() {
+    const poolSize = 10 // 预分配10个方块
+    for (let i = 0; i < poolSize; i++) {
+      const block = new Block(this.scene, 0, 0, 0, 'normal', false) // 不立即添加到场景
+      block.setActive(false) // 设为非激活状态
+      this.blockPool.push(block)
+    }
+  }
+  
+  // 从对象池获取方块
+  getBlockFromPool(x, y, z, type) {
+    let block = this.blockPool.pop()
+    
+    if (!block) {
+      // 池中没有可用方块，创建新的
+      block = new Block(this.scene, x, y, z, type)
+    } else {
+      // 重用池中的方块
+      block.reset(x, y, z, type)
+      block.setActive(true)
+    }
+    
+    return block
+  }
+  
+  // 将方块返回到对象池
+  returnBlockToPool(block) {
+    if (this.blockPool.length < 15) { // 限制池大小
+      block.setActive(false)
+      this.blockPool.push(block)
+    } else {
+      block.destroy() // 销毁多余的方块
+    }
   }
   
   // 创建初始方块
@@ -123,7 +163,7 @@ class GameEngine {
     this.player.setPosition(0, 1, 0)
   }
   
-  // 生成下一个方块
+  // 生成下一个方块 - 使用对象池
   generateNextBlock() {
     const lastBlock = this.blocks[this.blocks.length - 1]
     
@@ -138,7 +178,7 @@ class GameEngine {
     const types = ['normal', 'small', 'tall', 'special']
     const type = types[Math.floor(Math.random() * types.length)]
     
-    const newBlock = new Block(this.scene, x, 0, z, type)
+    const newBlock = this.getBlockFromPool(x, 0, z, type)
     this.blocks.push(newBlock)
   }
   
@@ -211,28 +251,37 @@ class GameEngine {
     })
   }
   
-  // 检查落地
+  // 检查落地 - 优化版本
   checkLanding() {
     const playerPos = this.player.position
     let landedBlock = null
-    let minDistance = Infinity
+    let minDistanceSquared = Infinity
+    const landingThresholdSquared = 1.5 * 1.5 // 预计算阈值的平方
     
-    // 检查与所有方块的距离
-    this.blocks.forEach((block, index) => {
-      const distance = Math.sqrt(
+    // 只检查附近的方块，减少计算量
+    const nearbyBlocks = this.blocks.slice(
+      Math.max(0, this.currentBlockIndex - 2), 
+      Math.min(this.blocks.length, this.currentBlockIndex + 5)
+    )
+    
+    nearbyBlocks.forEach((block, relativeIndex) => {
+      // 使用平方距离避免Math.sqrt计算
+      const distanceSquared = 
         Math.pow(playerPos.x - block.position.x, 2) +
         Math.pow(playerPos.z - block.position.z, 2)
-      )
       
-      if (distance < minDistance) {
-        minDistance = distance
-        landedBlock = { block, index }
+      if (distanceSquared < minDistanceSquared) {
+        minDistanceSquared = distanceSquared
+        landedBlock = { 
+          block, 
+          index: Math.max(0, this.currentBlockIndex - 2) + relativeIndex 
+        }
       }
     })
     
     // 判断是否成功落地
-    if (landedBlock && minDistance < 1.5) {
-      this.handleSuccessfulLanding(landedBlock.index, minDistance)
+    if (landedBlock && minDistanceSquared < landingThresholdSquared) {
+      this.handleSuccessfulLanding(landedBlock.index, Math.sqrt(minDistanceSquared))
     } else {
       this.handleGameOver()
     }
@@ -284,23 +333,26 @@ class GameEngine {
     })
   }
   
-  // 清理远处的方块
+  // 清理远处的方块 - 使用对象池优化版本
   cleanupDistantBlocks() {
     const keepDistance = 20
+    const keepDistanceSquared = keepDistance * keepDistance // 避免重复计算平方根
     const playerPos = this.player.position
     
-    this.blocks = this.blocks.filter((block, index) => {
-      const distance = Math.sqrt(
+    // 使用倒序遍历避免索引问题
+    for (let i = this.blocks.length - 1; i >= 0; i--) {
+      const block = this.blocks[i]
+      
+      // 使用平方距离比较，避免昂贵的Math.sqrt计算
+      const distanceSquared = 
         Math.pow(playerPos.x - block.position.x, 2) +
         Math.pow(playerPos.z - block.position.z, 2)
-      )
       
-      if (distance > keepDistance && index < this.currentBlockIndex - 2) {
-        block.destroy()
-        return false
+      if (distanceSquared > keepDistanceSquared && i < this.currentBlockIndex - 2) {
+        this.returnBlockToPool(block) // 返回到对象池而不是销毁
+        this.blocks.splice(i, 1)
       }
-      return true
-    })
+    }
   }
   
   // 更新游戏逻辑
@@ -339,7 +391,7 @@ class GameEngine {
     this.camera.lookAt(this.player.position.x, this.player.position.y, this.player.position.z)
   }
   
-  // 渲染循环
+  // 渲染循环 - 优化版本
   render(timestamp) {
     if (this.isPaused) {
       requestAnimationFrame(this.render)
@@ -349,11 +401,22 @@ class GameEngine {
     const deltaTime = (timestamp - (this.lastTime || timestamp)) / 1000
     this.lastTime = timestamp
     
-    // 更新游戏逻辑
-    this.update(deltaTime)
+    // 限制帧率以节省性能（最大60fps）
+    if (deltaTime < 0.016) {
+      requestAnimationFrame(this.render)
+      return
+    }
     
-    // 渲染场景
-    this.renderer.render(this.scene, this.camera)
+    // 只在游戏状态变化时更新
+    const shouldUpdate = this.isRunning || this.gameState === 'falling' || this.gameState === 'jumping'
+    
+    if (shouldUpdate) {
+      // 更新游戏逻辑
+      this.update(deltaTime)
+      
+      // 渲染场景
+      this.renderer.render(this.scene, this.camera)
+    }
     
     // 继续渲染循环
     requestAnimationFrame(this.render)

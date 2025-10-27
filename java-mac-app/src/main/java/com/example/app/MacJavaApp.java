@@ -86,11 +86,18 @@ public class MacJavaApp extends Application {
         Scene scene = new Scene(root, 600, 500);
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
+        
+        // 添加关闭处理器确保资源清理
+        primaryStage.setOnCloseRequest(e -> {
+            flushPendingOutput(); // 确保所有待处理的输出都被刷新
+        });
+        
         primaryStage.show();
 
         // Initial welcome message
         appendOutput("应用程序启动成功！");
         appendOutput("当前时间: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        flushPendingOutput(); // 确保初始消息立即显示
         updateStatus("应用程序已启动");
     }
 
@@ -146,13 +153,40 @@ public class MacJavaApp extends Application {
         updateStatus("输出已清空");
     }
 
+    // 优化的输出追加方法 - 减少UI更新频率
+    private StringBuilder pendingOutput = new StringBuilder();
+    private long lastOutputUpdate = 0;
+    
     private void appendOutput(String text) {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-        outputArea.appendText("[" + timestamp + "] " + text + "\n");
+        String formattedText = "[" + timestamp + "] " + text + "\n";
+        
+        // 批量更新UI以提高性能
+        pendingOutput.append(formattedText);
+        long currentTime = System.currentTimeMillis();
+        
+        if (currentTime - lastOutputUpdate > 100) { // 每100ms最多更新一次
+            flushPendingOutput();
+            lastOutputUpdate = currentTime;
+        }
+    }
+    
+    private void flushPendingOutput() {
+        if (pendingOutput.length() > 0) {
+            outputArea.appendText(pendingOutput.toString());
+            pendingOutput.setLength(0);
+        }
     }
 
+    // 缓存状态以避免重复更新
+    private String lastStatus = "";
+    
     private void updateStatus(String status) {
-        statusLabel.setText("状态: " + status);
+        String fullStatus = "状态: " + status;
+        if (!fullStatus.equals(lastStatus)) {
+            statusLabel.setText(fullStatus);
+            lastStatus = fullStatus;
+        }
     }
 
     public static void main(String[] args) {
