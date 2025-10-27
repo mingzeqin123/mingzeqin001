@@ -12,6 +12,7 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 20rpx;
   color: white;
+  position: relative;
 }
 
 .title {
@@ -24,6 +25,26 @@
 .subtitle {
   font-size: 26rpx;
   opacity: 0.9;
+}
+
+/* 统计按钮 */
+.stats-btn {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 15rpx;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60rpx;
+  height: 60rpx;
+}
+
+.stats-icon {
+  font-size: 28rpx;
 }
 
 /* 模式切换 */
