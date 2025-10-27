@@ -3,8 +3,11 @@
  * 支持文字水印和图片水印
  */
 class WatermarkUtil {
+  // 静态缓存
+  static _cache = new Map();
+  static _maxCacheSize = 50;
   /**
-   * 添加文字水印
+   * 添加文字水印 - 优化版本，支持缓存
    * @param {string} imagePath - 原图片路径
    * @param {Object} options - 水印配置
    * @param {string} options.text - 水印文字
@@ -28,6 +31,13 @@ class WatermarkUtil {
         position = 'bottom-right'
       } = options;
 
+      // 检查缓存
+      const cacheKey = this._generateCacheKey(imagePath, options);
+      if (this._cache && this._cache.has(cacheKey)) {
+        resolve(this._cache.get(cacheKey));
+        return;
+      }
+
       // 获取图片信息
       wx.getImageInfo({
         src: imagePath,
@@ -37,6 +47,9 @@ class WatermarkUtil {
           // 创建canvas上下文
           const canvasId = `watermark-canvas-${Date.now()}`;
           const ctx = wx.createCanvasContext(canvasId);
+          
+          // 设置canvas尺寸
+          ctx.setCanvasSize(width, height);
           
           // 绘制原图
           ctx.drawImage(imagePath, 0, 0, width, height);
@@ -58,6 +71,10 @@ class WatermarkUtil {
             wx.canvasToTempFilePath({
               canvasId: canvasId,
               success: (res) => {
+                // 缓存结果
+                if (this._cache) {
+                  this._cache.set(cacheKey, res.tempFilePath);
+                }
                 resolve(res.tempFilePath);
               },
               fail: reject
@@ -143,25 +160,29 @@ class WatermarkUtil {
   }
 
   /**
-   * 批量添加水印
+   * 批量添加水印 - 优化版本，支持并发处理
    * @param {Array} imagePaths - 图片路径数组
    * @param {Object} watermarkConfig - 水印配置
    * @param {string} watermarkConfig.type - 水印类型：'text' 或 'image'
    * @param {Function} progressCallback - 进度回调函数
+   * @param {number} concurrency - 并发数量，默认3
    * @returns {Promise<Array>} 返回处理后的图片路径数组
    */
-  static batchAddWatermark(imagePaths, watermarkConfig, progressCallback) {
+  static batchAddWatermark(imagePaths, watermarkConfig, progressCallback, concurrency = 3) {
     return new Promise((resolve, reject) => {
       const results = [];
       let completed = 0;
+      let processing = 0;
+      let currentIndex = 0;
       
       const processNext = async () => {
-        if (completed >= imagePaths.length) {
-          resolve(results);
+        if (currentIndex >= imagePaths.length) {
           return;
         }
         
-        const imagePath = imagePaths[completed];
+        const imagePath = imagePaths[currentIndex++];
+        processing++;
+        
         try {
           let result;
           if (watermarkConfig.type === 'text') {
@@ -176,19 +197,6 @@ class WatermarkUtil {
             success: true
           });
           
-          completed++;
-          
-          if (progressCallback) {
-            progressCallback({
-              completed,
-              total: imagePaths.length,
-              progress: completed / imagePaths.length
-            });
-          }
-          
-          // 继续处理下一张
-          setTimeout(processNext, 100);
-          
         } catch (error) {
           results.push({
             original: imagePath,
@@ -196,13 +204,34 @@ class WatermarkUtil {
             success: false,
             error
           });
-          
-          completed++;
-          setTimeout(processNext, 100);
+        }
+        
+        completed++;
+        processing--;
+        
+        if (progressCallback) {
+          progressCallback({
+            completed,
+            total: imagePaths.length,
+            progress: completed / imagePaths.length
+          });
+        }
+        
+        // 如果还有图片需要处理，继续处理
+        if (currentIndex < imagePaths.length) {
+          setTimeout(processNext, 50); // 减少延迟
+        }
+        
+        // 如果所有图片都处理完了
+        if (completed >= imagePaths.length) {
+          resolve(results);
         }
       };
       
-      processNext();
+      // 启动并发处理
+      for (let i = 0; i < Math.min(concurrency, imagePaths.length); i++) {
+        setTimeout(processNext, i * 100);
+      }
     });
   }
 
@@ -309,6 +338,52 @@ class WatermarkUtil {
     }
     
     return { x, y, width, height };
+  }
+
+  /**
+   * 生成缓存键
+   * @private
+   */
+  static _generateCacheKey(imagePath, options) {
+    const key = `${imagePath}_${JSON.stringify(options)}`;
+    return key;
+  }
+
+  /**
+   * 清理缓存
+   */
+  static clearCache() {
+    this._cache.clear();
+  }
+
+  /**
+   * 获取缓存状态
+   */
+  static getCacheStats() {
+    return {
+      size: this._cache.size,
+      maxSize: this._maxCacheSize
+    };
+  }
+
+  /**
+   * 设置缓存大小限制
+   */
+  static setMaxCacheSize(size) {
+    this._maxCacheSize = size;
+    this._trimCache();
+  }
+
+  /**
+   * 修剪缓存到指定大小
+   * @private
+   */
+  static _trimCache() {
+    if (this._cache.size > this._maxCacheSize) {
+      const entries = Array.from(this._cache.entries());
+      const toDelete = entries.slice(0, this._cache.size - this._maxCacheSize);
+      toDelete.forEach(([key]) => this._cache.delete(key));
+    }
   }
 }
 

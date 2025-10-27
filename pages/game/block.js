@@ -322,6 +322,20 @@ class Block {
     }
   }
   
+  // 重置方块（用于对象池）
+  reset(x, y, z, type) {
+    this.position.set(x, y, z)
+    this.type = type
+    
+    // 清理旧的模型
+    if (this.group && this.scene) {
+      this.scene.remove(this.group)
+    }
+    
+    // 重新创建模型
+    this.createModel()
+  }
+  
   // 销毁方块
   destroy() {
     if (this.group && this.scene) {
