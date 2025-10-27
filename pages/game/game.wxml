@@ -31,6 +31,9 @@
     <view class="game-title">跳一跳</view>
     <view class="game-subtitle">长按蓄力，松开跳跃</view>
     <button class="start-btn" bindtap="startGame">开始游戏</button>
+    <navigator url="/pages/statistics/statistics" class="nav-btn stats-btn">
+      📊 查看统计
+    </navigator>
   </view>
   
   <!-- 游戏结束界面 -->
@@ -40,6 +43,9 @@
     <view class="best-score-display" wx:if="{{isNewRecord}}">🎉 新纪录!</view>
     <button class="restart-btn" bindtap="restartGame">再来一局</button>
     <button class="share-btn" bindtap="shareScore">分享成绩</button>
+    <navigator url="/pages/statistics/statistics" class="nav-btn stats-btn">
+      📊 查看统计
+    </navigator>
   </view>
   
   <!-- 蓄力指示器 -->

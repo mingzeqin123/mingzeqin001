@@ -1,0 +1,299 @@
+<!--pages/statistics/statistics.wxml-->
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="header">
+    <text class="title">📊 数据统计</text>
+    <view class="header-actions">
+      <button class="btn-icon" bindtap="exportStatistics">
+        <text class="icon">📤</text>
+      </button>
+      <button class="btn-icon" bindtap="clearStatistics">
+        <text class="icon">🗑️</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading">
+    <view class="loading-spinner"></view>
+    <text>加载中...</text>
+  </view>
+
+  <!-- 统计内容 -->
+  <view wx:else class="content">
+    
+    <!-- 标签页导航 -->
+    <view class="tabs">
+      <view class="tab-item {{selectedTab === 'overview' ? 'active' : ''}}" 
+            data-tab="overview" bindtap="onTabChange">
+        <text>概览</text>
+      </view>
+      <view class="tab-item {{selectedTab === 'pages' ? 'active' : ''}}" 
+            data-tab="pages" bindtap="onTabChange">
+        <text>页面</text>
+      </view>
+      <view class="tab-item {{selectedTab === 'trends' ? 'active' : ''}}" 
+            data-tab="trends" bindtap="onTabChange">
+        <text>趋势</text>
+      </view>
+      <view class="tab-item {{selectedTab === 'details' ? 'active' : ''}}" 
+            data-tab="details" bindtap="onTabChange">
+        <text>详情</text>
+      </view>
+    </view>
+
+    <!-- 概览标签页 -->
+    <view wx:if="{{selectedTab === 'overview'}}" class="tab-content">
+      
+      <!-- 今日统计 -->
+      <view class="section">
+        <view class="section-title">📅 今日统计 ({{todayStats.date}})</view>
+        <view class="today-stats">
+          <view class="today-item">
+            <text class="label">今日PV</text>
+            <text class="value pv-color">{{todayStats.pv}}</text>
+          </view>
+          <view class="today-item">
+            <text class="label">今日UV</text>
+            <text class="value uv-color">{{todayStats.uv}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 总体统计卡片 -->
+      <view class="section">
+        <view class="section-title">📈 总体统计</view>
+        <view class="stats-cards">
+          <view class="stats-card pv-card">
+            <view class="card-icon">👁️</view>
+            <view class="card-content">
+              <text class="card-title">总页面浏览量</text>
+              <text class="card-value">{{stats.summary.totalPV}}</text>
+              <text class="card-label">PV</text>
+            </view>
+          </view>
+          
+          <view class="stats-card uv-card">
+            <view class="card-icon">👤</view>
+            <view class="card-content">
+              <text class="card-title">总独立访客</text>
+              <text class="card-value">{{stats.summary.totalUV}}</text>
+              <text class="card-label">UV</text>
+            </view>
+          </view>
+          
+          <view class="stats-card active-card">
+            <view class="card-icon">🔥</view>
+            <view class="card-content">
+              <text class="card-title">活跃用户</text>
+              <text class="card-value">{{stats.uv.activeUsers}}</text>
+              <text class="card-label">7天内</text>
+            </view>
+          </view>
+          
+          <view class="stats-card avg-card">
+            <view class="card-icon">📊</view>
+            <view class="card-content">
+              <text class="card-title">平均访问</text>
+              <text class="card-value">{{stats.summary.avgPVPerUV}}</text>
+              <text class="card-label">PV/UV</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 快速趋势 -->
+      <view class="section">
+        <view class="section-title">📈 7天趋势</view>
+        <view class="quick-trend">
+          <view wx:for="{{recentStats}}" wx:key="date" class="trend-item"
+                data-index="{{index}}" bindtap="showTrendDetail">
+            <text class="trend-date">{{item.date.substring(5)}}</text>
+            <view class="trend-bars">
+              <view class="trend-bar pv-bar" style="height: {{item.pv > 0 ? (item.pv / 20 * 100) : 5}}%"></view>
+              <view class="trend-bar uv-bar" style="height: {{item.uv > 0 ? (item.uv / 10 * 100) : 5}}%"></view>
+            </view>
+            <text class="trend-values">{{item.pv}}/{{item.uv}}</text>
+          </view>
+        </view>
+        <view class="trend-legend">
+          <view class="legend-item">
+            <view class="legend-color pv-color"></view>
+            <text>PV</text>
+          </view>
+          <view class="legend-item">
+            <view class="legend-color uv-color"></view>
+            <text>UV</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 页面统计标签页 -->
+    <view wx:if="{{selectedTab === 'pages'}}" class="tab-content">
+      <view class="section">
+        <view class="section-title">📄 页面访问排行</view>
+        <view class="page-list">
+          <view wx:for="{{stats.pv.pages}}" wx:for-item="pv" wx:for-index="path" wx:key="path"
+                class="page-item" data-path="{{path}}" bindtap="showPageDetail">
+            <view class="page-info">
+              <text class="page-name">{{formatPagePath ? formatPagePath(path) : path}}</text>
+              <text class="page-path">{{path}}</text>
+            </view>
+            <view class="page-stats">
+              <view class="stat-item">
+                <text class="stat-label">PV</text>
+                <text class="stat-value pv-color">{{pv}}</text>
+              </view>
+              <view class="stat-item">
+                <text class="stat-label">UV</text>
+                <text class="stat-value uv-color">{{stats.uv.pages[path] || 0}}</text>
+              </view>
+            </view>
+            <text class="page-arrow">›</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 趋势分析标签页 -->
+    <view wx:if="{{selectedTab === 'trends'}}" class="tab-content">
+      <view class="section">
+        <view class="section-title">📈 访问趋势分析</view>
+        
+        <!-- 趋势图表区域 -->
+        <view class="chart-container">
+          <view class="chart-header">
+            <text class="chart-title">最近7天访问趋势</text>
+          </view>
+          <view class="chart-area">
+            <view class="chart-y-axis">
+              <text class="y-label">访问量</text>
+            </view>
+            <view class="chart-content">
+              <view wx:for="{{recentStats}}" wx:key="date" class="chart-bar-group">
+                <view class="chart-bars">
+                  <view class="chart-bar pv-bar" 
+                        style="height: {{item.pv > 0 ? Math.min(item.pv * 5, 100) : 2}}px"></view>
+                  <view class="chart-bar uv-bar" 
+                        style="height: {{item.uv > 0 ? Math.min(item.uv * 8, 100) : 2}}px"></view>
+                </view>
+                <text class="chart-label">{{item.date.substring(5)}}</text>
+              </view>
+            </view>
+          </view>
+          <view class="chart-legend">
+            <view class="legend-item">
+              <view class="legend-dot pv-color"></view>
+              <text>页面浏览量 (PV)</text>
+            </view>
+            <view class="legend-item">
+              <view class="legend-dot uv-color"></view>
+              <text>独立访客 (UV)</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 趋势数据列表 -->
+        <view class="trend-list">
+          <view wx:for="{{recentStats}}" wx:key="date" class="trend-list-item"
+                data-index="{{index}}" bindtap="showTrendDetail">
+            <view class="trend-date-info">
+              <text class="date">{{item.date}}</text>
+              <text class="weekday">
+                {{item.date === todayStats.date ? '今天' : ''}}
+              </text>
+            </view>
+            <view class="trend-values">
+              <view class="value-item">
+                <text class="label">PV</text>
+                <text class="value pv-color">{{item.pv}}</text>
+              </view>
+              <view class="value-item">
+                <text class="label">UV</text>
+                <text class="value uv-color">{{item.uv}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 详细信息标签页 -->
+    <view wx:if="{{selectedTab === 'details'}}" class="tab-content">
+      <view class="section">
+        <view class="section-title">📋 详细信息</view>
+        
+        <!-- 最近访问记录 -->
+        <view class="detail-section">
+          <text class="detail-title">最近访问记录</text>
+          <view class="recent-records">
+            <view wx:for="{{stats.pv.recentRecords}}" wx:key="index" class="record-item">
+              <view class="record-info">
+                <text class="record-page">{{formatPagePath ? formatPagePath(item.pagePath) : item.pagePath}}</text>
+                <text class="record-time">{{new Date(item.timestamp).toLocaleString()}}</text>
+              </view>
+              <text class="record-user">{{item.userId.substring(0, 8)}}...</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 数据概要 -->
+        <view class="detail-section">
+          <text class="detail-title">数据概要</text>
+          <view class="data-summary">
+            <view class="summary-row">
+              <text class="summary-label">数据统计开始时间</text>
+              <text class="summary-value">
+                {{stats.pv.recentRecords.length > 0 ? new Date(stats.pv.recentRecords[stats.pv.recentRecords.length - 1].timestamp).toLocaleDateString() : '暂无数据'}}
+              </text>
+            </view>
+            <view class="summary-row">
+              <text class="summary-label">总页面数</text>
+              <text class="summary-value">{{Object.keys(stats.pv.pages).length}}</text>
+            </view>
+            <view class="summary-row">
+              <text class="summary-label">统计天数</text>
+              <text class="summary-value">{{Object.keys(stats.pv.daily).length}}</text>
+            </view>
+            <view class="summary-row">
+              <text class="summary-label">平均日PV</text>
+              <text class="summary-value">
+                {{Object.keys(stats.pv.daily).length > 0 ? Math.round(stats.summary.totalPV / Object.keys(stats.pv.daily).length) : 0}}
+              </text>
+            </view>
+            <view class="summary-row">
+              <text class="summary-label">平均日UV</text>
+              <text class="summary-value">
+                {{Object.keys(stats.uv.daily).length > 0 ? Math.round(stats.summary.totalUV / Object.keys(stats.uv.daily).length) : 0}}
+              </text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 导出弹窗 -->
+  <view wx:if="{{showExportModal}}" class="modal-overlay" bindtap="closeExportModal">
+    <view class="modal-content" catchtap="">
+      <view class="modal-header">
+        <text class="modal-title">导出统计数据</text>
+        <button class="modal-close" bindtap="closeExportModal">×</button>
+      </view>
+      <view class="modal-body">
+        <text class="modal-desc">选择导出方式：</text>
+        <view class="export-options">
+          <button class="export-btn" bindtap="copyToClipboard">
+            <text class="export-icon">📋</text>
+            <text>复制到剪贴板</text>
+          </button>
+          <button class="export-btn" bindtap="shareStatistics">
+            <text class="export-icon">📤</text>
+            <text>分享数据</text>
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

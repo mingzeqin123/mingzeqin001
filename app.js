@@ -1,3 +1,5 @@
+const StatisticsUtil = require('./utils/statistics.js')
+
 App({
   onLaunch() {
     // 展示本地存储能力
@@ -11,6 +13,9 @@ App({
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
       }
     })
+
+    // 初始化统计模块
+    console.log('统计模块已初始化')
   },
   
   globalData: {

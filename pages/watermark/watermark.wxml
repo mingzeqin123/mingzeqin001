@@ -1,8 +1,13 @@
 <!--pages/watermark/watermark.wxml-->
 <view class="container">
   <view class="header">
-    <text class="title">图片水印工具</text>
-    <text class="subtitle">为图片添加文字或图片水印</text>
+    <view class="header-content">
+      <text class="title">图片水印工具</text>
+      <text class="subtitle">为图片添加文字或图片水印</text>
+    </view>
+    <navigator url="/pages/statistics/statistics" class="header-nav">
+      📊
+    </navigator>
   </view>
 
   <!-- 模式切换 -->

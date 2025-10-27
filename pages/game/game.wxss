@@ -212,3 +212,21 @@
   0%, 100% { opacity: 0.8; }
   50% { opacity: 1; }
 }
+
+/* 导航按钮 */
+.nav-btn {
+  display: block;
+  text-align: center;
+  padding: 20rpx 40rpx;
+  margin: 20rpx auto;
+  border-radius: 50rpx;
+  font-size: 26rpx;
+  text-decoration: none;
+  max-width: 300rpx;
+}
+
+.stats-btn {
+  background: rgba(102, 126, 234, 0.9);
+  color: white;
+  border: 2rpx solid rgba(255, 255, 255, 0.3);
+}

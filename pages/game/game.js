@@ -1,5 +1,6 @@
 // pages/game/game.js
 import GameEngine from './gameEngine.js'
+const StatisticsUtil = require('../../utils/statistics.js')
 
 Page({
   data: {
@@ -11,7 +12,10 @@ Page({
     isNewRecord: false
   },
 
-  onLoad() {
+  onLoad(options) {
+    // 记录页面访问
+    StatisticsUtil.recordPageView('/pages/game/game', options)
+    
     // 获取最高分
     this.setData({
       bestScore: getApp().getBestScore()

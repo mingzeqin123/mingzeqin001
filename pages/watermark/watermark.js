@@ -1,5 +1,6 @@
 // pages/watermark/watermark.js
 const WatermarkUtil = require('../../utils/watermark.js');
+const StatisticsUtil = require('../../utils/statistics.js');
 
 Page({
   data: {
@@ -28,6 +29,8 @@ Page({
 
   onLoad: function (options) {
     console.log('水印页面加载');
+    // 记录页面访问
+    StatisticsUtil.recordPageView('/pages/watermark/watermark', options);
   },
 
   // 选择要添加水印的图片
