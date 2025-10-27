@@ -1,0 +1,39 @@
+{
+  "name": "data-summary-service",
+  "version": "1.0.0",
+  "description": "定时汇总数据库表数据并上传到OSS的服务",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "jest",
+    "cli": "node src/cli.js",
+    "install:service": "chmod +x scripts/*.sh && ./scripts/install.sh",
+    "deploy": "chmod +x scripts/*.sh && ./scripts/deploy.sh"
+  },
+  "bin": {
+    "data-summary": "./src/cli.js"
+  },
+  "keywords": [
+    "data-summary",
+    "oss",
+    "scheduler",
+    "database"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "mysql2": "^3.6.5",
+    "ali-oss": "^6.18.1",
+    "node-cron": "^3.0.3",
+    "xlsx": "^0.18.5",
+    "moment": "^2.29.4",
+    "dotenv": "^16.3.1",
+    "winston": "^3.11.0",
+    "commander": "^11.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "jest": "^29.7.0"
+  }
+}
