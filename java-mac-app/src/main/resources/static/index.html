@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyBatis Plus 代码生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .links {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .links a {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 8px 16px;
+            background: #f8f9fa;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .links a:hover {
+            background: #e9ecef;
+        }
+
+        .example {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 MyBatis Plus 代码生成器</h1>
+            <p>快速生成实体类、Mapper、Service、Controller等代码</p>
+        </div>
+
+        <form id="generatorForm">
+            <div class="form-group">
+                <label for="moduleName">模块名称</label>
+                <input type="text" id="moduleName" name="moduleName" placeholder="请输入模块名称，如：user、order等" required>
+                <div class="example">
+                    示例：user、order、product
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="tableNames">数据表名</label>
+                <textarea id="tableNames" name="tableNames" placeholder="请输入要生成代码的数据表名，多个表名用逗号分隔" required></textarea>
+                <div class="example">
+                    示例：user,role,permission 或 user_info,user_role
+                </div>
+            </div>
+
+            <button type="submit" class="btn" id="generateBtn">
+                生成代码
+            </button>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>正在生成代码，请稍候...</p>
+        </div>
+
+        <div class="result" id="result"></div>
+
+        <div class="links">
+            <a href="/swagger-ui.html" target="_blank">📖 API文档</a>
+            <a href="/druid/index.html" target="_blank">📊 数据库监控</a>
+            <a href="/api/generator/health" target="_blank">🔍 健康检查</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('generatorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const moduleName = document.getElementById('moduleName').value.trim();
+            const tableNames = document.getElementById('tableNames').value.trim();
+            
+            if (!moduleName || !tableNames) {
+                showResult('请填写完整的模块名称和数据表名', 'error');
+                return;
+            }
+            
+            generateCode(moduleName, tableNames);
+        });
+
+        function generateCode(moduleName, tableNames) {
+            const btn = document.getElementById('generateBtn');
+            const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
+            
+            // 显示加载状态
+            btn.disabled = true;
+            btn.textContent = '生成中...';
+            loading.style.display = 'block';
+            result.style.display = 'none';
+            
+            // 发送请求
+            const formData = new FormData();
+            formData.append('moduleName', moduleName);
+            formData.append('tableNames', tableNames);
+            
+            fetch('/api/generator/generate', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showResult('🎉 代码生成成功！请检查项目目录中的生成文件。', 'success');
+                } else {
+                    showResult('❌ 代码生成失败：' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showResult('❌ 请求失败，请检查网络连接或服务器状态', 'error');
+            })
+            .finally(() => {
+                // 恢复按钮状态
+                btn.disabled = false;
+                btn.textContent = '生成代码';
+                loading.style.display = 'none';
+            });
+        }
+
+        function showResult(message, type) {
+            const result = document.getElementById('result');
+            result.textContent = message;
+            result.className = 'result ' + type;
+            result.style.display = 'block';
+            
+            // 3秒后自动隐藏成功消息
+            if (type === 'success') {
+                setTimeout(() => {
+                    result.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // 页面加载时检查服务状态
+        window.addEventListener('load', function() {
+            fetch('/api/generator/health')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('✅ 代码生成器服务正常运行');
+                    }
+                })
+                .catch(error => {
+                    console.warn('⚠️ 无法连接到代码生成器服务');
+                });
+        });
+    </script>
+</body>
+</html>

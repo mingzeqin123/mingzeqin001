@@ -1,0 +1,176 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mybatis_plus_demo?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+    druid:
+      # 初始连接数
+      initial-size: 5
+      # 最小连接池数量
+      min-idle: 10
+      # 最大连接池数量
+      max-active: 20
+      # 配置获取连接等待超时的时间
+      max-wait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      time-between-eviction-runs-millis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      min-evictable-idle-time-millis: 300000
+      # 配置一个连接在池中最大生存的时间，单位是毫秒
+      max-evictable-idle-time-millis: 900000
+      # 配置检测连接是否有效
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters: stat,wall,slf4j
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connection-properties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000
+      # 配置DruidStatFilter
+      web-stat-filter:
+        enabled: true
+        url-pattern: "/*"
+        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+      # 配置DruidStatViewServlet
+      stat-view-servlet:
+        enabled: true
+        url-pattern: "/druid/*"
+        # IP白名单(没有配置或者为空，则允许所有访问)
+        allow: 127.0.0.1,192.168.163.1
+        # IP黑名单 (存在共同时，deny优先于allow)
+        deny: 192.168.1.73
+        # 禁用HTML页面上的"Reset All"功能
+        reset-enable: false
+        # 登录名
+        login-username: admin
+        # 登录密码
+        login-password: 123456
+
+# MyBatis Plus 配置
+mybatis-plus:
+  configuration:
+    # 是否开启自动驼峰命名规则映射
+    map-underscore-to-camel-case: true
+    # 开启Mybatis的二级缓存，默认为 true
+    cache-enabled: false
+    # 全局地开启或关闭配置文件中的所有映射器已经配置的任何缓存，默认为 true
+    use-generated-keys: true
+    # 配置默认的执行器
+    default-executor-type: reuse
+    # 指定 MyBatis 所用日志的具体实现
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    # 数据库相关配置
+    db-config:
+      # 主键类型
+      id-type: ASSIGN_ID
+      # 表名下划线命名
+      table-underline: true
+      # 逻辑删除配置
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+    banner: false
+  # 搜索指定包别名
+  type-aliases-package: com.example.app.entity
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+
+# 日志配置
+logging:
+  level:
+    com.example.app: debug
+    com.baomidou: info
+    root: info
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{20} - [%method,%line] - %msg%n"
+
+# 代码生成器配置
+generator:
+  # 数据库配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/mybatis_plus_demo?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+    driver-name: com.mysql.cj.jdbc.Driver
+  # 全局配置
+  global:
+    # 作者
+    author: MyBatis Plus Generator
+    # 输出目录
+    output-dir: /workspace/java-mac-app/src/main/java
+    # 是否覆盖已有文件
+    file-override: false
+    # 是否打开输出目录
+    open: true
+    # 是否在xml中添加二级缓存配置
+    enable-cache: false
+    # 开启 BaseResultMap
+    base-result-map: true
+    # 开启 baseColumnList
+    base-column-list: true
+    # 时间类型对应策略
+    date-type: ONLY_DATE
+  # 包配置
+  package:
+    # 父包名
+    parent: com.example.app
+    # 实体类包名
+    entity: entity
+    # Mapper包名
+    mapper: mapper
+    # Mapper XML包名
+    xml: mapper.xml
+    # Service包名
+    service: service
+    # Service实现类包名
+    service-impl: service.impl
+    # Controller包名
+    controller: controller
+  # 策略配置
+  strategy:
+    # 数据库表映射到实体的命名策略
+    naming: underline_to_camel
+    # 数据库表字段映射到实体的命名策略
+    column-naming: underline_to_camel
+    # 自定义继承的Entity类全称，带包名
+    super-entity-class: 
+    # 自定义继承的Mapper类全称，带包名
+    super-mapper-class: com.baomidou.mybatisplus.core.mapper.BaseMapper
+    # 自定义继承的Service类全称，带包名
+    super-service-class: com.baomidou.mybatisplus.extension.service.IService
+    # 自定义继承的ServiceImpl类全称，带包名
+    super-service-impl-class: com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
+    # 自定义继承的Controller类全称，带包名
+    super-controller-class: 
+    # 需要包含的表名，允许正则表达式（与exclude二选一配置）
+    include: 
+    # 需要排除的表名，允许正则表达式
+    exclude: 
+    # 实体是否为lombok模型（默认 false）
+    entity-lombok-model: true
+    # 生成 @RestController 控制器
+    rest-controller-style: true
+    # 驼峰转连字符
+    controller-mapping-hyphen-style: true
+    # 是否生成实体时，生成字段注解
+    entity-table-field-annotation-enable: true
+    # 乐观锁属性名称
+    version-field-name: version
+    # 逻辑删除属性名称
+    logic-delete-field-name: deleted
+    # 表填充字段
+    table-fill-list:
+      - field-name: create_time
+        field-fill: INSERT
+      - field-name: update_time
+        field-fill: INSERT_UPDATE
