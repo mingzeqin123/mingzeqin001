@@ -1,0 +1,42 @@
+{
+  "name": "sono-public-interface",
+  "version": "1.0.0",
+  "description": "Sono公开接口 - 提供水印处理、游戏引擎、工具函数等核心能力的统一API",
+  "main": "index.js",
+  "scripts": {
+    "test": "node examples.js",
+    "example": "node examples.js",
+    "docs": "echo '请查看 README.md 获取完整文档'"
+  },
+  "keywords": [
+    "sono",
+    "watermark",
+    "game-engine",
+    "utilities",
+    "api",
+    "interface",
+    "wechat-miniprogram",
+    "three.js"
+  ],
+  "author": "Sono Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/sono-interface"
+  },
+  "files": [
+    "index.js",
+    "sono-interface.js",
+    "error-codes.js",
+    "examples.js",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "peerDependencies": {
+    "three": "^0.150.0"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}
