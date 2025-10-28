@@ -3,6 +3,7 @@ import * as THREE from './libs/three.min.js'
 import Player from './player.js'
 import Block from './block.js'
 import { lerp, easeOutQuart } from './utils.js'
+import enhancedAudioManager from '../../utils/enhanced-audio-manager.js'
 
 class GameEngine {
   constructor(canvas, ctx) {
@@ -24,6 +25,10 @@ class GameEngine {
     this.onScoreChange = null
     this.onGameOver = null
     this.onPowerChange = null
+    
+    // Sonos音频配置
+    this.sonosConfig = null
+    this.loadSonosConfig()
     
     // 初始化Three.js场景
     this.initScene()
@@ -142,6 +147,25 @@ class GameEngine {
     this.blocks.push(newBlock)
   }
   
+  // 加载Sonos配置
+  loadSonosConfig() {
+    try {
+      this.sonosConfig = wx.getStorageSync('sonosConfig')
+    } catch (error) {
+      console.error('加载Sonos配置失败:', error)
+      this.sonosConfig = null
+    }
+  }
+
+  // 播放游戏音效
+  async playGameSound(soundType, score = 0) {
+    try {
+      await enhancedAudioManager.playGameSound(soundType, score)
+    } catch (error) {
+      console.error('播放游戏音效失败:', error)
+    }
+  }
+
   // 开始游戏
   startGame() {
     this.isRunning = true
@@ -152,6 +176,9 @@ class GameEngine {
     if (this.onScoreChange) {
       this.onScoreChange(this.score)
     }
+    
+    // 播放开始音效
+    this.playGameSound('start')
   }
   
   // 重新开始游戏
@@ -201,6 +228,9 @@ class GameEngine {
       this.onPowerChange(0)
     }
     
+    // 播放跳跃音效
+    this.playGameSound('jump')
+    
     // 计算跳跃参数
     const jumpDistance = 2 + power * 6 // 跳跃距离2-8
     const jumpHeight = 1 + power * 3   // 跳跃高度1-4
@@ -244,8 +274,11 @@ class GameEngine {
     
     // 计算得分
     let points = 1
+    let soundType = 'landing'
+    
     if (distance < 0.3) {
       points = 5 // 完美落地
+      soundType = 'perfect'
       this.player.showPerfectEffect()
     } else if (distance < 0.8) {
       points = 3 // 良好落地
@@ -257,6 +290,9 @@ class GameEngine {
     if (this.onScoreChange) {
       this.onScoreChange(this.score)
     }
+    
+    // 播放落地音效
+    this.playGameSound(soundType, this.score)
     
     // 更新相机目标
     const targetBlock = this.blocks[blockIndex]
@@ -275,6 +311,9 @@ class GameEngine {
   handleGameOver() {
     this.gameState = 'falling'
     this.isRunning = false
+    
+    // 播放游戏结束音效
+    this.playGameSound('gameOver', this.score)
     
     // 播放坠落动画
     this.player.fall(() => {

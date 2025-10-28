@@ -113,6 +113,11 @@ Page({
       isNewRecord = true
       getApp().setBestScore(score)
       this.setData({ bestScore: score })
+      
+      // 播放新纪录音效
+      if (this.gameEngine) {
+        this.gameEngine.playGameSound('newRecord', score)
+      }
     }
     
     this.setData({
@@ -184,5 +189,12 @@ Page({
       query: 'from=timeline',
       imageUrl: '/images/share.png'
     }
+  },
+
+  // 打开Sonos配置页面
+  openSonosConfig() {
+    wx.navigateTo({
+      url: '/pages/sonos/sonos'
+    })
   }
 })

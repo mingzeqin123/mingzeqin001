@@ -24,6 +24,11 @@
       <text class="best-score-label">最高分</text>
       <text class="best-score-value">{{bestScore}}</text>
     </view>
+    
+    <!-- Sonos配置按钮 -->
+    <button class="sonos-config-btn" bindtap="openSonosConfig">
+      <text class="sonos-icon">🔊</text>
+    </button>
   </view>
   
   <!-- 游戏开始界面 -->

@@ -67,6 +67,32 @@
   color: #ffd700;
 }
 
+.sonos-config-btn {
+  position: absolute;
+  top: 80rpx;
+  right: 200rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  transition: all 0.3s ease;
+}
+
+.sonos-config-btn:active {
+  transform: scale(0.95);
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.sonos-icon {
+  font-size: 32rpx;
+  color: white;
+}
+
 /* 开始界面 */
 .start-screen {
   position: absolute;
