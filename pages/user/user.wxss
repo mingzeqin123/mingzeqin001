@@ -1,0 +1,307 @@
+/* 用户中心页面样式 */
+.user-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20rpx;
+}
+
+/* 用户信息卡片 */
+.user-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 8rpx 30rpx rgba(0,0,0,0.1);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-right: 30rpx;
+  border: 4rpx solid #f0f0f0;
+}
+
+.user-details {
+  flex: 1;
+}
+
+.nickname {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.level-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15rpx;
+}
+
+.level {
+  background: #ff4757;
+  color: #fff;
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  margin-right: 15rpx;
+}
+
+.level-name {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.experience-bar {
+  width: 200rpx;
+  height: 8rpx;
+  background: #f0f0f0;
+  border-radius: 4rpx;
+  overflow: hidden;
+}
+
+.experience-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #ff4757, #ff6b6b);
+  transition: width 0.3s;
+}
+
+.edit-btn {
+  width: 120rpx;
+  height: 60rpx;
+  background: #f8f9fa;
+  color: #666;
+  border: 1rpx solid #e9ecef;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+}
+
+/* 登录区域 */
+.login-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx 0;
+}
+
+.default-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-bottom: 20rpx;
+  opacity: 0.6;
+}
+
+.login-text {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 30rpx;
+}
+
+.login-btn {
+  width: 200rpx;
+  height: 80rpx;
+  background: #07c160;
+  color: #fff;
+  border: none;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+/* 统计信息 */
+.stats-section {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 8rpx 30rpx rgba(0,0,0,0.1);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20rpx;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value {
+  display: block;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.stat-label {
+  font-size: 22rpx;
+  color: #666;
+}
+
+/* 今日统计 */
+.today-stats {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 8rpx 30rpx rgba(0,0,0,0.1);
+}
+
+.stats-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.today-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+}
+
+.today-item {
+  text-align: center;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 15rpx;
+}
+
+.today-value {
+  display: block;
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #ff4757;
+  margin-bottom: 8rpx;
+}
+
+.today-label {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 功能菜单 */
+.menu-section {
+  background: #fff;
+  border-radius: 20rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 8rpx 30rpx rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  transition: background-color 0.3s;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-item:active {
+  background-color: #f8f9fa;
+}
+
+.menu-icon {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 15rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  margin-right: 20rpx;
+}
+
+.menu-title {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.menu-arrow {
+  font-size: 24rpx;
+  color: #ccc;
+}
+
+/* 开始直播按钮 */
+.start-live-section {
+  margin-bottom: 20rpx;
+}
+
+.start-live-btn {
+  width: 100%;
+  height: 100rpx;
+  background: linear-gradient(135deg, #ff4757, #ff6b6b);
+  color: #fff;
+  border: none;
+  border-radius: 50rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  font-weight: bold;
+  box-shadow: 0 8rpx 30rpx rgba(255,71,87,0.4);
+  transition: transform 0.3s;
+}
+
+.start-live-btn:active {
+  transform: scale(0.98);
+}
+
+.btn-icon {
+  font-size: 36rpx;
+  margin-right: 15rpx;
+}
+
+.btn-text {
+  font-size: 32rpx;
+}
+
+/* 退出登录 */
+.logout-section {
+  margin-bottom: 40rpx;
+}
+
+.logout-btn {
+  width: 100%;
+  height: 80rpx;
+  background: #fff;
+  color: #ff4757;
+  border: 2rpx solid #ff4757;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+/* 响应式适配 */
+@media screen and (max-width: 750rpx) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .stat-item {
+    margin-bottom: 20rpx;
+  }
+  
+  .avatar {
+    width: 100rpx;
+    height: 100rpx;
+  }
+  
+  .nickname {
+    font-size: 32rpx;
+  }
+}

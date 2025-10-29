@@ -1,0 +1,184 @@
+<!-- 直播页面结构 -->
+<view class="live-container">
+  <!-- 直播区域 -->
+  <view class="live-area">
+    <!-- 主播端推流 -->
+    <live-pusher 
+      wx:if="{{userInfo.isHost}}"
+      id="livePusher"
+      class="live-pusher"
+      url="{{liveInfo.pushUrl}}"
+      mode="SD"
+      autopush="{{false}}"
+      enable-camera="{{true}}"
+      enable-mic="{{true}}"
+      enable-agc="{{true}}"
+      enable-ans="{{true}}"
+      enable-ear-monitor="{{false}}"
+      auto-focus="{{true}}"
+      beauty="{{3}}"
+      whiteness="{{3}}"
+      aspect="{{9}}"
+      min-bitrate="{{200}}"
+      max-bitrate="{{1000}}"
+      video-width="{{360}}"
+      video-height="{{640}}"
+      waiting-image=""
+      background-mute="{{false}}"
+      bindstatechange="handlePusherStateChange"
+      bindnetstatus="handlePusherNetStatus"
+    />
+    
+    <!-- 观众端播放 -->
+    <live-player 
+      wx:if="{{!userInfo.isHost}}"
+      id="livePlayer"
+      class="live-player"
+      src="{{liveInfo.streamUrl}}"
+      mode="live"
+      autoplay="{{true}}"
+      muted="{{false}}"
+      orientation="{{0}}"
+      object-fit="fillCrop"
+      background-mute="{{false}}"
+      min-cache="{{1}}"
+      max-cache="{{3}}"
+      bindstatechange="handlePlayerStateChange"
+      bindnetstatus="handlePlayerNetStatus"
+    />
+    
+    <!-- 直播控制层 -->
+    <view class="live-controls">
+      <!-- 直播信息 -->
+      <view class="live-info">
+        <text class="live-title">{{liveInfo.title || '请输入直播标题'}}</text>
+        <view class="live-stats">
+          <text class="viewer-count">👥 {{liveInfo.viewerCount}}</text>
+          <text class="live-status" wx:if="{{isLive}}">● 直播中</text>
+        </view>
+      </view>
+      
+      <!-- 主播控制按钮 -->
+      <view class="host-controls" wx:if="{{userInfo.isHost}}">
+        <button 
+          class="control-btn camera-btn"
+          bindtap="switchCamera"
+        >
+          🔄
+        </button>
+        <button 
+          class="control-btn mute-btn {{isMuted ? 'muted' : ''}}"
+          bindtap="toggleMute"
+        >
+          {{isMuted ? '🔇' : '🎤'}}
+        </button>
+        <button 
+          class="control-btn flash-btn {{isFlashOn ? 'on' : ''}}"
+          bindtap="toggleFlash"
+        >
+          {{isFlashOn ? '💡' : '🔦'}}
+        </button>
+        <button 
+          class="control-btn live-btn {{isLive ? 'stop' : 'start'}}"
+          bindtap="{{isLive ? 'stopLive' : 'startLive'}}"
+        >
+          {{isLive ? '停止直播' : '开始直播'}}
+        </button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 弹幕区域 -->
+  <view class="danmaku-area">
+    <view 
+      class="danmaku-item"
+      wx:for="{{danmakuList}}"
+      wx:key="id"
+      style="color: {{item.color}}"
+    >
+      <image class="danmaku-avatar" src="{{item.avatar}}" />
+      <text class="danmaku-user">{{item.user}}:</text>
+      <text class="danmaku-content">{{item.content}}</text>
+    </view>
+  </view>
+  
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <!-- 弹幕输入 -->
+    <view class="danmaku-input">
+      <input 
+        class="input-field"
+        placeholder="说点什么..."
+        value="{{danmakuInput}}"
+        bindinput="onDanmakuInput"
+        confirm-type="send"
+        bindconfirm="sendDanmaku"
+      />
+      <button class="send-btn" bindtap="sendDanmaku">发送</button>
+    </view>
+    
+    <!-- 功能按钮 -->
+    <view class="function-buttons">
+      <button class="func-btn" bindtap="showGiftPanel">🎁</button>
+      <button class="func-btn" bindtap="showSharePanel">📤</button>
+      <button class="func-btn" bindtap="showMorePanel">⋯</button>
+    </view>
+  </view>
+  
+  <!-- 礼物面板 -->
+  <view class="gift-panel" wx:if="{{showGiftPanel}}">
+    <view class="panel-header">
+      <text class="panel-title">选择礼物</text>
+      <button class="close-btn" bindtap="hideGiftPanel">×</button>
+    </view>
+    <view class="gift-list">
+      <view 
+        class="gift-item"
+        wx:for="{{giftList}}"
+        wx:key="id"
+        data-gift-id="{{item.id}}"
+        bindtap="onGiftSelect"
+      >
+        <image class="gift-icon" src="{{item.icon}}" />
+        <text class="gift-name">{{item.name}}</text>
+        <text class="gift-value">{{item.value}}币</text>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 直播标题输入弹窗 -->
+  <view class="title-modal" wx:if="{{showTitleModal}}">
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">设置直播标题</text>
+        <button class="close-btn" bindtap="hideTitleModal">×</button>
+      </view>
+      <view class="modal-body">
+        <input 
+          class="title-input"
+          placeholder="请输入直播标题"
+          value="{{liveInfo.title}}"
+          bindinput="onTitleInput"
+          maxlength="20"
+        />
+      </view>
+      <view class="modal-footer">
+        <button class="cancel-btn" bindtap="hideTitleModal">取消</button>
+        <button class="confirm-btn" bindtap="confirmTitle">确定</button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 礼物动画层 -->
+  <view class="gift-animation-layer">
+    <view 
+      class="gift-animation"
+      wx:for="{{giftAnimations}}"
+      wx:key="id"
+      style="animation-delay: {{item.delay}}s"
+    >
+      <image class="gift-animation-icon" src="{{item.icon}}" />
+      <text class="gift-animation-text">{{item.user}} 送出了 {{item.name}}</text>
+    </view>
+  </view>
+</view>

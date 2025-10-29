@@ -1,0 +1,42 @@
+{
+  "name": "live-streaming-server",
+  "version": "1.0.0",
+  "description": "直播系统后端服务",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "morgan": "^1.10.0",
+    "dotenv": "^16.3.1",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3",
+    "mongoose": "^7.5.0",
+    "redis": "^4.6.8",
+    "node-cron": "^3.0.2",
+    "axios": "^1.5.0",
+    "crypto": "^1.0.1",
+    "uuid": "^9.0.0",
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.32.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "jest": "^29.6.4",
+    "supertest": "^6.3.3"
+  },
+  "keywords": [
+    "live-streaming",
+    "websocket",
+    "netease",
+    "wechat-miniprogram"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

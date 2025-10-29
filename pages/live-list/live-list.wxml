@@ -1,0 +1,133 @@
+<!-- 直播列表页面结构 -->
+<view class="live-list-container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrapper">
+      <input 
+        class="search-input"
+        placeholder="搜索直播间..."
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        bindconfirm="onSearch"
+      />
+      <button 
+        class="search-btn"
+        bindtap="onSearch"
+      >
+        搜索
+      </button>
+    </view>
+    <button 
+      class="clear-btn"
+      wx:if="{{searchKeyword}}"
+      bindtap="onClearSearch"
+    >
+      清空
+    </button>
+  </view>
+
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <picker 
+      class="filter-item"
+      range="{{categories}}"
+      range-key="name"
+      value="{{category}}"
+      bindchange="onCategoryChange"
+    >
+      <view class="picker-text">
+        {{categories[category].name}}
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+    
+    <picker 
+      class="filter-item"
+      range="{{sortOptions}}"
+      range-key="name"
+      value="{{sortBy}}"
+      bindchange="onSortChange"
+    >
+      <view class="picker-text">
+        {{sortOptions[sortBy].name}}
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 直播列表 -->
+  <scroll-view 
+    class="live-list"
+    scroll-y="{{true}}"
+    refresher-enabled="{{true}}"
+    refresher-triggered="{{refreshing}}"
+    bindrefresherrefresh="refreshList"
+    bindscrolltolower="loadMore"
+  >
+    <view class="live-item" 
+          wx:for="{{liveList}}" 
+          wx:key="roomId"
+          data-room-id="{{item.roomId}}"
+          bindtap="enterLiveRoom"
+    >
+      <!-- 直播封面 -->
+      <view class="live-cover">
+        <image 
+          class="cover-image"
+          src="{{item.cover || '/images/default-cover.png'}}"
+          mode="aspectFill"
+        />
+        <view class="live-status" style="background-color: {{getLiveStatusColor(item.status)}}">
+          {{getLiveStatusText(item.status)}}
+        </view>
+        <view class="viewer-count">
+          👥 {{formatViewerCount(item.viewerCount)}}
+        </view>
+        <view class="live-duration" wx:if="{{item.duration > 0}}">
+          {{formatDuration(item.duration)}}
+        </view>
+      </view>
+
+      <!-- 直播信息 -->
+      <view class="live-info">
+        <view class="live-title">{{item.title}}</view>
+        <view class="host-info">
+          <image class="host-avatar" src="{{item.hostInfo.avatar}}" />
+          <text class="host-name">{{item.hostInfo.nickname}}</text>
+          <text class="host-level">Lv.{{item.hostInfo.level || 1}}</text>
+        </view>
+        <view class="live-stats">
+          <text class="stat-item">弹幕 {{item.danmakuCount || 0}}</text>
+          <text class="stat-item">礼物 {{item.giftCount || 0}}</text>
+          <text class="stat-item">收益 {{item.earnings || 0}}币</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{loading}}">
+      <text>加载中...</text>
+    </view>
+    
+    <view class="load-more" wx:if="{{!pagination.hasMore && liveList.length > 0}}">
+      <text>没有更多了</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && liveList.length === 0}}">
+      <image class="empty-image" src="/images/empty-live.png" />
+      <text class="empty-text">暂无直播</text>
+      <button class="start-live-btn" bindtap="startLive">
+        开始直播
+      </button>
+    </view>
+  </scroll-view>
+
+  <!-- 开始直播按钮 -->
+  <view class="fab">
+    <button class="fab-btn" bindtap="startLive">
+      <text class="fab-icon">📹</text>
+      <text class="fab-text">开播</text>
+    </button>
+  </view>
+</view>

@@ -1,0 +1,92 @@
+<!-- 用户中心页面结构 -->
+<view class="user-container">
+  <!-- 用户信息卡片 -->
+  <view class="user-card">
+    <view class="user-info" wx:if="{{isLoggedIn}}">
+      <image class="avatar" src="{{userInfo.avatar || '/images/default-avatar.png'}}" />
+      <view class="user-details">
+        <view class="nickname">{{userInfo.nickname || '未设置昵称'}}</view>
+        <view class="level-info">
+          <text class="level">Lv.{{userInfo.level}}</text>
+          <text class="level-name">{{getLevelInfo(userInfo.level).name}}</text>
+        </view>
+        <view class="experience-bar">
+          <view class="experience-progress" style="width: {{getLevelInfo(userInfo.level).progress}}%"></view>
+        </view>
+      </view>
+      <button class="edit-btn" bindtap="editProfile">编辑</button>
+    </view>
+    
+    <view class="login-section" wx:else>
+      <image class="default-avatar" src="/images/default-avatar.png" />
+      <text class="login-text">点击登录</text>
+      <button class="login-btn" bindtap="wxLogin">微信登录</button>
+    </view>
+  </view>
+
+  <!-- 统计信息 -->
+  <view class="stats-section" wx:if="{{isLoggedIn}}">
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-value">{{formatNumber(userInfo.liveCount)}}</text>
+        <text class="stat-label">直播次数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{formatDuration(userInfo.totalLiveTime)}}</text>
+        <text class="stat-label">直播时长</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{formatNumber(userInfo.fansCount)}}</text>
+        <text class="stat-label">粉丝数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{formatNumber(userInfo.earnings)}}</text>
+        <text class="stat-label">总收益(币)</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 今日统计 -->
+  <view class="today-stats" wx:if="{{isLoggedIn}}">
+    <view class="stats-title">今日数据</view>
+    <view class="today-grid">
+      <view class="today-item">
+        <text class="today-value">{{formatNumber(stats.todayViewers)}}</text>
+        <text class="today-label">观看人数</text>
+      </view>
+      <view class="today-item">
+        <text class="today-value">{{formatNumber(stats.todayEarnings)}}</text>
+        <text class="today-label">今日收益</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-section">
+    <view class="menu-item" 
+          wx:for="{{menuList}}" 
+          wx:key="id"
+          data-id="{{item.id}}"
+          bindtap="onMenuTap"
+    >
+      <view class="menu-icon" style="background-color: {{item.color}}">
+        {{item.icon}}
+      </view>
+      <text class="menu-title">{{item.title}}</text>
+      <text class="menu-arrow">></text>
+    </view>
+  </view>
+
+  <!-- 开始直播按钮 -->
+  <view class="start-live-section">
+    <button class="start-live-btn" bindtap="startLive">
+      <text class="btn-icon">📹</text>
+      <text class="btn-text">开始直播</text>
+    </button>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-section" wx:if="{{isLoggedIn}}">
+    <button class="logout-btn" bindtap="logout">退出登录</button>
+  </view>
+</view>
