@@ -1,0 +1,211 @@
+<!--直播推流页面-->
+<view class="live-push-container">
+  <!-- 推流组件 -->
+  <live-pusher 
+    wx:if="{{isLiving}}"
+    class="live-pusher"
+    url="{{pushUrl}}"
+    mode="{{pushConfig.mode}}"
+    orientation="{{pushConfig.orientation}}"
+    beauty="{{pushConfig.beauty}}"
+    whiteness="{{pushConfig.whiteness}}"
+    muted="{{pushConfig.muted}}"
+    enable-camera="{{pushConfig.enableCamera}}"
+    device-position="{{pushConfig.devicePosition}}"
+    bindstatechange="onPushStateChange"
+  />
+
+  <!-- 预览界面 -->
+  <view class="preview-container" wx:else>
+    <view class="preview-content">
+      <view class="preview-icon">📹</view>
+      <view class="preview-text">准备开始直播</view>
+      
+      <!-- 直播间设置 -->
+      <view class="room-settings">
+        <view class="setting-item">
+          <text class="setting-label">直播间名称</text>
+          <input 
+            class="setting-input" 
+            placeholder="输入直播间名称"
+            value="{{roomInfo.name}}"
+            data-field="name"
+            bindinput="onRoomInfoInput"
+          />
+        </view>
+        
+        <view class="setting-item">
+          <text class="setting-label">直播简介</text>
+          <textarea 
+            class="setting-textarea" 
+            placeholder="介绍一下你的直播内容"
+            value="{{roomInfo.description}}"
+            data-field="description"
+            bindinput="onRoomInfoInput"
+          />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 顶部状态栏 -->
+  <view class="top-bar" wx:if="{{isLiving && showControls}}">
+    <view class="live-status">
+      <view class="live-dot"></view>
+      <text class="live-text">直播中</text>
+      <text class="live-duration">{{formatDuration(stats.duration)}}</text>
+    </view>
+    
+    <view class="live-stats">
+      <view class="stat-item">
+        <text class="stat-icon">👁</text>
+        <text class="stat-value">{{stats.viewerCount}}</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-icon">❤️</text>
+        <text class="stat-value">{{stats.likes}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部控制栏 -->
+  <view class="bottom-controls" wx:if="{{showControls}}">
+    <!-- 直播控制按钮 -->
+    <view class="control-buttons" wx:if="{{isLiving}}">
+      <button class="control-btn" bindtap="switchCamera">
+        <text class="btn-icon">🔄</text>
+        <text class="btn-text">翻转</text>
+      </button>
+      
+      <button class="control-btn {{pushConfig.muted ? 'active' : ''}}" bindtap="toggleMute">
+        <text class="btn-icon">{{pushConfig.muted ? '🔇' : '🎤'}}</text>
+        <text class="btn-text">{{pushConfig.muted ? '取消静音' : '静音'}}</text>
+      </button>
+      
+      <button class="control-btn {{!pushConfig.enableCamera ? 'active' : ''}}" bindtap="toggleCamera">
+        <text class="btn-icon">{{pushConfig.enableCamera ? '📹' : '📷'}}</text>
+        <text class="btn-text">{{pushConfig.enableCamera ? '关闭摄像头' : '开启摄像头'}}</text>
+      </button>
+      
+      <button class="control-btn settings" bindtap="toggleSettings">
+        <text class="btn-icon">⚙️</text>
+        <text class="btn-text">设置</text>
+      </button>
+    </view>
+
+    <!-- 开始/停止直播按钮 -->
+    <view class="live-actions">
+      <button 
+        class="live-btn {{isLiving ? 'stop' : 'start'}}"
+        bindtap="{{isLiving ? 'stopLive' : 'startLive'}}"
+        disabled="{{isPreparing}}"
+      >
+        {{isPreparing ? '准备中...' : (isLiving ? '结束直播' : '开始直播')}}
+      </button>
+    </view>
+  </view>
+
+  <!-- 聊天区域 -->
+  <view class="chat-container {{showChat ? 'show' : 'hide'}}" wx:if="{{isLiving}}">
+    <view class="chat-header">
+      <text class="chat-title">聊天</text>
+      <button class="chat-toggle" bindtap="toggleChat">
+        {{showChat ? '隐藏' : '显示'}}
+      </button>
+    </view>
+    
+    <scroll-view class="chat-messages" scroll-y="true" scroll-into-view="msg-{{messages.length - 1}}">
+      <view 
+        class="message-item"
+        wx:for="{{messages}}" 
+        wx:key="id"
+        id="msg-{{index}}"
+      >
+        <image class="message-avatar" src="{{item.user.avatar}}" />
+        <view class="message-content">
+          <text class="message-user">{{item.user.name}}</text>
+          <text class="message-text">{{item.content}}</text>
+        </view>
+      </view>
+    </scroll-view>
+    
+    <view class="chat-input-wrapper">
+      <input 
+        class="chat-input" 
+        placeholder="说点什么..."
+        value="{{newMessage}}"
+        bindinput="onMessageInput"
+        bindconfirm="sendMessage"
+      />
+      <button class="send-btn" bindtap="sendMessage">发送</button>
+    </view>
+  </view>
+
+  <!-- 设置面板 -->
+  <view class="settings-panel {{showSettings ? 'show' : 'hide'}}" wx:if="{{isLiving}}">
+    <view class="settings-header">
+      <text class="settings-title">美颜设置</text>
+      <button class="settings-close" bindtap="toggleSettings">✕</button>
+    </view>
+    
+    <view class="settings-content">
+      <!-- 美颜强度 -->
+      <view class="setting-group">
+        <text class="setting-name">美颜 {{beautySettings.beauty}}</text>
+        <slider 
+          class="setting-slider"
+          min="0" 
+          max="10" 
+          value="{{beautySettings.beauty}}"
+          data-type="beauty"
+          bindchange="onBeautyChange"
+        />
+      </view>
+      
+      <!-- 美白强度 -->
+      <view class="setting-group">
+        <text class="setting-name">美白 {{beautySettings.whiteness}}</text>
+        <slider 
+          class="setting-slider"
+          min="0" 
+          max="10" 
+          value="{{beautySettings.whiteness}}"
+          data-type="whiteness"
+          bindchange="onBeautyChange"
+        />
+      </view>
+      
+      <!-- 红润强度 -->
+      <view class="setting-group">
+        <text class="setting-name">红润 {{beautySettings.ruddy}}</text>
+        <slider 
+          class="setting-slider"
+          min="0" 
+          max="10" 
+          value="{{beautySettings.ruddy}}"
+          data-type="ruddy"
+          bindchange="onBeautyChange"
+        />
+      </view>
+      
+      <!-- 滤镜选择 -->
+      <view class="setting-group">
+        <text class="setting-name">滤镜</text>
+        <scroll-view class="filter-list" scroll-x="true">
+          <view 
+            class="filter-item {{item.active ? 'active' : ''}}"
+            wx:for="{{filters}}" 
+            wx:key="id"
+            data-id="{{item.id}}"
+            bindtap="onFilterSelect"
+          >
+            {{item.name}}
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 点击遮罩隐藏控制栏 -->
+  <view class="touch-overlay" bindtap="toggleControls"></view>
+</view>

@@ -1,0 +1,352 @@
+<!--直播房间管理页面-->
+<view class="live-room-container">
+  <!-- 进度指示器 -->
+  <view class="progress-indicator">
+    <view class="progress-bar">
+      <view class="progress-fill" style="width: {{(currentStep / totalSteps) * 100}}%"></view>
+    </view>
+    <view class="step-info">
+      <text class="step-text">第 {{currentStep}} 步，共 {{totalSteps}} 步</text>
+    </view>
+  </view>
+
+  <!-- 步骤1：基本信息 -->
+  <view class="step-content" wx:if="{{currentStep === 1}}">
+    <view class="step-header">
+      <text class="step-title">📝 基本信息</text>
+      <text class="step-desc">设置直播间的基本信息</text>
+    </view>
+
+    <view class="form-section">
+      <!-- 房间名称 -->
+      <view class="form-item">
+        <text class="form-label">房间名称 *</text>
+        <input 
+          class="form-input" 
+          placeholder="输入直播间名称"
+          value="{{roomInfo.name}}"
+          data-field="name"
+          bindinput="onInputChange"
+          maxlength="30"
+        />
+        <text class="char-count">{{roomInfo.name.length}}/30</text>
+      </view>
+
+      <!-- 房间描述 -->
+      <view class="form-item">
+        <text class="form-label">房间描述 *</text>
+        <textarea 
+          class="form-textarea" 
+          placeholder="介绍一下你的直播内容"
+          value="{{roomInfo.description}}"
+          data-field="description"
+          bindinput="onInputChange"
+          maxlength="200"
+        />
+        <text class="char-count">{{roomInfo.description.length}}/200</text>
+      </view>
+
+      <!-- 分类选择 -->
+      <view class="form-item">
+        <text class="form-label">直播分类 *</text>
+        <scroll-view class="category-scroll" scroll-x="true">
+          <view class="category-list">
+            <view 
+              class="category-item {{roomInfo.category === item.id ? 'active' : ''}}"
+              wx:for="{{categories}}" 
+              wx:key="id"
+              data-category="{{item}}"
+              bindtap="onCategorySelect"
+            >
+              <text class="category-icon">{{item.icon}}</text>
+              <text class="category-name">{{item.name}}</text>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 标签选择 -->
+      <view class="form-item">
+        <text class="form-label">标签 (最多5个)</text>
+        <view class="tags-container">
+          <view 
+            class="tag-item {{roomInfo.tags.includes(item) ? 'active' : ''}}"
+            wx:for="{{availableTags}}" 
+            wx:key="*this"
+            data-tag="{{item}}"
+            bindtap="onTagToggle"
+          >
+            {{item}}
+          </view>
+        </view>
+        <text class="tag-count">已选择 {{roomInfo.tags.length}} 个标签</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 步骤2：封面设置 -->
+  <view class="step-content" wx:if="{{currentStep === 2}}">
+    <view class="step-header">
+      <text class="step-title">🖼️ 封面设置</text>
+      <text class="step-desc">选择或上传直播间封面</text>
+    </view>
+
+    <view class="form-section">
+      <!-- 当前封面预览 -->
+      <view class="current-cover" wx:if="{{roomInfo.cover}}">
+        <text class="form-label">当前封面</text>
+        <view class="cover-preview">
+          <image class="preview-image" src="{{roomInfo.cover}}" mode="aspectFill" />
+        </view>
+      </view>
+
+      <!-- 预设封面 -->
+      <view class="form-item">
+        <text class="form-label">选择预设封面</text>
+        <view class="cover-grid">
+          <view 
+            class="cover-item {{roomInfo.cover === item ? 'active' : ''}}"
+            wx:for="{{coverImages}}" 
+            wx:key="*this"
+            data-cover="{{item}}"
+            bindtap="onCoverSelect"
+          >
+            <image class="cover-image" src="{{item}}" mode="aspectFill" />
+            <view class="cover-check" wx:if="{{roomInfo.cover === item}}">✓</view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 自定义上传 -->
+      <view class="form-item">
+        <text class="form-label">自定义封面</text>
+        <button class="upload-btn" bindtap="onCustomCoverUpload">
+          📷 上传自定义封面
+        </button>
+        <text class="upload-tip">支持 JPG、PNG 格式，建议尺寸 16:9</text>
+      </view>
+
+      <!-- 房间设置 -->
+      <view class="form-item">
+        <text class="form-label">房间设置</text>
+        
+        <view class="setting-item">
+          <view class="setting-info">
+            <text class="setting-name">私密房间</text>
+            <text class="setting-desc">开启后需要密码才能进入</text>
+          </view>
+          <switch 
+            class="setting-switch"
+            checked="{{roomInfo.isPrivate}}"
+            bindchange="onPrivateToggle"
+          />
+        </view>
+
+        <view class="setting-item" wx:if="{{roomInfo.isPrivate}}">
+          <text class="setting-name">房间密码</text>
+          <input 
+            class="setting-input" 
+            placeholder="设置房间密码"
+            value="{{roomInfo.password}}"
+            data-field="password"
+            bindinput="onInputChange"
+            type="number"
+            maxlength="6"
+          />
+        </view>
+
+        <view class="setting-item">
+          <text class="setting-name">最大观众数</text>
+          <slider 
+            class="setting-slider"
+            min="100" 
+            max="10000" 
+            step="100"
+            value="{{roomInfo.maxAudience}}"
+            data-field="maxAudience"
+            bindchange="onInputChange"
+            show-value
+          />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 步骤3：高级设置 -->
+  <view class="step-content" wx:if="{{currentStep === 3}}">
+    <view class="step-header">
+      <text class="step-title">⚙️ 高级设置</text>
+      <text class="step-desc">配置直播的技术参数和功能</text>
+    </view>
+
+    <view class="form-section">
+      <!-- 功能开关 -->
+      <view class="form-item">
+        <text class="form-label">功能设置</text>
+        
+        <view class="setting-item">
+          <view class="setting-info">
+            <text class="setting-name">录制回放</text>
+            <text class="setting-desc">自动录制直播内容</text>
+          </view>
+          <switch 
+            class="setting-switch"
+            checked="{{advancedSettings.enableRecord}}"
+            data-setting="enableRecord"
+            bindchange="onAdvancedSettingToggle"
+          />
+        </view>
+
+        <view class="setting-item">
+          <view class="setting-info">
+            <text class="setting-name">弹幕功能</text>
+            <text class="setting-desc">允许观众发送弹幕</text>
+          </view>
+          <switch 
+            class="setting-switch"
+            checked="{{advancedSettings.enableDanmaku}}"
+            data-setting="enableDanmaku"
+            bindchange="onAdvancedSettingToggle"
+          />
+        </view>
+
+        <view class="setting-item">
+          <view class="setting-info">
+            <text class="setting-name">礼物功能</text>
+            <text class="setting-desc">允许观众赠送礼物</text>
+          </view>
+          <switch 
+            class="setting-switch"
+            checked="{{advancedSettings.enableGift}}"
+            data-setting="enableGift"
+            bindchange="onAdvancedSettingToggle"
+          />
+        </view>
+
+        <view class="setting-item">
+          <view class="setting-info">
+            <text class="setting-name">聊天功能</text>
+            <text class="setting-desc">允许观众发送消息</text>
+          </view>
+          <switch 
+            class="setting-switch"
+            checked="{{advancedSettings.enableChat}}"
+            data-setting="enableChat"
+            bindchange="onAdvancedSettingToggle"
+          />
+        </view>
+      </view>
+
+      <!-- 视频质量 -->
+      <view class="form-item">
+        <text class="form-label">视频质量</text>
+        
+        <view class="quality-options">
+          <view 
+            class="quality-item {{advancedSettings.resolution === '480p' ? 'active' : ''}}"
+            data-resolution="480p"
+            bindtap="onResolutionSelect"
+          >
+            <text class="quality-name">标清</text>
+            <text class="quality-desc">480p</text>
+          </view>
+          <view 
+            class="quality-item {{advancedSettings.resolution === '720p' ? 'active' : ''}}"
+            data-resolution="720p"
+            bindtap="onResolutionSelect"
+          >
+            <text class="quality-name">高清</text>
+            <text class="quality-desc">720p</text>
+          </view>
+          <view 
+            class="quality-item {{advancedSettings.resolution === '1080p' ? 'active' : ''}}"
+            data-resolution="1080p"
+            bindtap="onResolutionSelect"
+          >
+            <text class="quality-name">超清</text>
+            <text class="quality-desc">1080p</text>
+          </view>
+        </view>
+
+        <view class="setting-item">
+          <text class="setting-name">码率 {{advancedSettings.bitrate}} kbps</text>
+          <slider 
+            class="setting-slider"
+            min="500" 
+            max="3000" 
+            step="100"
+            value="{{advancedSettings.bitrate}}"
+            data-setting="bitrate"
+            bindchange="onAdvancedSettingSlider"
+            show-value
+          />
+        </view>
+
+        <view class="setting-item">
+          <text class="setting-name">帧率 {{advancedSettings.frameRate}} fps</text>
+          <slider 
+            class="setting-slider"
+            min="15" 
+            max="60" 
+            step="15"
+            value="{{advancedSettings.frameRate}}"
+            data-setting="frameRate"
+            bindchange="onAdvancedSettingSlider"
+            show-value
+          />
+        </view>
+      </view>
+
+      <!-- 预估信息 -->
+      <view class="form-item">
+        <text class="form-label">预估信息</text>
+        <view class="estimate-info">
+          <view class="estimate-item">
+            <text class="estimate-label">预估流量消耗</text>
+            <text class="estimate-value">{{calculateEstimatedTraffic()}}/小时</text>
+          </view>
+          <view class="estimate-item">
+            <text class="estimate-label">推荐网络</text>
+            <text class="estimate-value">{{advancedSettings.bitrate > 1500 ? 'WiFi' : '4G/WiFi'}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-actions">
+    <button 
+      class="action-btn secondary" 
+      wx:if="{{currentStep > 1}}"
+      bindtap="prevStep"
+    >
+      上一步
+    </button>
+    
+    <button 
+      class="action-btn secondary" 
+      bindtap="previewRoom"
+    >
+      预览
+    </button>
+    
+    <button 
+      class="action-btn primary" 
+      wx:if="{{currentStep < totalSteps}}"
+      bindtap="nextStep"
+      disabled="{{!formValid}}"
+    >
+      下一步
+    </button>
+    
+    <button 
+      class="action-btn primary" 
+      wx:if="{{currentStep === totalSteps}}"
+      bindtap="createRoom"
+      disabled="{{!formValid || isSubmitting}}"
+    >
+      {{isSubmitting ? '创建中...' : '创建直播间'}}
+    </button>
+  </view>
+</view>

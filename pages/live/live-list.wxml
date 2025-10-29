@@ -1,0 +1,106 @@
+<!--直播列表页面-->
+<view class="live-list-container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrapper">
+      <input 
+        class="search-input" 
+        placeholder="搜索直播间" 
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        bindconfirm="onSearchConfirm"
+      />
+      <view class="search-icon">🔍</view>
+    </view>
+  </view>
+
+  <!-- 分类标签 -->
+  <scroll-view class="category-scroll" scroll-x="true">
+    <view class="category-list">
+      <view 
+        class="category-item {{item.active ? 'active' : ''}}"
+        wx:for="{{categories}}" 
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="onCategoryTap"
+      >
+        {{item.name}}
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button class="action-btn primary" bindtap="onStartLive">
+      📹 开始直播
+    </button>
+    <button class="action-btn secondary" bindtap="onCreateRoom">
+      ➕ 创建房间
+    </button>
+  </view>
+
+  <!-- 直播间列表 -->
+  <scroll-view class="room-list" scroll-y="true" bindscrolltolower="onReachBottom">
+    <view class="room-grid">
+      <view 
+        class="room-card"
+        wx:for="{{liveRooms}}" 
+        wx:key="id"
+        data-room="{{item}}"
+        bindtap="onRoomTap"
+      >
+        <!-- 直播封面 -->
+        <view class="room-cover">
+          <image class="cover-image" src="{{item.cover || '/images/live-default-cover.jpg'}}" mode="aspectFill" />
+          <view class="live-status">
+            <view class="live-dot"></view>
+            <text class="live-text">直播中</text>
+          </view>
+          <view class="viewer-count">
+            👁 {{formatViewerCount(item.viewerCount)}}
+          </view>
+        </view>
+
+        <!-- 直播信息 -->
+        <view class="room-info">
+          <view class="room-title">{{item.name}}</view>
+          <view class="room-meta">
+            <view class="anchor-info">
+              <image class="anchor-avatar" src="{{item.anchor.avatar}}" />
+              <text class="anchor-name">{{item.anchor.name}}</text>
+            </view>
+            <view class="room-category">{{item.category}}</view>
+          </view>
+        </view>
+
+        <!-- 分享按钮 -->
+        <button 
+          class="share-btn" 
+          open-type="share"
+          data-room="{{item}}"
+          bindtap="onShareRoom"
+        >
+          📤
+        </button>
+      </view>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-wrapper" wx:if="{{loading}}">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载中...</text>
+    </view>
+
+    <!-- 没有更多数据 -->
+    <view class="no-more" wx:if="{{!hasMore && liveRooms.length > 0}}">
+      没有更多直播间了
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && liveRooms.length === 0}}">
+      <view class="empty-icon">📺</view>
+      <view class="empty-text">暂无直播间</view>
+      <button class="empty-action" bindtap="onStartLive">开始第一个直播</button>
+    </view>
+  </scroll-view>
+</view>

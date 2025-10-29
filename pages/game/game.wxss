@@ -23,14 +23,47 @@
   pointer-events: none;
 }
 
+/* 顶部工具栏 */
+.top-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 80rpx 40rpx 0;
+}
+
 .score-panel {
-  position: absolute;
-  top: 80rpx;
-  left: 40rpx;
   background: rgba(0, 0, 0, 0.5);
   padding: 20rpx 30rpx;
   border-radius: 20rpx;
   color: white;
+}
+
+/* 直播入口 */
+.live-entrance {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 71, 87, 0.9);
+  padding: 16rpx 24rpx;
+  border-radius: 20rpx;
+  pointer-events: auto;
+  transition: all 0.3s ease;
+}
+
+.live-entrance:active {
+  transform: scale(0.95);
+  background: rgba(255, 71, 87, 1);
+}
+
+.live-icon {
+  font-size: 32rpx;
+  margin-bottom: 4rpx;
+}
+
+.live-text {
+  color: white;
+  font-size: 22rpx;
+  font-weight: 500;
 }
 
 .score-label {

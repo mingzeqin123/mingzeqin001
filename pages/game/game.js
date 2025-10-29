@@ -28,6 +28,15 @@ Page({
     }
   },
 
+  /**
+   * 进入直播系统
+   */
+  goToLive() {
+    wx.navigateTo({
+      url: '/pages/live/live-list'
+    })
+  },
+
   onHide() {
     // 页面隐藏时暂停游戏
     if (this.gameEngine) {

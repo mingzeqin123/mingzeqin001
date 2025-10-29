@@ -13,10 +13,19 @@
   
   <!-- 游戏UI -->
   <view class="game-ui">
-    <!-- 分数显示 -->
-    <view class="score-panel">
-      <text class="score-label">分数</text>
-      <text class="score-value">{{score}}</text>
+    <!-- 顶部工具栏 -->
+    <view class="top-toolbar">
+      <!-- 分数显示 -->
+      <view class="score-panel">
+        <text class="score-label">分数</text>
+        <text class="score-value">{{score}}</text>
+      </view>
+      
+      <!-- 直播入口 -->
+      <view class="live-entrance" bindtap="goToLive">
+        <text class="live-icon">📺</text>
+        <text class="live-text">直播</text>
+      </view>
     </view>
     
     <!-- 最高分 -->

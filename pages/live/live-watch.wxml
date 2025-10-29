@@ -1,0 +1,178 @@
+<!--观看直播页面-->
+<view class="live-watch-container">
+  <!-- 播放器 -->
+  <live-player 
+    wx:if="{{playUrl && !isLoading}}"
+    class="live-player"
+    src="{{playUrl}}"
+    mode="{{playerConfig.mode}}"
+    orientation="{{playerConfig.orientation}}"
+    muted="{{playerConfig.muted}}"
+    min-cache="{{playerConfig.minCache}}"
+    max-cache="{{playerConfig.maxCache}}"
+    background-color="{{playerConfig.backgroundColor}}"
+    bindstatechange="onPlayerStateChange"
+    bindfullscreenchange="onFullscreenChange"
+    bindnetstatus="onNetStatus"
+  />
+
+  <!-- 加载状态 -->
+  <view class="loading-container" wx:if="{{isLoading}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">连接中...</text>
+  </view>
+
+  <!-- 直播离线状态 -->
+  <view class="offline-container" wx:if="{{roomInfo.status === 'offline'}}">
+    <view class="offline-icon">📺</view>
+    <view class="offline-text">主播暂时离开</view>
+    <button class="refresh-btn" bindtap="reconnectPlayer">刷新</button>
+  </view>
+
+  <!-- 顶部信息栏 -->
+  <view class="top-info" wx:if="{{showControls && !isFullscreen}}">
+    <view class="room-info">
+      <view class="anchor-info">
+        <image class="anchor-avatar" src="{{roomInfo.anchor.avatar}}" />
+        <view class="anchor-details">
+          <text class="anchor-name">{{roomInfo.anchor.name}}</text>
+          <text class="anchor-level">Lv.{{roomInfo.anchor.level}}</text>
+        </view>
+      </view>
+      
+      <view class="room-stats">
+        <view class="stat-item">
+          <text class="stat-icon">👁</text>
+          <text class="stat-value">{{formatNumber(stats.viewerCount)}}</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-icon">❤️</text>
+          <text class="stat-value">{{formatNumber(stats.likes)}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <view class="room-actions">
+      <button class="follow-btn" bindtap="followAnchor">+ 关注</button>
+      <button class="share-btn" open-type="share">分享</button>
+    </view>
+  </view>
+
+  <!-- 弹幕区域 -->
+  <view class="danmaku-container" wx:if="{{showDanmaku && !isFullscreen}}">
+    <view 
+      class="danmaku-item"
+      wx:for="{{danmakuList}}" 
+      wx:key="id"
+      style="animation-delay: {{index * 0.5}}s"
+    >
+      {{item.content}}
+    </view>
+  </view>
+
+  <!-- 底部控制栏 -->
+  <view class="bottom-controls" wx:if="{{showControls && !isFullscreen}}">
+    <!-- 聊天区域 -->
+    <view class="chat-section" wx:if="{{showChat}}">
+      <scroll-view 
+        class="chat-messages" 
+        scroll-y="true" 
+        scroll-into-view="msg-{{messages.length - 1}}"
+        style="height: {{chatHeight}}rpx"
+      >
+        <view 
+          class="message-item {{item.type}}"
+          wx:for="{{messages}}" 
+          wx:key="id"
+          id="msg-{{index}}"
+        >
+          <!-- 普通文本消息 -->
+          <block wx:if="{{item.type === 'text'}}">
+            <image class="message-avatar" src="{{item.user.avatar}}" />
+            <view class="message-content">
+              <text class="message-user">{{item.user.name}}</text>
+              <text class="message-text">{{item.content}}</text>
+            </view>
+          </block>
+          
+          <!-- 礼物消息 -->
+          <block wx:if="{{item.type === 'gift'}}">
+            <view class="gift-message">
+              <image class="gift-avatar" src="{{item.user.avatar}}" />
+              <text class="gift-text">{{item.user.name}} 送出了 </text>
+              <text class="gift-name" style="color: {{item.gift.color}}">{{item.gift.icon}} {{item.gift.name}}</text>
+            </view>
+          </block>
+          
+          <!-- 系统消息 -->
+          <block wx:if="{{item.type === 'system'}}">
+            <view class="system-message">
+              <text class="system-text">{{item.content}}</text>
+            </view>
+          </block>
+        </view>
+      </scroll-view>
+      
+      <!-- 聊天输入 -->
+      <view class="chat-input-wrapper">
+        <input 
+          class="chat-input" 
+          placeholder="说点什么..."
+          value="{{newMessage}}"
+          bindinput="onMessageInput"
+          bindconfirm="sendMessage"
+        />
+        <button class="send-btn" bindtap="sendMessage">发送</button>
+      </view>
+    </view>
+
+    <!-- 功能按钮区 -->
+    <view class="function-buttons">
+      <button class="function-btn" bindtap="toggleChat">
+        <text class="btn-icon">💬</text>
+        <text class="btn-text">{{showChat ? '隐藏聊天' : '显示聊天'}}</text>
+      </button>
+      
+      <button class="function-btn" bindtap="toggleDanmaku">
+        <text class="btn-icon">📝</text>
+        <text class="btn-text">{{showDanmaku ? '关闭弹幕' : '开启弹幕'}}</text>
+      </button>
+      
+      <button class="function-btn {{playerConfig.muted ? 'active' : ''}}" bindtap="toggleMute">
+        <text class="btn-icon">{{playerConfig.muted ? '🔇' : '🔊'}}</text>
+        <text class="btn-text">{{playerConfig.muted ? '取消静音' : '静音'}}</text>
+      </button>
+      
+      <button class="function-btn gift" bindtap="toggleGiftPanel">
+        <text class="btn-icon">🎁</text>
+        <text class="btn-text">礼物</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 礼物面板 -->
+  <view class="gift-panel {{showGiftPanel ? 'show' : 'hide'}}" wx:if="{{!isFullscreen}}">
+    <view class="gift-header">
+      <text class="gift-title">选择礼物</text>
+      <button class="gift-close" bindtap="toggleGiftPanel">✕</button>
+    </view>
+    
+    <view class="gift-list">
+      <view 
+        class="gift-item"
+        wx:for="{{gifts}}" 
+        wx:key="id"
+        data-gift="{{item}}"
+        bindtap="sendGift"
+      >
+        <view class="gift-icon" style="color: {{item.color}}">{{item.icon}}</view>
+        <view class="gift-name">{{item.name}}</view>
+        <view class="gift-price" wx:if="{{item.price > 0}}">{{item.price}}金币</view>
+        <view class="gift-price free" wx:else>免费</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 点击遮罩控制显示/隐藏 -->
+  <view class="touch-overlay" bindtap="toggleControls"></view>
+</view>
