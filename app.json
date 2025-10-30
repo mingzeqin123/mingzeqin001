@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/sokoban/sokoban",
     "pages/game/game",
     "pages/watermark/watermark"
   ],
