@@ -1,0 +1,122 @@
+<view class="page">
+  <view class="intro">
+    <text class="title">短视频封面挑选</text>
+    <text class="subtitle">智能筛选 + 人工复核</text>
+  </view>
+
+  <view class="card">
+    <view class="card-header">选择视频</view>
+    <view class="card-body">
+      <button class="primary-btn" bindtap="chooseVideo">选择短视频</button>
+      <view wx:if="{{videoPath}}" class="video-meta">
+        <text>时长：{{durationText}} 秒</text>
+        <text wx:if="{{videoInfo.width && videoInfo.height}}">分辨率：{{videoInfo.width}} × {{videoInfo.height}}</text>
+        <text wx:if="{{videoInfo.fps}}">帧率：{{videoInfo.fps}} fps</text>
+      </view>
+      <video
+        wx:if="{{videoPath}}"
+        id="previewVideo"
+        class="preview-video"
+        src="{{videoPath}}"
+        controls
+        show-center-play-btn
+        enable-progress-gesture
+        loop
+        muted
+        bindtimeupdate="onTimeUpdate"
+        bindloadedmetadata="onVideoReady"
+      ></video>
+    </view>
+  </view>
+
+  <view wx:if="{{videoPath}}" class="card">
+    <view class="card-header">自动挑选参数</view>
+    <view class="card-body">
+      <view class="setting-item">
+        <view class="label">抽帧数量</view>
+        <slider
+          min="6"
+          max="30"
+          step="1"
+          show-value
+          value="{{sampleFrameCount}}"
+          bindchange="onSampleCountChange"
+        />
+      </view>
+      <view class="setting-item">
+        <view class="label">自动入选数量</view>
+        <slider
+          min="1"
+          max="6"
+          step="1"
+          show-value
+          value="{{topK}}"
+          bindchange="onTopKChange"
+        />
+      </view>
+      <button
+        class="primary-btn"
+        bindtap="autoSelectCovers"
+        loading="{{autoSelecting}}"
+        disabled="{{autoSelecting}}"
+      >{{autoSelecting ? '分析中...' : '自动选封面'}}</button>
+      <view wx:if="{{autoSelecting}}" class="progress">
+        <progress percent="{{analyzingProgress}}" stroke-width="6" />
+        <text>{{analyzingProgress}}%</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{videoPath}}" class="card">
+    <view class="card-header">人工复核</view>
+    <view class="card-body">
+      <view class="manual-actions">
+        <button
+          class="secondary-btn"
+          bindtap="captureCurrentFrame"
+          disabled="{{captureInProgress}}"
+        >{{captureInProgress ? '捕捉中...' : '捕捉当前帧'}}</button>
+        <button class="secondary-btn danger" bindtap="resetCandidates">清空候选</button>
+      </view>
+      <view class="hint">播放或拖动进度条后，可随时捕捉当前画面参与人工复核。</view>
+    </view>
+  </view>
+
+  <view wx:if="{{frameCandidates.length}}" class="card">
+    <view class="card-header">候选封面（已选 {{selectedCount}}）</view>
+    <view class="card-body">
+      <view class="frame-grid">
+        <view
+          wx:for="{{frameCandidates}}"
+          wx:key="id"
+          class="frame-card {{item.selected ? 'selected' : ''}}"
+          bindtap="toggleFrameSelection"
+          data-id="{{item.id}}"
+        >
+          <image src="{{item.thumb}}" mode="aspectFill" class="frame-image" />
+          <view class="frame-info">
+            <text>{{item.timeText}} 秒</text>
+            <text>评分 {{item.scoreText}}</text>
+          </view>
+          <view class="badge" wx:if="{{item.source === 'auto'}}">自动</view>
+          <view class="badge manual" wx:if="{{item.source === 'manual'}}">人工</view>
+          <view class="checkmark" wx:if="{{item.selected}}">✔</view>
+        </view>
+      </view>
+      <view class="actions">
+        <button class="primary-btn" bindtap="previewSelected" disabled="{{selectedCount === 0}}">预览入选封面</button>
+        <button
+          class="primary-btn"
+          bindtap="saveSelectedToAlbum"
+          disabled="{{selectedCount === 0 || saving}}"
+        >{{saving ? '保存中...' : '保存到相册'}}</button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{!frameCandidates.length && videoPath && !autoSelecting}}" class="empty-hint">
+    <text>点击“自动选封面”获取推荐，或手动捕捉你认为更精彩的画面。</text>
+  </view>
+
+  <canvas type="2d" id="analysisCanvas" class="analysis-canvas"></canvas>
+</view>
