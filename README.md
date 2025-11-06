@@ -158,6 +158,11 @@ jump-jump-game/
 - 完整的游戏流程
 - 分数系统和社交分享
 
+## 🛠️ 辅助脚本
+
+- `excel_transpose.py`：Excel 行列转置工具，详见 `README_excel_transpose.md`
+- `json_to_excel.py`：将 JSON 数据转换为 Excel 的工具，详见 `README_json_to_excel.md`
+
 ## 📄 许可证
 
 本项目采用 MIT 许可证，详见 [LICENSE](LICENSE) 文件。
