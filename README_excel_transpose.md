@@ -1,14 +1,15 @@
-# Excel行列转置工具
+# Excel行列转置与批量转换工具
 
-这个工具可以将Excel文件的行列进行转置（行列互换）。
+这个脚本可以导入单个或多个数据文件，支持行列转置，并可转换成 Excel / CSV / JSON 等指定格式。
 
 ## 功能特点
 
-- 支持读取Excel文件（.xlsx格式）
-- 自动进行行列转置
-- 保持数据完整性
-- 自动生成转置后的文件名
-- 支持自定义输出文件名
+- ✅ 支持读取 Excel（.xlsx / .xls / .xlsm）、CSV、JSON 文件
+- ✅ 可选的行列转置（默认开启）
+- ✅ 批量处理：支持目录扫描、通配符匹配、递归处理
+- ✅ 输出格式可选：`xlsx` / `csv` / `json`
+- ✅ 自定义输出目录、文件名后缀、是否保留索引/表头
+- ✅ 自动生成输出文件名，可选择覆盖或跳过已有文件
 
 ## 安装依赖
 
@@ -18,23 +19,41 @@ pip install --break-system-packages pandas openpyxl
 
 ## 使用方法
 
-### 基本用法
+### 基本语法
 
 ```bash
-python3 excel_transpose.py <输入文件> [输出文件]
+python3 excel_transpose.py <输入路径...> [选项]
 ```
 
-### 示例
+> 提示：`<输入路径...>` 可以是一个或多个文件，也可以是目录。目录模式下可通过 `--pattern` 指定匹配的文件类型。
 
-1. **自动生成输出文件名**：
+### 常用示例
+
+1. **单个 Excel 文件（默认转置并输出为新的 Excel）**：
    ```bash
    python3 excel_transpose.py sample_data.xlsx
    ```
-   输出文件将自动命名为 `sample_data_transposed.xlsx`
+   输出文件自动命名为 `sample_data_transposed.xlsx`
 
-2. **指定输出文件名**：
+2. **单个文件转成 CSV，并禁用转置**：
    ```bash
-   python3 excel_transpose.py sample_data.xlsx output.xlsx
+   python3 excel_transpose.py sample_data.xlsx --output output.csv --format csv --no-transpose
+   ```
+
+3. **批量处理目录下所有 Excel 文件**：
+   ```bash
+   python3 excel_transpose.py ./data --pattern "*.xlsx" --output-dir ./out
+   ```
+
+4. **递归扫描子目录，转为 JSON，文件名添加自定义后缀**：
+   ```bash
+   python3 excel_transpose.py ./data --pattern "*.csv,*.xlsx" --format json \
+     --suffix processed --recursive --output-dir ./json_out --no-index
+   ```
+
+5. **保留索引与表头**（默认开启，可用 `--no-index` / `--no-header` 关闭）：
+   ```bash
+   python3 excel_transpose.py sample_data.xlsx --output-dir ./out --include-index --include-header
    ```
 
 ## 转置示例
@@ -58,19 +77,34 @@ python3 excel_transpose.py <输入文件> [输出文件]
 4         部门   技术部    销售部    市场部    人事部
 ```
 
+## 常用参数说明
+
+| 参数 | 说明 |
+| ---- | ---- |
+| `--format {xlsx,csv,json}` | 设置输出格式，默认 `xlsx` |
+| `--output <文件路径>` | 指定单文件模式的输出文件名 |
+| `--output-dir <目录>` | 批量模式下指定输出目录 |
+| `--pattern "*.xlsx,*.csv"` | 目录模式匹配的文件通配符，支持多个（逗号分隔） |
+| `--transpose / --no-transpose` | 控制是否进行行列转置，默认转置 |
+| `--include-index / --no-index` | 控制输出是否保留索引，默认保留 |
+| `--include-header / --no-header` | 控制输出是否保留表头（JSON 始终包含字段名） |
+| `--suffix <文本>` | 自定义输出文件名后缀，默认 `_transposed` 或 `_converted` |
+| `--overwrite` | 允许覆盖已存在的输出文件 |
+| `--recursive` | 扫描目录时递归遍历子目录 |
+
 ## 文件说明
 
-- `excel_transpose.py` - 主要的转置脚本
-- `create_sample_excel.py` - 创建示例Excel文件
+- `excel_transpose.py` - 主要的转换脚本
+- `create_sample_excel.py` - 创建示例 Excel 文件
 - `final_verify.py` - 验证转置结果的脚本
 - `requirements.txt` - 依赖包列表
 
 ## 注意事项
 
-1. 输入文件必须是Excel格式（.xlsx）
-2. 转置后的文件会包含索引列
-3. 原始数据的行数会变成转置后数据的列数（减1，因为包含索引）
-4. 原始数据的列数会变成转置后数据的行数
+1. 支持的输入格式：Excel（.xlsx/.xls/.xlsm）、CSV、JSON
+2. JSON 输出采用 `records` 结构；若保留索引，会自动转为第一列
+3. 转置后行列数量会互换，包含索引的情况下列数会 +1
+4. 批量处理大文件时请注意内存占用，可分批处理或关闭转置
 
 ## 错误处理
 
