@@ -34,23 +34,32 @@ class WatermarkUtil {
         success: (imageInfo) => {
           const { width, height } = imageInfo;
           
-          // 创建canvas上下文
-          const canvasId = `watermark-canvas-${Date.now()}`;
-          const ctx = wx.createCanvasContext(canvasId);
-          
-          // 绘制原图
-          ctx.drawImage(imagePath, 0, 0, width, height);
-          
-          // 设置文字样式
-          ctx.setFontSize(fontSize);
-          ctx.setFillStyle(color);
-          ctx.setGlobalAlpha(opacity);
-          
-          // 计算水印位置
-          const { x, y } = this._calculateTextPosition(width, height, text, fontSize, position, options);
-          
-          // 绘制文字水印
-          ctx.fillText(text, x, y);
+            // 创建canvas上下文
+            const canvasId = `watermark-canvas-${Date.now()}`;
+            const ctx = wx.createCanvasContext(canvasId);
+            
+            // 绘制原图
+            ctx.drawImage(imagePath, 0, 0, width, height);
+            
+            // 设置文字样式
+            ctx.setFontSize(fontSize);
+            ctx.setFillStyle(color);
+            ctx.setTextBaseline('top');
+            ctx.setTextAlign('left');
+            ctx.setGlobalAlpha(opacity);
+            
+            // 绘制文字水印（支持多种布局形态）
+            this._renderTextLayout(ctx, {
+              imgWidth: width,
+              imgHeight: height,
+              text,
+              fontSize,
+              position,
+              options
+            });
+            
+            // 恢复全局透明度
+            ctx.setGlobalAlpha(1);
           
           // 绘制到canvas
           ctx.draw(false, () => {
@@ -113,14 +122,17 @@ class WatermarkUtil {
                 imgWidth, imgHeight, wmWidth, wmHeight, position, options
               );
               
-              // 绘制水印图片
-              ctx.drawImage(
+              // 绘制水印图片（支持多种布局形态）
+              this._renderImageLayout(ctx, {
+                imgWidth,
+                imgHeight,
                 watermarkPath,
-                watermarkConfig.x,
-                watermarkConfig.y,
-                watermarkConfig.width,
-                watermarkConfig.height
-              );
+                baseConfig: watermarkConfig,
+                options
+              });
+              
+              // 恢复透明度
+              ctx.setGlobalAlpha(1);
               
               // 绘制到canvas
               ctx.draw(false, () => {
@@ -309,6 +321,212 @@ class WatermarkUtil {
     }
     
     return { x, y, width, height };
+  }
+  
+  /**
+   * 绘制文本水印布局
+   * @private
+   */
+  static _renderTextLayout(ctx, { imgWidth, imgHeight, text, fontSize, position, options }) {
+    const layout = options.layout || 'single';
+    let rotationRad = 0;
+    if (options.rotation !== undefined) {
+      rotationRad = (options.rotation * Math.PI) / 180;
+    } else if (layout === 'diagonal') {
+      rotationRad = Math.PI / 4;
+    }
+    
+    const drawText = (x, y, overrideRotation) => {
+      ctx.save();
+      ctx.translate(x, y);
+      const rad = overrideRotation !== undefined ? overrideRotation : rotationRad;
+      if (rad !== 0) {
+        ctx.rotate(rad);
+      }
+      ctx.fillText(text, 0, 0);
+      ctx.restore();
+    };
+    
+    if (layout === 'custom' && Array.isArray(options.customPositions) && options.customPositions.length) {
+      options.customPositions.forEach((config) => {
+        const px = this._resolveRelativeValue(config.x, imgWidth);
+        const py = this._resolveRelativeValue(config.y, imgHeight);
+        const customRotation = config.rotation !== undefined
+          ? (config.rotation * Math.PI) / 180
+          : rotationRad;
+        if (!isNaN(px) && !isNaN(py)) {
+          drawText(px, py, customRotation);
+        }
+      });
+      return;
+    }
+    
+    if (layout === 'single') {
+      const { x, y } = this._calculateTextPosition(imgWidth, imgHeight, text, fontSize, position, options);
+      drawText(x, y);
+      return;
+    }
+    
+    // 平铺/对角线布局
+    const defaultSpacingX = Math.max(imgWidth / 3, text.length * fontSize * 1.2);
+    const defaultSpacingY = Math.max(imgHeight / 3, fontSize * 2);
+    let spacingX = this._resolveRelativeValue(
+      options.spacingX,
+      imgWidth,
+      defaultSpacingX
+    );
+    let spacingY = this._resolveRelativeValue(
+      options.spacingY,
+      imgHeight,
+      defaultSpacingY
+    );
+    if (!spacingX || spacingX <= 0) spacingX = defaultSpacingX;
+    if (!spacingY || spacingY <= 0) spacingY = defaultSpacingY;
+    const offsetX = this._resolveRelativeValue(
+      options.offsetX,
+      imgWidth,
+      spacingX / 2
+    );
+    const offsetY = this._resolveRelativeValue(
+      options.offsetY,
+      imgHeight,
+      spacingY / 2
+    );
+    
+    const cols = Math.ceil(imgWidth / spacingX) + 4;
+    const rows = Math.ceil(imgHeight / spacingY) + 4;
+    const startX = offsetX - (cols / 2) * spacingX;
+    const startY = offsetY - (rows / 2) * spacingY;
+    const diagonalShift = spacingX / 2;
+    
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        let x = startX + col * spacingX;
+        let y = startY + row * spacingY;
+        
+        if (layout === 'diagonal') {
+          x += (row % 2) * diagonalShift;
+        }
+        
+        drawText(x, y);
+      }
+    }
+  }
+  
+  /**
+   * 绘制图片水印布局
+   * @private
+   */
+  static _renderImageLayout(ctx, { imgWidth, imgHeight, watermarkPath, baseConfig, options }) {
+    const layout = options.layout || 'single';
+    let rotationRad = 0;
+    if (options.rotation !== undefined) {
+      rotationRad = (options.rotation * Math.PI) / 180;
+    } else if (layout === 'diagonal') {
+      rotationRad = Math.PI / 4;
+    }
+    
+    const drawImage = (x, y, width, height, overrideRotation) => {
+      ctx.save();
+      const cx = x + width / 2;
+      const cy = y + height / 2;
+      ctx.translate(cx, cy);
+      const rad = overrideRotation !== undefined ? overrideRotation : rotationRad;
+      if (rad !== 0) {
+        ctx.rotate(rad);
+      }
+      ctx.drawImage(watermarkPath, -width / 2, -height / 2, width, height);
+      ctx.restore();
+    };
+    
+    if (layout === 'custom' && Array.isArray(options.customPositions) && options.customPositions.length) {
+      options.customPositions.forEach((config) => {
+        const px = this._resolveRelativeValue(config.x, imgWidth);
+        const py = this._resolveRelativeValue(config.y, imgHeight);
+        const customRotation = config.rotation !== undefined
+          ? (config.rotation * Math.PI) / 180
+          : rotationRad;
+        const width = config.width !== undefined
+          ? this._resolveRelativeValue(config.width, imgWidth)
+          : baseConfig.width;
+        const height = config.height !== undefined
+          ? this._resolveRelativeValue(config.height, imgHeight)
+          : baseConfig.height;
+        if (!isNaN(px) && !isNaN(py)) {
+          drawImage(px, py, width, height, customRotation);
+        }
+      });
+      return;
+    }
+    
+    if (layout === 'single') {
+      drawImage(baseConfig.x, baseConfig.y, baseConfig.width, baseConfig.height);
+      return;
+    }
+    
+    const defaultSpacingX = Math.max(baseConfig.width * 2, imgWidth / 3);
+    const defaultSpacingY = Math.max(baseConfig.height * 2, imgHeight / 3);
+    let spacingX = this._resolveRelativeValue(
+      options.spacingX,
+      imgWidth,
+      defaultSpacingX
+    );
+    let spacingY = this._resolveRelativeValue(
+      options.spacingY,
+      imgHeight,
+      defaultSpacingY
+    );
+    if (!spacingX || spacingX <= 0) spacingX = defaultSpacingX;
+    if (!spacingY || spacingY <= 0) spacingY = defaultSpacingY;
+    const offsetX = this._resolveRelativeValue(
+      options.offsetX,
+      imgWidth,
+      spacingX / 2
+    );
+    const offsetY = this._resolveRelativeValue(
+      options.offsetY,
+      imgHeight,
+      spacingY / 2
+    );
+    
+    const cols = Math.ceil(imgWidth / spacingX) + 4;
+    const rows = Math.ceil(imgHeight / spacingY) + 4;
+    const startX = offsetX - (cols / 2) * spacingX;
+    const startY = offsetY - (rows / 2) * spacingY;
+    const diagonalShift = spacingX / 2;
+    
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        let x = startX + col * spacingX;
+        let y = startY + row * spacingY;
+        
+        if (layout === 'diagonal') {
+          x += (row % 2) * diagonalShift;
+        }
+        
+        drawImage(x, y, baseConfig.width, baseConfig.height);
+      }
+    }
+  }
+  
+  /**
+   * 工具方法：处理比例/像素值
+   * @private
+   */
+  static _resolveRelativeValue(value, reference, defaultValue) {
+    if (value === undefined || value === null || value === '') {
+      return defaultValue !== undefined ? defaultValue : 0;
+    }
+    if (typeof value === 'string') {
+      const parsed = parseFloat(value);
+      if (!isNaN(parsed)) {
+        value = parsed;
+      }
+    }
+    if (typeof value === 'number' && Math.abs(value) <= 1) {
+      return value * reference;
+    }
+    return value;
   }
 }
 
