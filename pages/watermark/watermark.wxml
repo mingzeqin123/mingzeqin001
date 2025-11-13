@@ -151,20 +151,73 @@
       />
     </view>
 
-    <view class="config-item">
-      <text class="config-label">位置</text>
-      <picker 
-        mode="selector" 
-        range="{{['右下角', '右上角', '左下角', '左上角', '居中']}}"
-        range-key=""
-        value="{{['bottom-right', 'top-right', 'bottom-left', 'top-left', 'center'].indexOf(textConfig.position)}}"
-        bindchange="onPositionChange"
-      >
-        <view class="picker">
-          <text>{{['右下角', '右上角', '左下角', '左上角', '居中'][['bottom-right', 'top-right', 'bottom-left', 'top-left', 'center'].indexOf(textConfig.position)]}}</text>
-        </view>
-      </picker>
-    </view>
+      <view class="config-item">
+        <text class="config-label">位置</text>
+        <picker 
+          mode="selector" 
+          range="{{['右下角', '右上角', '左下角', '左上角', '居中']}}"
+          range-key=""
+          value="{{['bottom-right', 'top-right', 'bottom-left', 'top-left', 'center'].indexOf(textConfig.position)}}"
+          bindchange="onPositionChange"
+        >
+          <view class="picker">
+            <text>{{['右下角', '右上角', '左下角', '左上角', '居中'][['bottom-right', 'top-right', 'bottom-left', 'top-left', 'center'].indexOf(textConfig.position)]}}</text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="config-item">
+        <text class="config-label">布局形态</text>
+        <picker 
+          mode="selector" 
+          range="{{layoutOptions}}" 
+          range-key="label"
+          value="{{textLayoutIndex}}"
+          bindchange="onTextLayoutChange"
+        >
+          <view class="picker">
+            <text>{{layoutOptions[textLayoutIndex].label}}</text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="config-item">
+        <text class="config-label">旋转角度: {{textConfig.rotation}}°</text>
+        <slider 
+          min="-90" 
+          max="90" 
+          step="1"
+          value="{{textConfig.rotation}}" 
+          bindchange="onTextRotationChange"
+          show-value
+        />
+      </view>
+
+      <view wx:if="{{textConfig.layout !== 'single'}}" class="config-item">
+        <text class="config-label">水平间距: {{textConfig.spacingX}}px</text>
+        <slider 
+          min="80" 
+          max="600" 
+          step="10"
+          value="{{textConfig.spacingX}}" 
+          bindchange="onTextSpacingChange"
+          data-field="spacingX"
+          show-value
+        />
+      </view>
+
+      <view wx:if="{{textConfig.layout !== 'single'}}" class="config-item">
+        <text class="config-label">垂直间距: {{textConfig.spacingY}}px</text>
+        <slider 
+          min="80" 
+          max="600" 
+          step="10"
+          value="{{textConfig.spacingY}}" 
+          bindchange="onTextSpacingChange"
+          data-field="spacingY"
+          show-value
+        />
+      </view>
   </view>
 
   <!-- 图片水印配置 -->
@@ -233,6 +286,59 @@
           <text>{{['右下角', '右上角', '左下角', '左上角', '居中'][['bottom-right', 'top-right', 'bottom-left', 'top-left', 'center'].indexOf(imageConfig.position)]}}</text>
         </view>
       </picker>
+    </view>
+
+    <view class="config-item">
+      <text class="config-label">布局形态</text>
+      <picker 
+        mode="selector" 
+        range="{{layoutOptions}}" 
+        range-key="label"
+        value="{{imageLayoutIndex}}"
+        bindchange="onImageLayoutChange"
+      >
+        <view class="picker">
+          <text>{{layoutOptions[imageLayoutIndex].label}}</text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="config-item">
+      <text class="config-label">旋转角度: {{imageConfig.rotation}}°</text>
+      <slider 
+        min="-90" 
+        max="90" 
+        step="1"
+        value="{{imageConfig.rotation}}" 
+        bindchange="onImageRotationChange"
+        show-value
+      />
+    </view>
+
+    <view wx:if="{{imageConfig.layout !== 'single'}}" class="config-item">
+      <text class="config-label">水平间距: {{imageConfig.spacingX}}px</text>
+      <slider 
+        min="100" 
+        max="800" 
+        step="10"
+        value="{{imageConfig.spacingX}}" 
+        bindchange="onImageSpacingChange"
+        data-field="spacingX"
+        show-value
+      />
+    </view>
+
+    <view wx:if="{{imageConfig.layout !== 'single'}}" class="config-item">
+      <text class="config-label">垂直间距: {{imageConfig.spacingY}}px</text>
+      <slider 
+        min="100" 
+        max="800" 
+        step="10"
+        value="{{imageConfig.spacingY}}" 
+        bindchange="onImageSpacingChange"
+        data-field="spacingY"
+        show-value
+      />
     </view>
   </view>
 

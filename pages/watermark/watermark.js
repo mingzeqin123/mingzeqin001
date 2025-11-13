@@ -5,19 +5,34 @@ Page({
   data: {
     selectedImage: '',
     watermarkType: 'text', // 'text' 或 'image'
+    layoutOptions: [
+      { label: '单个', value: 'single' },
+      { label: '平铺', value: 'grid' },
+      { label: '对角线', value: 'diagonal' }
+    ],
+    textLayoutIndex: 0,
+    imageLayoutIndex: 0,
     textConfig: {
       text: '水印文字',
       color: '#FFFFFF',
       fontSize: 20,
       opacity: 0.8,
-      position: 'bottom-right'
+      position: 'bottom-right',
+      layout: 'single',
+      rotation: 0,
+      spacingX: 200,
+      spacingY: 200
     },
     imageConfig: {
       watermarkImage: '',
       opacity: 0.8,
       position: 'bottom-right',
       width: 100,
-      height: 100
+      height: 100,
+      layout: 'single',
+      rotation: 0,
+      spacingX: 220,
+      spacingY: 220
     },
     processedImage: '',
     processing: false,
@@ -121,6 +136,38 @@ Page({
       'textConfig.position': e.detail.value
     });
   },
+  
+  onTextLayoutChange: function(e) {
+    const index = parseInt(e.detail.value, 10) || 0;
+    const option = this.data.layoutOptions[index];
+    if (!option) return;
+    
+    const updates = {
+      textLayoutIndex: index,
+      'textConfig.layout': option.value
+    };
+    if (option.value === 'diagonal' && this.data.textConfig.rotation === 0) {
+      updates['textConfig.rotation'] = 45;
+    }
+    this.setData(updates);
+  },
+  
+  onTextRotationChange: function(e) {
+    const value = parseInt(e.detail.value, 10);
+    if (Number.isNaN(value)) return;
+    this.setData({
+      'textConfig.rotation': value
+    });
+  },
+  
+  onTextSpacingChange: function(e) {
+    const field = e.currentTarget.dataset.field;
+    const value = parseInt(e.detail.value, 10);
+    if (!field || Number.isNaN(value)) return;
+    this.setData({
+      [`textConfig.${field}`]: value
+    });
+  },
 
   // 图片水印配置变更
   onImageOpacityChange: function(e) {
@@ -132,6 +179,38 @@ Page({
   onImagePositionChange: function(e) {
     this.setData({
       'imageConfig.position': e.detail.value
+    });
+  },
+  
+  onImageLayoutChange: function(e) {
+    const index = parseInt(e.detail.value, 10) || 0;
+    const option = this.data.layoutOptions[index];
+    if (!option) return;
+    
+    const updates = {
+      imageLayoutIndex: index,
+      'imageConfig.layout': option.value
+    };
+    if (option.value === 'diagonal' && this.data.imageConfig.rotation === 0) {
+      updates['imageConfig.rotation'] = 45;
+    }
+    this.setData(updates);
+  },
+  
+  onImageRotationChange: function(e) {
+    const value = parseInt(e.detail.value, 10);
+    if (Number.isNaN(value)) return;
+    this.setData({
+      'imageConfig.rotation': value
+    });
+  },
+  
+  onImageSpacingChange: function(e) {
+    const field = e.currentTarget.dataset.field;
+    const value = parseInt(e.detail.value, 10);
+    if (!field || Number.isNaN(value)) return;
+    this.setData({
+      [`imageConfig.${field}`]: value
     });
   },
 
