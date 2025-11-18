@@ -1,0 +1,238 @@
+:root {
+  font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #101828;
+  background-color: #f5f6fb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem clamp(1rem, 4vw, 4rem);
+  background: linear-gradient(120deg, #2d70fd, #4ac6ef);
+  color: #fff;
+}
+
+header h1 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+header p {
+  margin: 0.25rem 0 0;
+  opacity: 0.8;
+}
+
+main {
+  padding: 2rem clamp(1rem, 4vw, 4rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+#auth-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 12px 30px rgba(16, 24, 40, 0.08);
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  color: #475467;
+  gap: 0.45rem;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="file"] {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: #2d70fd;
+  color: #fff;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button.secondary {
+  background-color: #101828;
+}
+
+button.ghost {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  color: inherit;
+}
+
+button.ghost.danger {
+  border-color: #fda29b;
+  color: #b42318;
+}
+
+button.download-btn {
+  background-color: #0f9d58;
+}
+
+.actions button {
+  margin-right: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+
+.error-message {
+  margin-top: 0.35rem;
+  color: #b42318;
+  font-size: 0.8rem;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.file-input {
+  border: 2px dashed #d0d5dd;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  color: #475467;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: #475467;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid #f2f4f7;
+}
+
+th {
+  font-size: 0.85rem;
+  color: #475467;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.status-chip {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.status-chip.processing {
+  background: rgba(45, 112, 253, 0.12);
+  color: #2d70fd;
+}
+
+.status-chip.completed {
+  background: rgba(17, 192, 81, 0.12);
+  color: #0f9d58;
+}
+
+.status-chip.failed {
+  background: rgba(233, 67, 53, 0.12);
+  color: #e94335;
+}
+
+.status-chip.queued {
+  background: rgba(16, 24, 40, 0.08);
+  color: #101828;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #f2f4f7;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(120deg, #2d70fd, #4ac6ef);
+}
+
+#toast {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  background: #101828;
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(16, 24, 40, 0.2);
+}
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
