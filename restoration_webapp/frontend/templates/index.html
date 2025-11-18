@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 老照片一键修复平台</title>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>AI 老照片一键修复</h1>
+        <p>上传 · 修复 · 下载，全流程可视化，一键完成</p>
+      </div>
+      <div id="user-status">
+        <span id="current-user">未登录</span>
+        <button id="logout-btn" class="ghost" hidden>退出</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="auth-section">
+        <div class="card">
+          <h2>登录账号</h2>
+          <form id="login-form">
+            <label>
+              用户名
+              <input type="text" name="username" required />
+            </label>
+            <label>
+              密码
+              <input type="password" name="password" required />
+            </label>
+            <button type="submit">立即登录</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2>注册新用户</h2>
+          <form id="register-form">
+            <label>
+              用户名
+              <input type="text" name="username" required />
+            </label>
+            <label>
+              密码
+              <input type="password" name="password" required />
+            </label>
+            <button type="submit" class="secondary">创建账号</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="upload-section" hidden>
+        <div class="card">
+          <div class="section-head">
+            <div>
+              <h2>批量上传与修复</h2>
+              <p>支持 PNG / JPG / BMP / TIFF，每张 ≤ 15MB，可一次上传多张批量排队</p>
+            </div>
+            <button id="refresh-history" class="ghost">刷新历史</button>
+          </div>
+          <form id="upload-form">
+            <label class="file-input">
+              <input type="file" name="files" accept="image/*" multiple required />
+            </label>
+            <button type="submit">一键上传并开始修复</button>
+            <p class="hint">提交后任务进入队列，后台自动执行，可在历史列表查看实时进度</p>
+          </form>
+        </div>
+      </section>
+
+      <section id="history-section" hidden>
+        <div class="card">
+          <h2>修复记录</h2>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>任务ID</th>
+                  <th>文件名</th>
+                  <th>状态</th>
+                  <th>进度</th>
+                  <th>创建时间</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="history-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" hidden></div>
+
+    <script src="/static/js/app.js" type="module"></script>
+  </body>
+</html>
