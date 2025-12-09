@@ -1,5 +1,56 @@
 // pages/watermark/watermark.js
 const WatermarkUtil = require('../../utils/watermark.js');
+const RekognitionService = require('../../utils/awsRekognition.js');
+
+function formatConfidence(value) {
+  const confidence = Number(value || 0);
+  return {
+    confidence,
+    confidenceText: `${Math.round(confidence * 10) / 10}%`
+  };
+}
+
+function normalizeRekognitionResult(raw = {}) {
+  const labels = (raw.labels || raw.Labels || [])
+    .map((item) => {
+      const { confidence, confidenceText } = formatConfidence(item.Confidence || item.confidence);
+      return {
+        name: item.Name || item.name,
+        confidence,
+        confidenceText
+      };
+    })
+    .sort((a, b) => b.confidence - a.confidence)
+    .slice(0, 10);
+
+  const textDetections = (raw.textDetections || raw.TextDetections || [])
+    .filter((item) => (item.Type || item.type) === 'LINE')
+    .map((item) => {
+      const { confidence, confidenceText } = formatConfidence(item.Confidence || item.confidence);
+      return {
+        text: item.DetectedText || item.Text || '',
+        confidence,
+        confidenceText
+      };
+    });
+
+  const moderationLabels = (raw.moderationLabels || raw.ModerationLabels || []).map((item) => {
+    const { confidence, confidenceText } = formatConfidence(item.Confidence || item.confidence);
+    return {
+      name: item.Name || item.name,
+      parent: item.ParentName || item.parentName,
+      confidence,
+      confidenceText
+    };
+  });
+
+  return {
+    labels,
+    textDetections,
+    moderationLabels,
+    requestId: raw.requestId || raw.RequestId || ''
+  };
+}
 
 Page({
   data: {
@@ -23,7 +74,10 @@ Page({
     processing: false,
     batchMode: false,
     selectedImages: [],
-    batchProgress: 0
+    batchProgress: 0,
+    analyzing: false,
+    analysisResult: null,
+    analysisError: ''
   },
 
   onLoad: function (options) {
@@ -39,7 +93,9 @@ Page({
       success: (res) => {
         this.setData({
           selectedImage: res.tempFilePaths[0],
-          processedImage: '' // 清空之前的结果
+          processedImage: '', // 清空之前的结果
+          analysisResult: null,
+          analysisError: ''
         });
       },
       fail: (err) => {
@@ -192,6 +248,68 @@ Page({
         title: '添加水印失败',
         icon: 'error'
       });
+    });
+  },
+
+  // 调用 AWS Rekognition 分析图片
+  analyzeWithAWS: function() {
+    if (!this.data.selectedImage) {
+      wx.showToast({
+        title: '请先选择图片',
+        icon: 'error'
+      });
+      return;
+    }
+
+    if (this.data.analyzing) {
+      return;
+    }
+
+    this.setData({
+      analyzing: true,
+      analysisError: '',
+      analysisResult: null
+    });
+
+    wx.showLoading({
+      title: '智能识别中...'
+    });
+
+    RekognitionService.analyzeImage(this.data.selectedImage, {
+      detectLabels: true,
+      detectText: true,
+      detectModerationLabels: false,
+      maxLabels: 15,
+      minConfidence: 65
+    }).then((result) => {
+      this.setData({
+        analyzing: false,
+        analysisResult: normalizeRekognitionResult(result)
+      });
+      wx.hideLoading();
+      wx.showToast({
+        title: '识别完成',
+        icon: 'success'
+      });
+    }).catch((error) => {
+      console.error('AWS Rekognition 调用失败:', error);
+      wx.hideLoading();
+      this.setData({
+        analyzing: false,
+        analysisError: error.message || '识别失败，请稍后重试'
+      });
+      wx.showToast({
+        title: '识别失败',
+        icon: 'error'
+      });
+    });
+  },
+
+  clearAnalysis: function() {
+    this.setData({
+      analysisResult: null,
+      analysisError: '',
+      analyzing: false
     });
   },
 
@@ -361,7 +479,10 @@ Page({
       processedImage: '',
       selectedImages: [],
       batchMode: false,
-      batchProgress: 0
+      batchProgress: 0,
+      analysisResult: null,
+      analysisError: '',
+      analyzing: false
     });
   }
 });

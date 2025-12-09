@@ -175,3 +175,14 @@ jump-jump-game/
 ---
 
 ⭐ 如果这个项目对你有帮助，请给个星星支持一下！
+
+## 🤖 AWS Rekognition 集成
+
+项目在 `pages/watermark/watermark` 页面中接入了 AWS AI Rekognition，可用于对待加水印的图片执行标签识别、文字提取以及敏感内容审核，帮助在分发前完成智能检查。
+
+### 使用步骤
+1. **部署代理服务**：根据 `serverless/rekognitionProxy.js` 创建 AWS Lambda，并通过 API Gateway 暴露 HTTPS 接口。
+2. **配置小程序端**：在 `config/aws.js` 中填写 API Gateway 地址、Region 及可选的 API Key。
+3. **运行智能识别**：在水印页面选择图片后点击“智能识别 (AWS Rekognition)”按钮，即可查看标签、文字与敏感内容提示。
+
+识别结果与水印功能无缝联动，可在最终导出前根据 AI 建议调整水印策略或过滤不合规图片。
