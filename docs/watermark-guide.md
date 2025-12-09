@@ -24,11 +24,19 @@
 - ✅ 批量保存到相册
 - ✅ 错误处理和重试机制
 
+### 🤖 AWS 智能识别（新）
+- ✅ 一键调用 AWS Rekognition 获取图片标签
+- ✅ 自动提取图片中文字
+- ✅ 可选敏感内容识别，辅助内容安全合规
+- ✅ 识别结果在页面内直观展示，可随时清空
+
 ## 文件结构
 
 ```
 ├── utils/
 │   └── watermark.js          # 水印工具类（核心功能）
+├── config/
+│   └── aws.js                # AWS Rekognition 配置
 ├── pages/
 │   └── watermark/
 │       ├── watermark.js      # 水印页面逻辑
@@ -37,6 +45,8 @@
 │       └── watermark.json    # 页面配置
 ├── examples/
 │   └── watermark-examples.js # 使用示例
+├── serverless/
+│   └── rekognitionProxy.js   # Lambda 代理示例
 └── docs/
     └── watermark-guide.md    # 本文档
 ```
@@ -98,6 +108,54 @@ const results = await WatermarkUtil.batchAddWatermark(
   }
 );
 ```
+
+## AWS Rekognition 对接指南
+
+> 通过 AWS AI Rekognition，可在添加水印前完成图片标签、文字和敏感内容识别，帮助内容审核与智能水印策略。
+
+### 1. 部署代理服务
+1. 拷贝 `serverless/rekognitionProxy.js` 至自己的代码仓库
+2. 在同目录执行 `npm install @aws-sdk/client-rekognition`
+3. 将该脚本部署为 AWS Lambda（Node.js 18.x），绑定具备 Rekognition 调用权限的 IAM 角色
+4. 使用 API Gateway 创建 HTTPS 接口，并启用 CORS
+
+### 2. 配置小程序端
+编辑 `config/aws.js`：
+```javascript
+module.exports = {
+  rekognition: {
+    endpoint: 'https://{api_id}.execute-api.{region}.amazonaws.com/prod/rekognition',
+    apiKey: '',
+    region: 'ap-southeast-1',
+    defaultFeatures: {
+      detectLabels: true,
+      detectText: true,
+      detectModerationLabels: false
+    },
+    requestTimeout: 20000
+  }
+};
+```
+
+### 3. 调用示例
+`pages/watermark/watermark.js` 已内置 `analyzeWithAWS`，若需要在其它页面自定义调用，可参考：
+```javascript
+const RekognitionService = require('../../utils/awsRekognition.js');
+
+async function analyze(imagePath) {
+  const result = await RekognitionService.analyzeImage(imagePath, {
+    detectLabels: true,
+    detectText: true,
+    detectModerationLabels: false,
+    maxLabels: 15,
+    minConfidence: 65
+  });
+
+  console.log(result.labels, result.textDetections);
+}
+```
+
+识别结果会以标签列表、文字列表及敏感内容提示形式展示在 UI 中，支持一键清空。
 
 ## API 文档
 

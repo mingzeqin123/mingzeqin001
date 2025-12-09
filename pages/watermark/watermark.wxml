@@ -41,6 +41,72 @@
       </view>
     </view>
 
+    <!-- AWS Rekognition 智能识别 -->
+    <view class="section">
+      <view class="section-title analysis-title">
+        <text>智能识别 (AWS Rekognition)</text>
+        <button 
+          wx:if="{{analysisResult || analysisError}}" 
+          class="link-btn"
+          bindtap="clearAnalysis"
+        >
+          清除结果
+        </button>
+      </view>
+      <view class="analysis-panel">
+        <button 
+          class="analysis-btn" 
+          bindtap="analyzeWithAWS"
+          loading="{{analyzing}}"
+          disabled="{{analyzing}}"
+        >
+          {{analyzing ? '识别中...' : '识别图片内容'}}
+        </button>
+
+        <view wx:if="{{analysisError}}" class="analysis-error">
+          {{analysisError}}
+        </view>
+
+        <view wx:if="{{analysisResult}}" class="analysis-result">
+          <view wx:if="{{analysisResult.labels.length}}" class="analysis-block">
+            <view class="analysis-block-title">识别标签</view>
+            <view class="tag-list">
+              <block wx:for="{{analysisResult.labels}}" wx:key="name">
+                <view class="tag-item">
+                  <text>{{item.name}}</text>
+                  <text class="tag-confidence">{{item.confidenceText}}</text>
+                </view>
+              </block>
+            </view>
+          </view>
+
+          <view wx:if="{{analysisResult.textDetections.length}}" class="analysis-block">
+            <view class="analysis-block-title">检测到的文字</view>
+            <view class="text-list">
+              <block wx:for="{{analysisResult.textDetections}}" wx:key="text">
+                <view class="text-item">
+                  <text class="text-content">{{item.text}}</text>
+                  <text class="text-confidence">{{item.confidenceText}}</text>
+                </view>
+              </block>
+            </view>
+          </view>
+
+          <view wx:if="{{analysisResult.moderationLabels.length}}" class="analysis-block warning">
+            <view class="analysis-block-title">敏感内容提示</view>
+            <view class="text-list">
+              <block wx:for="{{analysisResult.moderationLabels}}" wx:key="name">
+                <view class="text-item">
+                  <text class="text-content">{{item.parent ? item.parent + ' / ' : ''}}{{item.name}}</text>
+                  <text class="text-confidence">{{item.confidenceText}}</text>
+                </view>
+              </block>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
     <!-- 处理结果 -->
     <view wx:if="{{processedImage}}" class="section">
       <view class="section-title">处理结果</view>
