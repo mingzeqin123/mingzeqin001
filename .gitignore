@@ -1,0 +1,6 @@
+kb_store/
+*.sqlite3
+core
+core.*
+__pycache__/
+*.pyc
