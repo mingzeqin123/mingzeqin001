@@ -5,7 +5,12 @@
   "scripts": {
     "docs:api": "npm run docs:api:watermark && npm run docs:api:game",
     "docs:api:watermark": "jsdoc2md utils/watermark.js > docs/api/watermark.md",
-    "docs:api:game": "jsdoc2md pages/game/*.js > docs/api/game.md"
+    "docs:api:game": "jsdoc2md pages/game/*.js > docs/api/game.md",
+    "docs:jsdoc:scan": "node scripts/docs/jsdoc-scan.mjs",
+    "docs:jsdoc:stubs": "node scripts/docs/jsdoc-stubs.mjs",
+    "docs:py:scan": "python3 scripts/docs/docstring-scan.py .",
+    "docs:check": "FAIL_ON_MISSING=1 npm run docs:jsdoc:scan && FAIL_ON_MISSING=1 npm run docs:py:scan",
+    "docs:all": "npm run docs:api && npm run docs:jsdoc:scan && npm run docs:jsdoc:stubs && npm run docs:py:scan"
   },
   "devDependencies": {
     "jsdoc-to-markdown": "^9.1.3"
