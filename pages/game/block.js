@@ -1,17 +1,39 @@
-// pages/game/block.js
+/**
+ * @file 方块实体（不同类型外观/动画/碰撞参数）
+ */
 import * as THREE from './libs/three.min.js'
 
+/**
+ * 方块类型
+ * @typedef {'start'|'normal'|'small'|'tall'|'special'} BlockType
+ */
+
+/**
+ * 游戏方块类。
+ * 负责：创建不同类型方块模型、入场动画、装饰动画、碰撞半径/高度提供。
+ */
 class Block {
+  /**
+   * @param {THREE.Scene} scene - Three.js 场景
+   * @param {number} x
+   * @param {number} y
+   * @param {number} z
+   * @param {BlockType} [type='normal']
+   */
   constructor(scene, x, y, z, type = 'normal') {
     this.scene = scene
     this.position = new THREE.Vector3(x, y, z)
+    /** @type {BlockType} */
     this.type = type
     
     // 创建方块模型
     this.createModel()
   }
   
-  // 创建方块模型
+  /**
+   * 创建方块模型并加入场景，随后播放入场动画。
+   * @returns {void}
+   */
   createModel() {
     this.group = new THREE.Group()
     
@@ -41,7 +63,10 @@ class Block {
     this.playEntranceAnimation()
   }
   
-  // 创建普通方块
+  /**
+   * 创建普通方块（带顶部装饰）。
+   * @returns {void}
+   */
   createNormalBlock() {
     const geometry = new THREE.CylinderGeometry(1, 1, 0.5, 8)
     const material = new THREE.MeshLambertMaterial({ 
@@ -59,7 +84,10 @@ class Block {
     this.addTopDecoration()
   }
   
-  // 创建起始方块
+  /**
+   * 创建起始方块（带发光效果）。
+   * @returns {void}
+   */
   createStartBlock() {
     const geometry = new THREE.CylinderGeometry(1.2, 1.2, 0.6, 8)
     const material = new THREE.MeshLambertMaterial({ 
@@ -77,7 +105,10 @@ class Block {
     this.addGlowEffect()
   }
   
-  // 创建小方块
+  /**
+   * 创建小方块（更小的半径）。
+   * @returns {void}
+   */
   createSmallBlock() {
     const geometry = new THREE.CylinderGeometry(0.6, 0.6, 0.4, 6)
     const material = new THREE.MeshLambertMaterial({ 
@@ -92,7 +123,10 @@ class Block {
     this.group.add(this.mesh)
   }
   
-  // 创建高方块
+  /**
+   * 创建高方块（更高的平台）。
+   * @returns {void}
+   */
   createTallBlock() {
     const geometry = new THREE.CylinderGeometry(0.8, 1, 1.5, 6)
     const material = new THREE.MeshLambertMaterial({ 
@@ -120,7 +154,10 @@ class Block {
     this.group.add(topMesh)
   }
   
-  // 创建特殊方块
+  /**
+   * 创建特殊方块（带旋转装饰，可能带额外加分）。
+   * @returns {void}
+   */
   createSpecialBlock() {
     // 主体
     const geometry = new THREE.CylinderGeometry(1, 1, 0.5, 8)
@@ -142,7 +179,10 @@ class Block {
     this.bonusPoints = 5
   }
   
-  // 添加顶部装饰
+  /**
+   * 添加顶部装饰小球。
+   * @returns {void}
+   */
   addTopDecoration() {
     const decorations = []
     const decorationCount = 3 + Math.floor(Math.random() * 3)
@@ -168,7 +208,10 @@ class Block {
     this.decorations = decorations
   }
   
-  // 添加发光效果
+  /**
+   * 添加发光环效果（起始方块使用）。
+   * @returns {void}
+   */
   addGlowEffect() {
     const glowGeometry = new THREE.CylinderGeometry(1.4, 1.4, 0.1, 16)
     const glowMaterial = new THREE.MeshLambertMaterial({ 
@@ -183,7 +226,10 @@ class Block {
     this.group.add(this.glowMesh)
   }
   
-  // 添加旋转装饰
+  /**
+   * 添加旋转装饰（特殊方块使用）。
+   * @returns {void}
+   */
   addRotatingDecoration() {
     const geometry = new THREE.TorusGeometry(0.3, 0.05, 8, 16)
     const material = new THREE.MeshLambertMaterial({ 
@@ -197,7 +243,10 @@ class Block {
     this.group.add(this.rotatingDecoration)
   }
   
-  // 获取随机颜色
+  /**
+   * 随机选择方块颜色。
+   * @returns {number} 颜色（0xRRGGBB）
+   */
   getRandomColor() {
     const colors = [
       0xff6b6b, // 红色
@@ -213,7 +262,10 @@ class Block {
     return colors[Math.floor(Math.random() * colors.length)]
   }
   
-  // 播放入场动画
+  /**
+   * 方块入场动画：从下方升起并缩放到正常大小。
+   * @returns {void}
+   */
   playEntranceAnimation() {
     // 从下方升起
     this.group.position.y = this.position.y - 2
@@ -243,7 +295,10 @@ class Block {
     animate()
   }
   
-  // 播放落地效果
+  /**
+   * 落地反馈：轻微震动。
+   * @returns {void}
+   */
   playLandingEffect() {
     // 方块轻微震动
     const originalY = this.group.position.y
@@ -266,7 +321,11 @@ class Block {
     animate()
   }
   
-  // 更新动画
+  /**
+   * 每帧更新方块装饰动画。
+   * @param {number} deltaTime - 帧间隔（秒）
+   * @returns {void}
+   */
   update(deltaTime) {
     const time = Date.now() * 0.001
     
@@ -294,7 +353,10 @@ class Block {
     }
   }
   
-  // 获取方块高度（用于碰撞检测）
+  /**
+   * 获取方块高度（用于落地/碰撞判定）。
+   * @returns {number}
+   */
   getHeight() {
     switch (this.type) {
       case 'start':
@@ -308,7 +370,10 @@ class Block {
     }
   }
   
-  // 获取方块半径（用于碰撞检测）
+  /**
+   * 获取方块半径（用于落地/碰撞判定）。
+   * @returns {number}
+   */
   getRadius() {
     switch (this.type) {
       case 'start':
@@ -322,7 +387,10 @@ class Block {
     }
   }
   
-  // 销毁方块
+  /**
+   * 从场景中移除方块模型。
+   * @returns {void}
+   */
   destroy() {
     if (this.group && this.scene) {
       this.scene.remove(this.group)

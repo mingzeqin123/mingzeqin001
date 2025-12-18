@@ -312,4 +312,7 @@ class WatermarkUtil {
   }
 }
 
+/**
+ * 导出水印工具类（CommonJS），供小程序页面通过 require 引入。
+ */
 module.exports = WatermarkUtil;

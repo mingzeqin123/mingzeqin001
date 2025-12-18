@@ -632,3 +632,33 @@ onUnload() {
 ---
 
 这份开发指南涵盖了跳一跳游戏的核心技术实现，可以帮助开发者理解和扩展游戏功能。
+
+## 📚 注释与文档自动化（推荐）
+
+老项目“补注释/补文档”最稳妥的方式，是先统一注释规范，再用工具从源码**自动生成 API 文档**，避免手写文档与代码长期漂移。
+
+### 1) JS（小程序）— 使用 JSDoc 生成 API 文档
+
+本仓库已在 `pages/game/*.js`、`utils/watermark.js` 等关键模块补齐了 JSDoc，并提供一键生成脚本：
+
+```bash
+# 安装仅用于生成文档的开发依赖（不影响小程序运行）
+npm install
+
+# 生成 API 文档（Markdown）
+npm run docs:api
+```
+
+生成产物：
+- `docs/api/game.md`：游戏核心 API（`GameEngine`/`Player`/`Block`/`utils` 等）
+- `docs/api/watermark.md`：水印工具类 API（`WatermarkUtil`）
+
+### 2) Python — 用 docstring 生成文档
+
+Python 脚本建议采用标准 docstring（本仓库 `excel_transpose.py` 已是这种风格），后续可用：
+- 内置 `pydoc`（零依赖）
+- 或第三方 `pdoc`/`Sphinx`（适合生成站点级文档）
+
+### 3) Java — 用 Javadoc + Maven 插件生成文档
+
+Java 代码建议补齐 Javadoc（类/公共方法/参数/返回值），再用 Maven 的 `maven-javadoc-plugin` 生成 HTML 文档（适合发布到制品库/静态站点）。
