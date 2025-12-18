@@ -1,8 +1,22 @@
-// pages/game/player.js
+/**
+ * @file 玩家角色（跳跃/蓄力/坠落与简单特效）
+ */
 import * as THREE from './libs/three.min.js'
 import { lerp, easeOutQuart, easeInQuart } from './utils.js'
 
+/**
+ * 动画完成回调
+ * @callback AnimationCompleteCallback
+ */
+
+/**
+ * 玩家角色类。
+ * 负责：创建玩家模型、维护位置、执行蓄力/跳跃/坠落动画与特效。
+ */
 class Player {
+  /**
+   * @param {THREE.Scene} scene - Three.js 场景
+   */
   constructor(scene) {
     this.scene = scene
     this.position = new THREE.Vector3(0, 1, 0)
@@ -20,7 +34,10 @@ class Player {
     this.createModel()
   }
   
-  // 创建玩家模型
+  /**
+   * 创建玩家模型并加入场景。
+   * @returns {void}
+   */
   createModel() {
     // 创建玩家组
     this.group = new THREE.Group()
@@ -99,19 +116,38 @@ class Player {
     this.originalBodyScale = this.body.scale.clone()
   }
   
-  // 设置位置
+  /**
+   * 直接设置玩家位置（同时同步 Three.js Group）。
+   * @param {number} x
+   * @param {number} y
+   * @param {number} z
+   * @returns {void}
+   */
   setPosition(x, y, z) {
     this.position.set(x, y, z)
     this.group.position.copy(this.position)
   }
   
-  // 开始蓄力动画
+  /**
+   * 进入蓄力状态（在 update 中驱动压缩/抖动动画）。
+   * @returns {void}
+   */
   startCharging() {
     this.isCharging = true
     this.chargingStartTime = Date.now()
   }
   
-  // 跳跃
+  /**
+   * 执行一次跳跃动画（结束后调用回调）。
+   *
+   * 注意：当前实现会随机选择方向；如果要精确跳向下一个方块，
+   * 应由外部传入目标方向/目标点来替换这里的随机角度逻辑。
+   *
+   * @param {number} distance - 跳跃水平距离
+   * @param {number} height - 跳跃最高高度增量
+   * @param {AnimationCompleteCallback} onComplete - 跳跃完成回调
+   * @returns {void}
+   */
   jump(distance, height, onComplete) {
     if (this.isJumping) return
     
@@ -137,7 +173,11 @@ class Player {
     this.playJumpSound()
   }
   
-  // 坠落
+  /**
+   * 执行坠落动画（结束后调用回调）。
+   * @param {AnimationCompleteCallback} onComplete
+   * @returns {void}
+   */
   fall(onComplete) {
     this.isFalling = true
     this.fallStartTime = Date.now()
@@ -146,7 +186,10 @@ class Player {
     this.onFallComplete = onComplete
   }
   
-  // 显示完美落地效果
+  /**
+   * 完美落地效果：粒子 + 音效。
+   * @returns {void}
+   */
   showPerfectEffect() {
     // 创建粒子效果
     this.createParticleEffect()
@@ -155,7 +198,10 @@ class Player {
     this.playPerfectSound()
   }
   
-  // 创建粒子效果
+  /**
+   * 创建一次性粒子特效并播放。
+   * @returns {void}
+   */
   createParticleEffect() {
     const particleCount = 20
     const particles = new THREE.Group()
@@ -203,7 +249,11 @@ class Player {
     animateParticles()
   }
   
-  // 更新动画
+  /**
+   * 每帧更新：蓄力/跳跃/坠落动画与空闲微动画。
+   * @param {number} deltaTime - 帧间隔（秒）
+   * @returns {void}
+   */
   update(deltaTime) {
     const currentTime = Date.now()
     
@@ -296,7 +346,10 @@ class Player {
     }
   }
   
-  // 眨眼动画
+  /**
+   * 眨眼动画（一次性）。
+   * @returns {void}
+   */
   blink() {
     const originalScale = this.leftEye.scale.y
     this.leftEye.scale.y = 0.1
@@ -308,18 +361,27 @@ class Player {
     }, 100)
   }
   
-  // 播放跳跃音效
+  /**
+   * 播放跳跃音效（预留：可接入小程序音效）。
+   * @returns {void}
+   */
   playJumpSound() {
     // 这里可以添加音效播放逻辑
     // wx.createInnerAudioContext() 等
   }
   
-  // 播放完美落地音效
+  /**
+   * 播放完美落地音效（预留）。
+   * @returns {void}
+   */
   playPerfectSound() {
     // 这里可以添加特殊音效播放逻辑
   }
   
-  // 重置玩家状态
+  /**
+   * 重置玩家到初始状态（位置/旋转/缩放/动画标志位）。
+   * @returns {void}
+   */
   reset() {
     this.position.set(0, 1, 0)
     this.group.position.copy(this.position)
@@ -332,7 +394,10 @@ class Player {
     this.isFalling = false
   }
   
-  // 销毁玩家
+  /**
+   * 从场景移除玩家模型（释放引用）。
+   * @returns {void}
+   */
   destroy() {
     if (this.group && this.scene) {
       this.scene.remove(this.group)

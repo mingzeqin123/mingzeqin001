@@ -1,26 +1,50 @@
-// pages/game/utils.js
+/**
+ * @file 通用工具函数（数学/缓动/颜色/性能/存储/音效/手势）
+ */
 
-// 线性插值
+/**
+ * 线性插值。
+ * @param {number} start
+ * @param {number} end
+ * @param {number} factor - 插值系数（通常 0-1）
+ * @returns {number}
+ */
 export function lerp(start, end, factor) {
   return start + (end - start) * factor
 }
 
-// 缓动函数 - 四次方缓出
+/**
+ * 缓动函数：四次方缓出（easeOutQuart）。
+ * @param {number} t - 0-1
+ * @returns {number}
+ */
 export function easeOutQuart(t) {
   return 1 - Math.pow(1 - t, 4)
 }
 
-// 缓动函数 - 四次方缓入
+/**
+ * 缓动函数：四次方缓入（easeInQuart）。
+ * @param {number} t - 0-1
+ * @returns {number}
+ */
 export function easeInQuart(t) {
   return t * t * t * t
 }
 
-// 缓动函数 - 三次方缓入缓出
+/**
+ * 缓动函数：三次方缓入缓出（easeInOutCubic）。
+ * @param {number} t - 0-1
+ * @returns {number}
+ */
 export function easeInOutCubic(t) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
 }
 
-// 缓动函数 - 弹性缓出
+/**
+ * 缓动函数：弹性缓出（easeOutElastic）。
+ * @param {number} t - 0-1
+ * @returns {number}
+ */
 export function easeOutElastic(t) {
   const c4 = (2 * Math.PI) / 3
   
@@ -31,7 +55,11 @@ export function easeOutElastic(t) {
     : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1
 }
 
-// 缓动函数 - 反弹缓出
+/**
+ * 缓动函数：反弹缓出（easeOutBounce）。
+ * @param {number} t - 0-1
+ * @returns {number}
+ */
 export function easeOutBounce(t) {
   const n1 = 7.5625
   const d1 = 2.75
@@ -47,39 +75,79 @@ export function easeOutBounce(t) {
   }
 }
 
-// 角度转弧度
+/**
+ * 角度转弧度。
+ * @param {number} degrees
+ * @returns {number}
+ */
 export function degToRad(degrees) {
   return degrees * (Math.PI / 180)
 }
 
-// 弧度转角度
+/**
+ * 弧度转角度。
+ * @param {number} radians
+ * @returns {number}
+ */
 export function radToDeg(radians) {
   return radians * (180 / Math.PI)
 }
 
-// 限制数值范围
+/**
+ * 限制数值范围到 [min, max]。
+ * @param {number} value
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
+ */
 export function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max)
 }
 
-// 随机数生成
+/**
+ * 生成 [min, max) 的随机浮点数。
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
+ */
 export function random(min, max) {
   return Math.random() * (max - min) + min
 }
 
-// 随机整数生成
+/**
+ * 生成 [min, max] 的随机整数。
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
+ */
 export function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-// 计算两点距离
+/**
+ * 二维两点距离。
+ * @param {number} x1
+ * @param {number} y1
+ * @param {number} x2
+ * @param {number} y2
+ * @returns {number}
+ */
 export function distance(x1, y1, x2, y2) {
   const dx = x2 - x1
   const dy = y2 - y1
   return Math.sqrt(dx * dx + dy * dy)
 }
 
-// 计算三维距离
+/**
+ * 三维两点距离。
+ * @param {number} x1
+ * @param {number} y1
+ * @param {number} z1
+ * @param {number} x2
+ * @param {number} y2
+ * @param {number} z2
+ * @returns {number}
+ */
 export function distance3D(x1, y1, z1, x2, y2, z2) {
   const dx = x2 - x1
   const dy = y2 - y1
@@ -87,36 +155,69 @@ export function distance3D(x1, y1, z1, x2, y2, z2) {
   return Math.sqrt(dx * dx + dy * dy + dz * dz)
 }
 
-// 向量归一化
+/**
+ * 二维向量归一化。
+ * @param {number} x
+ * @param {number} y
+ * @returns {{x:number,y:number}}
+ */
 export function normalize(x, y) {
   const length = Math.sqrt(x * x + y * y)
   if (length === 0) return { x: 0, y: 0 }
   return { x: x / length, y: y / length }
 }
 
-// 向量点积
+/**
+ * 二维向量点积。
+ * @param {number} x1
+ * @param {number} y1
+ * @param {number} x2
+ * @param {number} y2
+ * @returns {number}
+ */
 export function dotProduct(x1, y1, x2, y2) {
   return x1 * x2 + y1 * y2
 }
 
-// 向量叉积
+/**
+ * 二维向量叉积（标量结果）。
+ * @param {number} x1
+ * @param {number} y1
+ * @param {number} x2
+ * @param {number} y2
+ * @returns {number}
+ */
 export function crossProduct(x1, y1, x2, y2) {
   return x1 * y2 - y1 * x2
 }
 
-// 平滑步长函数
+/**
+ * 平滑步长函数 smoothstep。
+ * @param {number} edge0
+ * @param {number} edge1
+ * @param {number} x
+ * @returns {number}
+ */
 export function smoothstep(edge0, edge1, x) {
   const t = clamp((x - edge0) / (edge1 - edge0), 0, 1)
   return t * t * (3 - 2 * t)
 }
 
-// 噪声函数（简单版）
+/**
+ * 简单噪声函数（基于 sin 的伪随机）。
+ * @param {number} x
+ * @param {number} y
+ * @returns {number} 0-1
+ */
 export function noise(x, y) {
   const n = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453
   return n - Math.floor(n)
 }
 
-// 颜色相关工具
+/**
+ * 颜色相关工具集。
+ * @namespace
+ */
 export const ColorUtils = {
   // HSL转RGB
   hslToRgb(h, s, l) {
@@ -180,7 +281,9 @@ export const ColorUtils = {
   }
 }
 
-// 性能监控工具
+/**
+ * 性能监控工具（FPS/帧耗时）。
+ */
 export class PerformanceMonitor {
   constructor() {
     this.frameCount = 0
@@ -209,7 +312,10 @@ export class PerformanceMonitor {
   }
 }
 
-// 本地存储工具
+/**
+ * 小程序本地存储工具（JSON 序列化封装）。
+ * @namespace
+ */
 export const StorageUtils = {
   // 设置数据
   set(key, value) {
@@ -256,7 +362,9 @@ export const StorageUtils = {
   }
 }
 
-// 音效管理工具
+/**
+ * 音效管理工具（基于 wx.createInnerAudioContext）。
+ */
 export class AudioManager {
   constructor() {
     this.sounds = new Map()
@@ -315,7 +423,9 @@ export class AudioManager {
   }
 }
 
-// 触摸手势识别
+/**
+ * 触摸手势识别（tap/longPress/swipe）。
+ */
 export class GestureRecognizer {
   constructor() {
     this.startX = 0

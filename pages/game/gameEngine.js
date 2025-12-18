@@ -1,10 +1,46 @@
-// pages/game/gameEngine.js
+/**
+ * @file 游戏引擎核心（3D 跳一跳）
+ *
+ * 说明：
+ * - 负责 Three.js 场景/相机/渲染器初始化与渲染循环
+ * - 管理游戏状态机（waiting/charging/jumping/falling）
+ * - 负责方块生成、落点判定、计分与相机跟随
+ */
 import * as THREE from './libs/three.min.js'
 import Player from './player.js'
 import Block from './block.js'
 import { lerp, easeOutQuart } from './utils.js'
 
+/**
+ * 分数变化回调
+ * @callback ScoreChangeCallback
+ * @param {number} score - 当前累计分数
+ */
+
+/**
+ * 游戏结束回调
+ * @callback GameOverCallback
+ */
+
+/**
+ * 蓄力值变化回调
+ * @callback PowerChangeCallback
+ * @param {number} power - 蓄力百分比（0-100）
+ */
+
+/**
+ * 游戏状态
+ * @typedef {'waiting'|'charging'|'jumping'|'falling'} GameState
+ */
+
+/**
+ * 游戏引擎（小游戏逻辑层 + 渲染层的封装）。
+ */
 class GameEngine {
+  /**
+   * @param {Object} canvas - 小程序 Canvas 节点（来自 selectorQuery fields({ node: true })）
+   * @param {WebGLRenderingContext} ctx - WebGL 上下文（canvas.getContext('webgl')）
+   */
   constructor(canvas, ctx) {
     this.canvas = canvas
     this.ctx = ctx
@@ -13,6 +49,7 @@ class GameEngine {
     this.isRunning = false
     this.isPaused = false
     this.score = 0
+    /** @type {GameState} */
     this.gameState = 'waiting' // waiting, charging, jumping, falling
     
     // 蓄力相关
@@ -21,8 +58,11 @@ class GameEngine {
     this.currentPower = 0
     
     // 回调函数
+    /** @type {ScoreChangeCallback | null} */
     this.onScoreChange = null
+    /** @type {GameOverCallback | null} */
     this.onGameOver = null
+    /** @type {PowerChangeCallback | null} */
     this.onPowerChange = null
     
     // 初始化Three.js场景
@@ -37,7 +77,10 @@ class GameEngine {
     this.render = this.render.bind(this)
   }
   
-  // 初始化场景
+  /**
+   * 初始化 Three.js 场景与渲染器。
+   * @returns {void}
+   */
   initScene() {
     this.scene = new THREE.Scene()
     this.scene.background = new THREE.Color(0x87CEEB) // 天蓝色背景
@@ -57,7 +100,10 @@ class GameEngine {
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
   }
   
-  // 初始化光照
+  /**
+   * 初始化环境光/方向光与阴影参数。
+   * @returns {void}
+   */
   initLighting() {
     // 环境光
     const ambientLight = new THREE.AmbientLight(0x404040, 0.4)
@@ -81,7 +127,10 @@ class GameEngine {
     this.scene.add(this.directionalLight)
   }
   
-  // 初始化相机
+  /**
+   * 初始化透视相机与相机跟随参数。
+   * @returns {void}
+   */
   initCamera() {
     const aspect = this.canvas.width / this.canvas.height
     this.camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000)
@@ -95,7 +144,10 @@ class GameEngine {
     this.cameraOffset = new THREE.Vector3(0, 8, 8)
   }
   
-  // 初始化游戏对象
+  /**
+   * 初始化玩家与方块列表等游戏对象。
+   * @returns {void}
+   */
   initGameObjects() {
     // 创建玩家
     this.player = new Player(this.scene)
@@ -108,7 +160,10 @@ class GameEngine {
     this.createInitialBlocks()
   }
   
-  // 创建初始方块
+  /**
+   * 创建起始方块与前若干个方块，并将玩家放到起点。
+   * @returns {void}
+   */
   createInitialBlocks() {
     // 起始方块
     const startBlock = new Block(this.scene, 0, 0, 0, 'start')
@@ -123,7 +178,10 @@ class GameEngine {
     this.player.setPosition(0, 1, 0)
   }
   
-  // 生成下一个方块
+  /**
+   * 基于上一个方块随机生成下一个方块并加入列表。
+   * @returns {void}
+   */
   generateNextBlock() {
     const lastBlock = this.blocks[this.blocks.length - 1]
     
@@ -142,7 +200,10 @@ class GameEngine {
     this.blocks.push(newBlock)
   }
   
-  // 开始游戏
+  /**
+   * 开始一局游戏：重置分数与状态，并触发分数回调。
+   * @returns {void}
+   */
   startGame() {
     this.isRunning = true
     this.gameState = 'waiting'
@@ -154,7 +215,10 @@ class GameEngine {
     }
   }
   
-  // 重新开始游戏
+  /**
+   * 重新开始：清理场景中旧方块、重置玩家与相机，再开始游戏。
+   * @returns {void}
+   */
   restart() {
     // 清理现有方块
     this.blocks.forEach(block => block.destroy())
@@ -175,7 +239,10 @@ class GameEngine {
     this.startGame()
   }
   
-  // 开始蓄力
+  /**
+   * 进入蓄力状态并触发玩家蓄力动画。
+   * @returns {void}
+   */
   startCharging() {
     if (this.gameState !== 'waiting') return
     
@@ -187,7 +254,11 @@ class GameEngine {
     this.player.startCharging()
   }
   
-  // 跳跃
+  /**
+   * 根据蓄力时长计算跳跃参数并执行跳跃。
+   * 跳跃完成后会进行落点判定并计分/结束游戏。
+   * @returns {void}
+   */
   jump() {
     if (this.gameState !== 'charging') return
     
@@ -211,7 +282,10 @@ class GameEngine {
     })
   }
   
-  // 检查落地
+  /**
+   * 判定玩家落在哪个方块附近，并根据距离判定成功或失败。
+   * @returns {void}
+   */
   checkLanding() {
     const playerPos = this.player.position
     let landedBlock = null
@@ -238,7 +312,12 @@ class GameEngine {
     }
   }
   
-  // 处理成功落地
+  /**
+   * 成功落地处理：计算得分、更新相机目标、生成新方块并清理远处方块。
+   * @param {number} blockIndex - 落地方块索引
+   * @param {number} distance - 玩家中心到方块中心的二维距离
+   * @returns {void}
+   */
   handleSuccessfulLanding(blockIndex, distance) {
     this.gameState = 'waiting'
     
@@ -271,7 +350,10 @@ class GameEngine {
     this.cleanupDistantBlocks()
   }
   
-  // 处理游戏结束
+  /**
+   * 失败处理：进入 falling 状态并播放玩家坠落动画，结束后触发回调。
+   * @returns {void}
+   */
   handleGameOver() {
     this.gameState = 'falling'
     this.isRunning = false
@@ -284,7 +366,10 @@ class GameEngine {
     })
   }
   
-  // 清理远处的方块
+  /**
+   * 清理距离玩家过远且已不可能回到的历史方块，释放资源。
+   * @returns {void}
+   */
   cleanupDistantBlocks() {
     const keepDistance = 20
     const playerPos = this.player.position
@@ -303,7 +388,11 @@ class GameEngine {
     })
   }
   
-  // 更新游戏逻辑
+  /**
+   * 每帧更新：蓄力进度、玩家/方块动画、相机跟随。
+   * @param {number} deltaTime - 帧间隔（秒）
+   * @returns {void}
+   */
   update(deltaTime) {
     if (!this.isRunning && this.gameState !== 'falling') return
     
@@ -329,7 +418,11 @@ class GameEngine {
     this.updateCamera(deltaTime)
   }
   
-  // 更新相机
+  /**
+   * 平滑更新相机位置，并保持看向玩家。
+   * @param {number} deltaTime - 帧间隔（秒）
+   * @returns {void}
+   */
   updateCamera(deltaTime) {
     // 平滑跟随目标
     this.camera.position.x = lerp(this.camera.position.x, this.cameraTarget.x + this.cameraOffset.x, deltaTime * 2)
@@ -339,7 +432,11 @@ class GameEngine {
     this.camera.lookAt(this.player.position.x, this.player.position.y, this.player.position.z)
   }
   
-  // 渲染循环
+  /**
+   * 渲染循环回调（requestAnimationFrame）。
+   * @param {number} timestamp - 高精度时间戳（毫秒）
+   * @returns {void}
+   */
   render(timestamp) {
     if (this.isPaused) {
       requestAnimationFrame(this.render)
@@ -359,22 +456,34 @@ class GameEngine {
     requestAnimationFrame(this.render)
   }
   
-  // 开始渲染
+  /**
+   * 启动渲染循环（不会自动开始一局，需要调用 startGame）。
+   * @returns {void}
+   */
   start() {
     requestAnimationFrame(this.render)
   }
   
-  // 暂停游戏
+  /**
+   * 暂停渲染更新（仍然保持 rAF 循环，但早返回）。
+   * @returns {void}
+   */
   pause() {
     this.isPaused = true
   }
   
-  // 恢复游戏
+  /**
+   * 恢复渲染更新。
+   * @returns {void}
+   */
   resume() {
     this.isPaused = false
   }
   
-  // 销毁游戏
+  /**
+   * 销毁并释放场景资源（方块/玩家/渲染器）。
+   * @returns {void}
+   */
   destroy() {
     this.isRunning = false
     this.isPaused = true
