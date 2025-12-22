@@ -1,0 +1,15 @@
+{
+  "name": "node-hbase-rest-demo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Node.js 对接 HBase REST(Stargate) 的最小可运行 demo：建表/写入/读取/删除/扫描",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "demo": "node src/demo.js",
+    "demo:scan": "node src/demo.js --scan"
+  },
+  "license": "MIT"
+}
