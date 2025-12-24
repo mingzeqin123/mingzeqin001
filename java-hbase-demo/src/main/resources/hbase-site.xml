@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+  示例用配置模板：
+  - 生产使用时，建议直接拷贝集群的 hbase-site.xml 到 classpath（resources）或 -Dhbase.conf.dir 指定目录。
+  - 本文件里的值可以被环境变量/启动参数覆盖，详见 HBaseClientDemo.java。
+-->
+<configuration>
+  <!-- ZooKeeper 地址（逗号分隔） -->
+  <property>
+    <name>hbase.zookeeper.quorum</name>
+    <value>127.0.0.1</value>
+  </property>
+
+  <!-- ZooKeeper 端口 -->
+  <property>
+    <name>hbase.zookeeper.property.clientPort</name>
+    <value>2181</value>
+  </property>
+
+  <!-- HBase 在 ZK 的 znode 路径（CDH/HDP 等发行版可能不是 /hbase） -->
+  <property>
+    <name>zookeeper.znode.parent</name>
+    <value>/hbase</value>
+  </property>
+
+  <!-- 可选：客户端超时与重试 -->
+  <property>
+    <name>hbase.rpc.timeout</name>
+    <value>20000</value>
+  </property>
+  <property>
+    <name>hbase.client.operation.timeout</name>
+    <value>30000</value>
+  </property>
+  <property>
+    <name>hbase.client.retries.number</name>
+    <value>3</value>
+  </property>
+</configuration>
