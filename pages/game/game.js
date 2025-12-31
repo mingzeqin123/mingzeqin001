@@ -135,6 +135,13 @@ Page({
     })
   },
 
+  // 跳转到发票识别与查验
+  goInvoice() {
+    wx.navigateTo({
+      url: '/pages/invoice/invoice'
+    })
+  },
+
   // 触摸开始
   onTouchStart(e) {
     if (this.data.gameState !== 'playing') return

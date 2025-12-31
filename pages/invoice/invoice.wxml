@@ -1,0 +1,94 @@
+<!-- pages/invoice/invoice.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">发票识别与查验</text>
+    <text class="subtitle">上传发票图片，自动展示信息并尝试查验真伪</text>
+  </view>
+
+  <!-- 图片选择 -->
+  <view class="section">
+    <view class="section-title">1) 上传发票</view>
+    <view class="image-selector" bindtap="chooseInvoiceImage">
+      <image
+        wx:if="{{imagePath}}"
+        src="{{imagePath}}"
+        class="selected-image"
+        data-src="{{imagePath}}"
+        bindtap="previewImage"
+      />
+      <view wx:else class="select-placeholder">
+        <text class="placeholder-icon">📄</text>
+        <text>点击选择发票图片</text>
+      </view>
+    </view>
+
+    <view class="hint-row">
+      <switch checked="{{autoVerify}}" bindchange="onAutoVerifyChange" />
+      <text class="hint-text">识别完成后自动查验（已配置查验服务时）</text>
+    </view>
+  </view>
+
+  <!-- 识别结果 -->
+  <view class="section">
+    <view class="section-title">2) 发票信息</view>
+
+    <view class="form">
+      <view class="form-item">
+        <text class="label">发票代码</text>
+        <input class="input" value="{{invoice.invoiceCode}}" placeholder="如 012001900111" bindinput="onInput" data-field="invoiceCode" />
+      </view>
+
+      <view class="form-item">
+        <text class="label">发票号码</text>
+        <input class="input" value="{{invoice.invoiceNumber}}" placeholder="如 12345678" bindinput="onInput" data-field="invoiceNumber" />
+      </view>
+
+      <view class="form-item">
+        <text class="label">开票日期</text>
+        <input class="input" value="{{invoice.invoiceDate}}" placeholder="如 2025-12-31" bindinput="onInput" data-field="invoiceDate" />
+      </view>
+
+      <view class="form-item">
+        <text class="label">价税合计(小写)</text>
+        <input class="input" value="{{invoice.totalAmount}}" placeholder="如 1234.56" bindinput="onInput" data-field="totalAmount" />
+      </view>
+
+      <view class="form-item">
+        <text class="label">校验码</text>
+        <input class="input" value="{{invoice.checkCode}}" placeholder="可填全校验码或后6位" bindinput="onInput" data-field="checkCode" />
+      </view>
+    </view>
+
+    <view class="meta">
+      <text wx:if="{{ocrStatus === 'done'}}" class="meta-ok">已识别（可手动修改）</text>
+      <text wx:if="{{ocrStatus === 'error'}}" class="meta-bad">识别失败：{{ocrMessage}}</text>
+      <text wx:if="{{ocrStatus === 'not_configured'}}" class="meta-warn">未配置OCR服务：仅支持手动填写</text>
+      <text wx:if="{{ocrStatus === 'idle'}}" class="meta-muted">上传图片后将自动识别</text>
+    </view>
+  </view>
+
+  <!-- 查验结果 -->
+  <view class="section">
+    <view class="section-title">3) 真伪查验</view>
+
+    <view class="verify-card {{verify.status}}">
+      <view class="verify-title">查验状态：{{verify.title}}</view>
+      <view class="verify-msg">{{verify.message}}</view>
+    </view>
+
+    <view wx:if="{{missingFields.length}}" class="missing">
+      <text class="missing-title">缺少查验必填：</text>
+      <text class="missing-list">{{missingFieldsText}}</text>
+    </view>
+
+    <view class="actions">
+      <button class="btn secondary" bindtap="reOcr" disabled="{{!imagePath || busy}}">重新识别</button>
+      <button class="btn primary" bindtap="verifyInvoice" disabled="{{busy}}">开始查验</button>
+    </view>
+  </view>
+
+  <view class="footer">
+    <text class="footer-text">提示：真伪查验需要开通并配置服务市场接口。</text>
+  </view>
+</view>
+
