@@ -52,17 +52,19 @@ jump-jump-game/
 ├── sitemap.json          # 站点地图配置
 ├── project.config.json   # 项目配置文件
 ├── pages/
-│   └── game/             # 游戏页面
-│       ├── game.js       # 页面逻辑
-│       ├── game.json     # 页面配置
-│       ├── game.wxml     # 页面结构
-│       ├── game.wxss     # 页面样式
-│       ├── gameEngine.js # 游戏引擎核心
-│       ├── player.js     # 玩家角色类
-│       ├── block.js      # 方块类
-│       ├── utils.js      # 工具函数
-│       └── libs/
-│           └── three.min.js # Three.js库
+│   ├── game/             # 游戏页面
+│   │   ├── game.js       # 页面逻辑
+│   │   ├── game.json     # 页面配置
+│   │   ├── game.wxml     # 页面结构
+│   │   ├── game.wxss     # 页面样式
+│   │   ├── gameEngine.js # 游戏引擎核心
+│   │   ├── player.js     # 玩家角色类
+│   │   ├── block.js      # 方块类
+│   │   ├── utils.js      # 工具函数
+│   │   └── libs/
+│   │       └── three.min.js # Three.js库
+│   ├── watermark/        # 图片水印工具页
+│   └── invoice/          # 发票识别与真伪查验页（需配置服务市场）
 ├── images/               # 图片资源
 │   └── README.md        # 图片说明
 ├── sounds/               # 音效资源
