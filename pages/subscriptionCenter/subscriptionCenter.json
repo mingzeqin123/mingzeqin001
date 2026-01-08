@@ -1,0 +1,9 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "企业通知订阅中心",
+  "navigationBarBackgroundColor": "#1f2937",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#0b1220",
+  "enablePullDownRefresh": false
+}
+
