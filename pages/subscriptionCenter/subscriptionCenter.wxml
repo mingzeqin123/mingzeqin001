@@ -1,0 +1,64 @@
+<!-- pages/subscriptionCenter/subscriptionCenter.wxml -->
+<view class="page">
+  <view class="header">
+    <text class="title">企业通知订阅中心</text>
+    <text class="subtitle">选择你希望接收的订阅通知类型</text>
+  </view>
+
+  <view class="card tips">
+    <text class="tips-title">说明</text>
+    <text class="tips-text">
+      订阅消息通常为“单次订阅”，需要在关键操作时再次发起订阅申请。本页面用于统一管理你偏好的通知类型，并在你点击按钮时批量发起订阅请求。
+    </text>
+  </view>
+
+  <view class="card">
+    <view class="card-header">
+      <text class="card-title">通知类型</text>
+      <view class="quick-actions">
+        <button class="ghost-btn" size="mini" bindtap="selectAll">全选</button>
+        <button class="ghost-btn" size="mini" bindtap="clearAll">全不选</button>
+      </view>
+    </view>
+
+    <view class="list">
+      <view
+        class="row"
+        wx:for="{{items}}"
+        wx:key="key"
+      >
+        <view class="row-left">
+          <text class="row-title">{{item.title}}</text>
+          <text class="row-desc">{{item.desc}}</text>
+          <view class="row-meta" wx:if="{{item.lastStatus}}">
+            <text class="meta-pill {{item.lastStatus === 'accept' ? 'ok' : (item.lastStatus === 'reject' ? 'bad' : 'muted')}}">
+              {{statusText[item.lastStatus] || item.lastStatus}}
+            </text>
+            <text class="meta-time" wx:if="{{item.lastRequestedAt}}">· {{item.lastRequestedAt}}</text>
+          </view>
+        </view>
+        <view class="row-right">
+          <switch
+            checked="{{item.enabled}}"
+            bindchange="onToggle"
+            data-key="{{item.key}}"
+          />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <text class="card-title">操作</text>
+    <view class="actions">
+      <button class="primary-btn" bindtap="requestSubscribe" disabled="{{requesting}}">
+        {{requesting ? '请求中...' : '订阅选中通知'}}
+      </button>
+      <button class="danger-btn" bindtap="resetState" disabled="{{requesting}}">
+        清空本地记录
+      </button>
+    </view>
+    <text class="footnote" wx:if="{{lastSavedAt}}">本地记录更新时间：{{lastSavedAt}}</text>
+  </view>
+</view>
+
