@@ -21,7 +21,7 @@ pip install --break-system-packages pandas openpyxl
 ### 基本用法
 
 ```bash
-python3 excel_transpose.py <输入文件> [输出文件]
+python3 excel_transpose.py <输入文件> [输出文件] [--watermark 水印文字] [--no-watermark]
 ```
 
 ### 示例
@@ -35,6 +35,16 @@ python3 excel_transpose.py <输入文件> [输出文件]
 2. **指定输出文件名**：
    ```bash
    python3 excel_transpose.py sample_data.xlsx output.xlsx
+   ```
+
+3. **导出时添加水印**：
+   ```bash
+   python3 excel_transpose.py sample_data.xlsx --watermark "内部数据 {timestamp}"
+   ```
+
+4. **禁用导出水印**：
+   ```bash
+   python3 excel_transpose.py sample_data.xlsx --no-watermark
    ```
 
 ## 转置示例
@@ -71,6 +81,7 @@ python3 excel_transpose.py <输入文件> [输出文件]
 2. 转置后的文件会包含索引列
 3. 原始数据的行数会变成转置后数据的列数（减1，因为包含索引）
 4. 原始数据的列数会变成转置后数据的行数
+5. 默认会在导出的Excel中添加水印（支持 `{timestamp}` 占位符）
 
 ## 错误处理
 

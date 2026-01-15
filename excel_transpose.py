@@ -5,18 +5,39 @@ Excel行列转置工具
 将Excel文件的行列进行转置（行列互换）
 """
 
-import pandas as pd
-import sys
+import argparse
+from datetime import datetime
 import os
 from pathlib import Path
+import sys
 
-def transpose_excel(input_file, output_file=None):
+import pandas as pd
+from openpyxl import load_workbook
+
+def build_watermark_text(custom_text=None):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    if custom_text:
+        return custom_text.replace("{timestamp}", timestamp)
+    return f"导出水印 {timestamp}"
+
+
+def apply_watermark(output_file, watermark_text):
+    workbook = load_workbook(output_file)
+    for sheet in workbook.worksheets:
+        sheet.oddHeader.center.text = watermark_text
+        sheet.oddFooter.center.text = watermark_text
+    workbook.properties.comments = watermark_text
+    workbook.save(output_file)
+
+
+def transpose_excel(input_file, output_file=None, watermark_text=None):
     """
     转置Excel文件的行列
     
     Args:
         input_file (str): 输入Excel文件路径
         output_file (str): 输出Excel文件路径，如果为None则自动生成
+        watermark_text (str): 水印文字内容，None则不添加水印
     
     Returns:
         str: 输出文件路径
@@ -45,6 +66,10 @@ def transpose_excel(input_file, output_file=None):
         # 保存转置后的数据
         print(f"正在保存到: {output_file}")
         df_transposed.to_excel(output_file, index=True, header=True)
+
+        if watermark_text:
+            print(f"正在添加水印: {watermark_text}")
+            apply_watermark(output_file, watermark_text)
         
         print("转置完成！")
         return str(output_file)
@@ -53,21 +78,33 @@ def transpose_excel(input_file, output_file=None):
         print(f"错误: {e}")
         return None
 
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Excel行列转置工具")
+    parser.add_argument("input_file", help="输入Excel文件路径")
+    parser.add_argument("output_file", nargs="?", default=None, help="输出Excel文件路径")
+    parser.add_argument(
+        "-w",
+        "--watermark",
+        default=None,
+        help="水印文字，可用 {timestamp} 占位符"
+    )
+    parser.add_argument(
+        "--no-watermark",
+        action="store_true",
+        help="禁用导出水印"
+    )
+    return parser.parse_args()
+
+
 def main():
     """主函数"""
-    if len(sys.argv) < 2:
-        print("使用方法:")
-        print("  python excel_transpose.py <输入文件> [输出文件]")
-        print("")
-        print("示例:")
-        print("  python excel_transpose.py data.xlsx")
-        print("  python excel_transpose.py data.xlsx output.xlsx")
-        return
+    args = parse_args()
+    watermark_text = None
+    if not args.no_watermark:
+        watermark_text = build_watermark_text(args.watermark)
     
-    input_file = sys.argv[1]
-    output_file = sys.argv[2] if len(sys.argv) > 2 else None
-    
-    result = transpose_excel(input_file, output_file)
+    result = transpose_excel(args.input_file, args.output_file, watermark_text)
     
     if result:
         print(f"转置成功！输出文件: {result}")
