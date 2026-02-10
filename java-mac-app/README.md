@@ -84,6 +84,26 @@ mvn package
 java -jar target/mac-java-app-1.0.0.jar
 ```
 
+## FreeMarker 模板邮件 Demo
+
+项目新增了一个使用 FreeMarker 生成模板邮件的示例，包含邮件主题和正文模板：
+
+- 示例类: `src/main/java/com/example/app/email/FreemarkerEmailDemo.java`
+- 主题模板: `src/main/resources/templates/email-subject.ftl`
+- 正文模板: `src/main/resources/templates/email-body.ftl`
+
+运行示例：
+
+```bash
+# 构建可执行 JAR (包含依赖)
+mvn -q -DskipTests package
+
+# 运行模板邮件示例
+java -cp target/mac-java-app-1.0.0.jar com.example.app.email.FreemarkerEmailDemo
+```
+
+控制台将输出渲染后的邮件主题和正文。
+
 ## 使用说明
 
 ### 启动应用程序
