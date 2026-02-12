@@ -143,6 +143,17 @@ java-mac-app/
 2. 如需要新的依赖，在 `pom.xml` 中添加
 3. 更新 `module-info.java` 如果使用了新的模块
 
+### 去除 a 标签示例（保留标签内容）
+
+项目中新增了 `HtmlAnchorCleaner` 工具类：
+
+```java
+String html = "欢迎访问 <a href=\"https://example.com\">官网</a>，查看<a target=\"_blank\" href=\"/help\">帮助中心</a>";
+String cleaned = HtmlAnchorCleaner.removeAnchorTags(html);
+System.out.println(cleaned);
+// 输出: 欢迎访问 官网，查看帮助中心
+```
+
 ## 故障排除
 
 ### 常见问题
