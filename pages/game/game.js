@@ -8,7 +8,8 @@ Page({
     gameState: 'start', // start, playing, over
     isPressing: false,
     power: 0,
-    isNewRecord: false
+    isNewRecord: false,
+    humanSimulationEnabled: false
   },
 
   onLoad() {
@@ -59,6 +60,7 @@ Page({
 
         // 初始化游戏引擎
         this.gameEngine = new GameEngine(canvas, ctx)
+        this.gameEngine.setHumanSimulationEnabled(this.data.humanSimulationEnabled)
         
         // 绑定游戏事件
         this.gameEngine.onScoreChange = (score) => {
@@ -73,6 +75,12 @@ Page({
           this.setData({ power })
         }
 
+        this.gameEngine.onChargingStateChange = (isCharging) => {
+          if (this.data.gameState === 'playing') {
+            this.setData({ isPressing: isCharging })
+          }
+        }
+
         // 开始渲染循环
         this.gameEngine.start()
       })
@@ -83,11 +91,14 @@ Page({
     this.setData({
       gameState: 'playing',
       score: 0,
-      isNewRecord: false
+      isNewRecord: false,
+      isPressing: false,
+      power: 0
     })
     
     if (this.gameEngine) {
       this.gameEngine.startGame()
+      this.gameEngine.setHumanSimulationEnabled(this.data.humanSimulationEnabled)
     }
   },
 
@@ -96,11 +107,14 @@ Page({
     this.setData({
       gameState: 'playing',
       score: 0,
-      isNewRecord: false
+      isNewRecord: false,
+      isPressing: false,
+      power: 0
     })
     
     if (this.gameEngine) {
       this.gameEngine.restart()
+      this.gameEngine.setHumanSimulationEnabled(this.data.humanSimulationEnabled)
     }
   },
 
@@ -117,7 +131,9 @@ Page({
     
     this.setData({
       gameState: 'over',
-      isNewRecord
+      isNewRecord,
+      isPressing: false,
+      power: 0
     })
     
     // 震动反馈
@@ -138,6 +154,7 @@ Page({
   // 触摸开始
   onTouchStart(e) {
     if (this.data.gameState !== 'playing') return
+    if (this.data.humanSimulationEnabled) return
     
     this.setData({ isPressing: true })
     
@@ -155,6 +172,7 @@ Page({
   // 触摸结束
   onTouchEnd(e) {
     if (this.data.gameState !== 'playing') return
+    if (this.data.humanSimulationEnabled) return
     
     this.setData({ 
       isPressing: false,
@@ -184,5 +202,25 @@ Page({
       query: 'from=timeline',
       imageUrl: '/images/share.png'
     }
+  },
+
+  // 开关：OpenClaw 人类行为模拟
+  toggleHumanSimulation() {
+    const enabled = !this.data.humanSimulationEnabled
+
+    this.setData({
+      humanSimulationEnabled: enabled,
+      isPressing: false,
+      power: 0
+    })
+
+    if (this.gameEngine) {
+      this.gameEngine.setHumanSimulationEnabled(enabled)
+    }
+
+    wx.showToast({
+      title: enabled ? 'OpenClaw 人类模拟已开启' : 'OpenClaw 人类模拟已关闭',
+      icon: 'none'
+    })
   }
 })

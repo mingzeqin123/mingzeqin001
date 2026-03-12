@@ -25,6 +25,13 @@
       <text class="best-score-value">{{bestScore}}</text>
     </view>
   </view>
+
+  <!-- OpenClaw 人类行为模拟开关 -->
+  <view class="sim-control">
+    <button class="sim-btn {{humanSimulationEnabled ? 'sim-btn-active' : ''}}" bindtap="toggleHumanSimulation">
+      {{humanSimulationEnabled ? 'OpenClaw 人类模拟：开启' : '开启 OpenClaw 人类模拟'}}
+    </button>
+  </view>
   
   <!-- 游戏开始界面 -->
   <view class="start-screen" wx:if="{{gameState === 'start'}}">
@@ -52,6 +59,6 @@
   
   <!-- 操作提示 -->
   <view class="hint" wx:if="{{gameState === 'playing' && score === 0}}">
-    <text>长按屏幕蓄力，松开跳跃</text>
+    <text>{{humanSimulationEnabled ? 'OpenClaw 正在模拟玩家操作' : '长按屏幕蓄力，松开跳跃'}}</text>
   </view>
 </view>

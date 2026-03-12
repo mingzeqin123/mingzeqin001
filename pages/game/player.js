@@ -112,8 +112,14 @@ class Player {
   }
   
   // 跳跃
-  jump(distance, height, onComplete) {
+  jump(distance, height, direction, onComplete) {
     if (this.isJumping) return
+
+    // 兼容旧调用：jump(distance, height, onComplete)
+    if (typeof direction === 'function') {
+      onComplete = direction
+      direction = null
+    }
     
     this.isJumping = true
     this.isCharging = false
@@ -125,12 +131,19 @@ class Player {
     // 计算跳跃起点和终点
     this.jumpStartPos.copy(this.position)
     
-    // 计算跳跃方向（朝向最近的方块）
-    const angle = Math.random() * Math.PI * 2 // 随机方向，实际应该根据最近方块计算
+    // 计算跳跃方向（默认朝 +Z，可由外部传入方向）
+    const jumpDirection = direction ? direction.clone() : new THREE.Vector3(0, 0, 1)
+    jumpDirection.y = 0
+    if (jumpDirection.lengthSq() < 1e-6) {
+      jumpDirection.set(0, 0, 1)
+    } else {
+      jumpDirection.normalize()
+    }
+
     this.jumpEndPos.set(
-      this.position.x + Math.sin(angle) * distance,
+      this.position.x + jumpDirection.x * distance,
       this.position.y,
-      this.position.z + Math.cos(angle) * distance
+      this.position.z + jumpDirection.z * distance
     )
     
     // 播放跳跃音效（如果有的话）
