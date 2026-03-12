@@ -67,6 +67,29 @@
   color: #ffd700;
 }
 
+/* OpenClaw 人类行为模拟开关 */
+.sim-control {
+  position: absolute;
+  top: 200rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+}
+
+.sim-btn {
+  font-size: 24rpx;
+  color: #fff;
+  border: none;
+  border-radius: 999rpx;
+  padding: 12rpx 28rpx;
+  background: rgba(0, 0, 0, 0.45);
+  line-height: 1.4;
+}
+
+.sim-btn-active {
+  background: linear-gradient(45deg, #2ecc71, #27ae60);
+}
+
 /* 开始界面 */
 .start-screen {
   position: absolute;

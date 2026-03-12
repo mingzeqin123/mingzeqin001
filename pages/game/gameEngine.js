@@ -2,7 +2,7 @@
 import * as THREE from './libs/three.min.js'
 import Player from './player.js'
 import Block from './block.js'
-import { lerp, easeOutQuart } from './utils.js'
+import { lerp, clamp } from './utils.js'
 
 class GameEngine {
   constructor(canvas, ctx) {
@@ -19,11 +19,28 @@ class GameEngine {
     this.chargingStartTime = 0
     this.maxChargingTime = 2000 // 最大蓄力时间2秒
     this.currentPower = 0
+
+    // OpenClaw 人类行为模拟
+    this.humanSimulationEnabled = false
+    this.simulationProfile = {
+      reactionTimeMin: 180,
+      reactionTimeMax: 520,
+      hesitationChance: 0.2,
+      hesitationExtraMin: 120,
+      hesitationExtraMax: 320,
+      powerError: 0.08,
+      directionErrorDeg: 6,
+      mistakeChance: 0.1
+    }
+    this.simulationDecisionTimer = null
+    this.simulationJumpTimer = null
+    this.pendingSimulationPlan = null
     
     // 回调函数
     this.onScoreChange = null
     this.onGameOver = null
     this.onPowerChange = null
+    this.onChargingStateChange = null
     
     // 初始化Three.js场景
     this.initScene()
@@ -144,18 +161,27 @@ class GameEngine {
   
   // 开始游戏
   startGame() {
+    this.clearSimulationTimers()
     this.isRunning = true
     this.gameState = 'waiting'
     this.score = 0
     this.currentBlockIndex = 0
+    this.pendingSimulationPlan = null
+    this.notifyChargingState(false)
     
     if (this.onScoreChange) {
       this.onScoreChange(this.score)
+    }
+
+    if (this.humanSimulationEnabled) {
+      this.scheduleSimulatedAction()
     }
   }
   
   // 重新开始游戏
   restart() {
+    this.clearSimulationTimers()
+
     // 清理现有方块
     this.blocks.forEach(block => block.destroy())
     this.blocks = []
@@ -185,17 +211,22 @@ class GameEngine {
     
     // 开始蓄力动画
     this.player.startCharging()
+    this.notifyChargingState(true)
   }
   
   // 跳跃
   jump() {
     if (this.gameState !== 'charging') return
     
+    const simulationPlan = this.pendingSimulationPlan
+    this.pendingSimulationPlan = null
+
     const chargingTime = Date.now() - this.chargingStartTime
-    const power = Math.min(chargingTime / this.maxChargingTime, 1)
+    const power = clamp((chargingTime / this.maxChargingTime) + (simulationPlan ? simulationPlan.powerOffset : 0), 0, 1)
     
     this.gameState = 'jumping'
     this.currentPower = 0
+    this.notifyChargingState(false)
     
     if (this.onPowerChange) {
       this.onPowerChange(0)
@@ -204,9 +235,10 @@ class GameEngine {
     // 计算跳跃参数
     const jumpDistance = 2 + power * 6 // 跳跃距离2-8
     const jumpHeight = 1 + power * 3   // 跳跃高度1-4
+    const jumpDirection = this.calculateJumpDirection(simulationPlan)
     
     // 执行跳跃
-    this.player.jump(jumpDistance, jumpHeight, () => {
+    this.player.jump(jumpDistance, jumpHeight, jumpDirection, () => {
       this.checkLanding()
     })
   }
@@ -230,8 +262,10 @@ class GameEngine {
       }
     })
     
-    // 判断是否成功落地
-    if (landedBlock && minDistance < 1.5) {
+    // 判断是否成功落地：必须向前推进到后续方块，且落在方块半径内
+    const landingRadius = landedBlock ? landedBlock.block.getRadius() : 0
+    const hasProgress = landedBlock ? landedBlock.index > this.currentBlockIndex : false
+    if (landedBlock && hasProgress && minDistance <= landingRadius) {
       this.handleSuccessfulLanding(landedBlock.index, minDistance)
     } else {
       this.handleGameOver()
@@ -261,6 +295,7 @@ class GameEngine {
     // 更新相机目标
     const targetBlock = this.blocks[blockIndex]
     this.cameraTarget.copy(targetBlock.position)
+    targetBlock.playLandingEffect()
     
     // 生成新方块
     if (this.blocks.length - blockIndex < 3) {
@@ -269,12 +304,21 @@ class GameEngine {
     
     // 清理远处的方块
     this.cleanupDistantBlocks()
+    const normalizedIndex = this.blocks.indexOf(targetBlock)
+    this.currentBlockIndex = normalizedIndex >= 0 ? normalizedIndex : Math.max(0, this.blocks.length - 1)
+
+    if (this.humanSimulationEnabled) {
+      this.scheduleSimulatedAction()
+    }
   }
   
   // 处理游戏结束
   handleGameOver() {
+    this.clearSimulationTimers()
+    this.pendingSimulationPlan = null
     this.gameState = 'falling'
     this.isRunning = false
+    this.notifyChargingState(false)
     
     // 播放坠落动画
     this.player.fall(() => {
@@ -327,6 +371,163 @@ class GameEngine {
     
     // 更新相机
     this.updateCamera(deltaTime)
+
+    // OpenClaw 人类行为模拟：在等待状态自动执行下一次蓄力与跳跃
+    if (
+      this.humanSimulationEnabled &&
+      !this.isPaused &&
+      this.isRunning &&
+      this.gameState === 'waiting' &&
+      !this.simulationDecisionTimer &&
+      !this.simulationJumpTimer
+    ) {
+      this.scheduleSimulatedAction()
+    }
+  }
+
+  // 开启/关闭 OpenClaw 人类行为模拟
+  setHumanSimulationEnabled(enabled) {
+    this.humanSimulationEnabled = !!enabled
+    this.clearSimulationTimers()
+    this.pendingSimulationPlan = null
+    this.notifyChargingState(false)
+
+    if (this.humanSimulationEnabled && this.isRunning && this.gameState === 'waiting') {
+      this.scheduleSimulatedAction()
+    }
+  }
+
+  // 更新模拟参数
+  setHumanSimulationProfile(profile = {}) {
+    this.simulationProfile = {
+      ...this.simulationProfile,
+      ...profile
+    }
+  }
+
+  // 计划下一次模拟操作
+  scheduleSimulatedAction(delayOverride = null) {
+    if (!this.humanSimulationEnabled || !this.isRunning || this.gameState !== 'waiting') return
+
+    const baseDelay = delayOverride === null
+      ? this.getRandomInRange(this.simulationProfile.reactionTimeMin, this.simulationProfile.reactionTimeMax)
+      : delayOverride
+
+    let delay = baseDelay
+    if (Math.random() < this.simulationProfile.hesitationChance) {
+      delay += this.getRandomInRange(
+        this.simulationProfile.hesitationExtraMin,
+        this.simulationProfile.hesitationExtraMax
+      )
+    }
+
+    this.simulationDecisionTimer = setTimeout(() => {
+      this.simulationDecisionTimer = null
+      this.performSimulatedAction()
+    }, delay)
+  }
+
+  // 执行一次模拟蓄力与跳跃
+  performSimulatedAction() {
+    if (!this.humanSimulationEnabled || !this.isRunning || this.isPaused || this.gameState !== 'waiting') return
+
+    this.pendingSimulationPlan = this.buildSimulationPlan()
+    if (!this.pendingSimulationPlan) return
+
+    this.startCharging()
+    this.simulationJumpTimer = setTimeout(() => {
+      this.simulationJumpTimer = null
+      if (this.gameState === 'charging') {
+        this.jump()
+      }
+    }, this.pendingSimulationPlan.holdTime)
+  }
+
+  // 构建人类化的跳跃决策
+  buildSimulationPlan() {
+    const currentBlock = this.blocks[this.currentBlockIndex]
+    const nextBlock = this.blocks[this.currentBlockIndex + 1]
+    if (!currentBlock || !nextBlock) return null
+
+    const dx = nextBlock.position.x - currentBlock.position.x
+    const dz = nextBlock.position.z - currentBlock.position.z
+    const targetDistance = Math.sqrt(dx * dx + dz * dz)
+
+    // 反推理论蓄力值：distance = 2 + power * 6
+    const idealPower = clamp((targetDistance - 2) / 6, 0, 1)
+    const baseError = this.getRandomInRange(-this.simulationProfile.powerError, this.simulationProfile.powerError)
+    const fatigueError = (Math.random() - 0.5) * Math.min(this.score * 0.003, 0.08)
+    let powerOffset = baseError + fatigueError
+
+    // 偶尔出现明显失误，模拟真实玩家
+    if (Math.random() < this.simulationProfile.mistakeChance) {
+      powerOffset += Math.random() < 0.5 ? -0.12 : 0.12
+    }
+
+    const simulatedPower = clamp(idealPower + powerOffset, 0, 1)
+    const holdTime = clamp(simulatedPower * this.maxChargingTime, 80, this.maxChargingTime)
+    const directionErrorRad = this.getRandomInRange(
+      -this.simulationProfile.directionErrorDeg,
+      this.simulationProfile.directionErrorDeg
+    ) * Math.PI / 180
+
+    return {
+      holdTime,
+      directionErrorRad,
+      powerOffset: 0
+    }
+  }
+
+  // 计算跳跃方向（默认朝向下一个方块）
+  calculateJumpDirection(simulationPlan = null) {
+    const currentBlock = this.blocks[this.currentBlockIndex]
+    const nextBlock = this.blocks[this.currentBlockIndex + 1]
+    if (!currentBlock || !nextBlock) {
+      return new THREE.Vector3(0, 0, 1)
+    }
+
+    const direction = new THREE.Vector3(
+      nextBlock.position.x - currentBlock.position.x,
+      0,
+      nextBlock.position.z - currentBlock.position.z
+    )
+
+    if (direction.lengthSq() < 1e-6) {
+      direction.set(0, 0, 1)
+    } else {
+      direction.normalize()
+    }
+
+    if (simulationPlan && simulationPlan.directionErrorRad) {
+      direction.applyAxisAngle(new THREE.Vector3(0, 1, 0), simulationPlan.directionErrorRad)
+      direction.normalize()
+    }
+
+    return direction
+  }
+
+  // 随机工具
+  getRandomInRange(min, max) {
+    return Math.random() * (max - min) + min
+  }
+
+  // 通知页面层蓄力状态
+  notifyChargingState(isCharging) {
+    if (this.onChargingStateChange) {
+      this.onChargingStateChange(isCharging)
+    }
+  }
+
+  // 清理模拟计时器
+  clearSimulationTimers() {
+    if (this.simulationDecisionTimer) {
+      clearTimeout(this.simulationDecisionTimer)
+      this.simulationDecisionTimer = null
+    }
+    if (this.simulationJumpTimer) {
+      clearTimeout(this.simulationJumpTimer)
+      this.simulationJumpTimer = null
+    }
   }
   
   // 更新相机
@@ -367,17 +568,23 @@ class GameEngine {
   // 暂停游戏
   pause() {
     this.isPaused = true
+    this.clearSimulationTimers()
+    this.notifyChargingState(false)
   }
   
   // 恢复游戏
   resume() {
     this.isPaused = false
+    if (this.humanSimulationEnabled && this.isRunning && this.gameState === 'waiting') {
+      this.scheduleSimulatedAction()
+    }
   }
   
   // 销毁游戏
   destroy() {
     this.isRunning = false
     this.isPaused = true
+    this.clearSimulationTimers()
     
     // 清理资源
     this.blocks.forEach(block => block.destroy())
